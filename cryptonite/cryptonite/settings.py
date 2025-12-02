@@ -8,9 +8,7 @@ env = environ.Env()
 
 env.read_env(BASE_DIR.parent / '.env')
 
-SECRET_KEY = (
-    env('DJANGO_SECRET_KEY', default='fake-key')
-)
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='fake-key')
 
 DEBUG = env.bool('DJANGO_DEBUG', default='False')
 
@@ -61,14 +59,14 @@ WSGI_APPLICATION = 'cryptonite.wsgi.application'
 
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DJANGO_DB_NAME", default="cryptonite_db"),
-        "USER": env("DJANGO_DB_USER", default="cryptonite_user"),
-        "PASSWORD": env("DJANGO_DB_PASSWORD", default="password"),
-        "HOST": env("DJANGO_DB_HOST", default="db"),
-        "PORT": env("DJANGO_DB_PORT", default="5432"),
-    }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('DJANGO_DB_NAME', default='cryptonite_db'),
+        'USER': env('DJANGO_DB_USER', default='cryptonite_user'),
+        'PASSWORD': env('DJANGO_DB_PASSWORD', default='password'),
+        'HOST': env('DJANGO_DB_HOST', default='db'),
+        'PORT': env('DJANGO_DB_PORT', default='5432'),
+    },
 }
 
 # Password validation
@@ -77,19 +75,19 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation'
-                '.UserAttributeSimilarityValidator',
+        '.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-                '.MinimumLengthValidator',
+        '.MinimumLengthValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-                '.CommonPasswordValidator',
+        '.CommonPasswordValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-                '.NumericPasswordValidator',
+        '.NumericPasswordValidator',
     },
 ]
 
