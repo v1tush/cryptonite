@@ -1,16 +1,20 @@
 from pathlib import Path
 
+import environ
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+
+env.read_env(BASE_DIR.parent / '.env')
 
 SECRET_KEY = (
-    'django-insecure-b$7mu9gtzui1px^rd!l^(yqv$(89dj*2e7@=y!e#c&tuz4=#r+'
+    env('DJANGO_SECRET_KEY', default='fake-key')
 )
 
-DEBUG = True
+DEBUG = env.bool('DJANGO_DEBUG', default='False')
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['*'])
 
 # Application definition
 
@@ -52,17 +56,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cryptonite.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-}
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("DJANGO_DB_NAME", default="cryptonite_db"),
+        "USER": env("DJANGO_DB_USER", default="cryptonite_user"),
+        "PASSWORD": env("DJANGO_DB_PASSWORD", default="password"),
+        "HOST": env("DJANGO_DB_HOST", default="db"),
+        "PORT": env("DJANGO_DB_PORT", default="5432"),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -70,22 +77,21 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation'
-        '.UserAttributeSimilarityValidator',
+                '.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-        '.MinimumLengthValidator',
+                '.MinimumLengthValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-        '.CommonPasswordValidator',
+                '.CommonPasswordValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation'
-        '.NumericPasswordValidator',
+                '.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -97,7 +103,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
