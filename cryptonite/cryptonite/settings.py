@@ -23,6 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'achievements.apps.AchievementsConfig',
+    'ciphers.apps.CiphersConfig',
+    'logs.apps.LogsConfig',
     'users.apps.UsersConfig',
 ]
 

@@ -15,3 +15,17 @@ class CustomUser(AbstractUser):
         blank=True,
     )
     strike = models.PositiveIntegerField(default=0)
+    money = models.PositiveIntegerField(default=0)
+
+    @property
+    def level(self):
+        if self.xp < 100:
+            return 1
+
+        if self.xp < 300:
+            return 2
+
+        if self.xp < 600:
+            return 3
+
+        return 4
