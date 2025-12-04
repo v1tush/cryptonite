@@ -24,7 +24,7 @@ class SolutionLog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        if not self.attempts_used:
+        if self.attempts_used is None:
             last_attempt = (
                 SolutionLog.objects.filter(user=self.user, cipher=self.cipher)
                 .order_by('-attempts_used')
