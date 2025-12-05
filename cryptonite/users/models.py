@@ -2,30 +2,22 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-# TODO: Витялия, поправь модельку, писал в тг ;)
 class CustomUser(AbstractUser):
     xp = models.PositiveIntegerField(default=0)
-
+    email = models.EmailField(unique=True, verbose_name='email address')
     avatar = models.ImageField(
         upload_to='uploads/users/avatars/',
         null=True,
         blank=True,
+        max_length=255,
     )
-
-    email = models.EmailField(
-        blank=False,
-        null=False,
-        unique=True,
-    )
-
     background = models.ImageField(
         upload_to='uploads/users/backgrounds/',
         null=True,
         blank=True,
+        max_length=255,
     )
-
     strike = models.PositiveIntegerField(default=0)
-
     money = models.PositiveIntegerField(default=0)
 
     @property
