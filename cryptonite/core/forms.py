@@ -1,4 +1,3 @@
-
 # ! Вынесение виджетов формы в отдельный класс
 class FormInitMixin:
     def __init__(self, *args, **kwargs):

@@ -4,7 +4,6 @@ from django.db import models
 
 # TODO: Витялия, поправь модельку, писал в тг ;)
 class CustomUser(AbstractUser):
-
     xp = models.PositiveIntegerField(default=0)
 
     avatar = models.ImageField(
