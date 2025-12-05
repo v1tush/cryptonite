@@ -1,6 +1,6 @@
 import django.contrib.auth
+from django.contrib.auth.mixins import LoginRequiredMixin
 import django.shortcuts
-import django.urls
 import django.views.generic
 
 import users.forms
@@ -16,7 +16,7 @@ class SignupView(django.views.generic.FormView):
         django.contrib.auth.login(self.request, user)
 
         return django.shortcuts.redirect(
-            '',  # ! TODO: Фротендеру добавть страницу для редиректа
+            'users:profile',
         )
 
     def form_invalid(self, form):
@@ -27,7 +27,11 @@ class SignupView(django.views.generic.FormView):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return django.shortcuts.redirect(
-                '',  # ! TODO: Фротендеру добавть страницу для редиректа
+                'users:profile',
             )
 
         return super().dispatch(request, *args, **kwargs)
+
+
+class ProfileView(LoginRequiredMixin, django.views.generic.TemplateView):
+    template_name = 'users/profile.html'

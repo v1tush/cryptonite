@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="signup-container">
+    <div class="signup-card">
+        <div class="signup-header">
+            <div class="signup-logo">
+                <span class="logo-icon">🔐</span>
+                <h1>CryptoMind</h1>
+            </div>
+            <h2>Создать аккаунт</h2>
+            <p class="signup-subtitle">Зарегистрируйтесь, чтобы начать свое путешествие в мир криптографии</p>
+        </div>
+        {% if form.errors %}
+        <div class="form-errors">
+            {% for field in form %}
+                {% for error in field.errors %}
+                <div class="error-message">❌ {{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+            <div class="error-message">❌ {{ error }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form method="POST" enctype="multipart/form-data" class="signup-form">
+            {% csrf_token %}
+            <div class="form-group avatar-group">
+                <label>Аватарка (необязательно)</label>
+                <div class="avatar-field">
+                    {{ form.avatar }}
+                    <div class="avatar-hint">
+                        JPEG или PNG, макс. 2 МБ, мин. 300×300px
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_first_name">Имя *</label>
+                    {{ form.first_name }}
+                </div>
+                <div class="form-group">
+                    <label for="id_last_name">Фамилия *</label>
+                    {{ form.last_name }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_username">Имя пользователя *</label>
+                {{ form.username }}
+                <small>Будет отображаться в рейтингах</small>
+            </div>
+            <div class="form-group">
+                <label for="id_email">Email *</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label for="id_password1">Пароль *</label>
+                {{ form.password1 }}
+                <small>Минимум 8 символов</small>
+            </div>
+            <div class="form-group">
+                <label for="id_password2">Подтвердите пароль *</label>
+                {{ form.password2 }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-large">Создать аккаунт</button>
+            <div class="signup-footer">
+                <p>Уже есть аккаунт? <a href="{% url 'users:login' %}">Войти</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

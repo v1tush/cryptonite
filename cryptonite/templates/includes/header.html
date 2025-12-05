@@ -1,0 +1,71 @@
+{% load i18n %}
+{% load static %}
+<div class="language-switch-container">
+    <div class="language-switch"><a>EN</a></div>
+</div>
+<div class="header-container">
+    <a href="{% url 'main:main' %}" class="logo">
+        <span class="logo-icon">🔐</span>
+        <span>CryptoNite</span>
+    </a>
+    
+    <nav>
+        <ul>
+            <li><a {% if request.resolver_match.view_name == 'main:main' %} class="active" disabled{% endif %} href="{% url 'main:main' %}">Главная</a></li>
+            <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">О Проекте</a></li>
+            <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">Библиотека</a></li>
+            {% if user.is_authenticated %}
+                <li><a {% if request.resolver_match.view_name == 'users:profile' %} class="active" disabled{% endif %} href="{% url 'users:profile' %}">Профиль</a></li>
+                <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">Создать шифр</a></li>
+                <li>
+                    <form method="post" action="{% url 'users:logout' %}">
+                        {% csrf_token %}
+                        <button class="nav-link" type="submit"><span>Выйти</span></button>
+                    </form>
+                </li>
+            {% else %}
+                <li><a href="{% url 'users:login' %}">Войти</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="user-info">
+        <div id="burger-menu" class="burger-menu">&#9776;</div>
+        {% if user.is_authenticated %}
+            <div class="user-balance">
+                <a href="-">
+                    <span>🪙</span>
+                    <span>{{ user.money }}</span>
+                </a>
+            </div>
+            <div>
+                <div class="avatar-and-username">
+                    <div class="avatar"><img src="{% if user.avatar %} {{ user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
+                    <div>
+                        <div>{{ user.username }}</div>
+                        <div class="user-rating">Счёт: {{ user.xp }}</div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<div id="nav-burger" class="nav-burger" hidden>
+    <ul>
+        <li><a {% if request.resolver_match.view_name == 'main:main' %} class="active" disabled{% endif %} href="{% url 'main:main' %}">Главная</a></li>
+        <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">О Проекте</a></li>
+        <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">Библиотека</a></li>
+        {% if user.is_authenticated %}
+            <li><a {% if request.resolver_match.view_name == 'users:profile' %} class="active" disabled{% endif %} href="{% url 'users:profile' %}">Профиль</a></li>
+            <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">Создать шифр</a></li>
+            <li>
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button class="nav-link" type="submit">Выйти</button>
+                </form>
+            </li>
+        {% else %}
+            <li><a href="{% url 'users:login' %}">Войти</a></li>
+        {% endif %}
+    </ul>
+</div>
+<script src="{% static 'js/burger-menu.js' %}"></script>
