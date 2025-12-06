@@ -12,7 +12,7 @@
     <nav>
         <ul>
             <li><a {% if request.resolver_match.view_name == 'main:main' %} class="active" disabled{% endif %} href="{% url 'main:main' %}">Главная</a></li>
-            <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">О Проекте</a></li>
+            <li><a {% if request.resolver_match.view_name == 'about:about' %} class="active" disabled{% endif %} href="{% url 'about:about' %}">О Проекте</a></li>
             <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">Библиотека</a></li>
             {% if user.is_authenticated %}
                 <li><a {% if request.resolver_match.view_name == 'users:profile' %} class="active" disabled{% endif %} href="{% url 'users:profile' %}">Профиль</a></li>
@@ -56,7 +56,7 @@
 <div id="nav-burger" class="nav-burger" hidden>
     <ul>
         <li><a {% if request.resolver_match.view_name == 'main:main' %} class="active" disabled{% endif %} href="{% url 'main:main' %}">Главная</a></li>
-        <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">О Проекте</a></li>
+        <li><a {% if request.resolver_match.view_name == 'about:about' %} class="active" disabled{% endif %} href="{% url 'about:about' %}">О Проекте</a></li>
         <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">Библиотека</a></li>
         {% if user.is_authenticated %}
             <li><a {% if request.resolver_match.view_name == 'users:profile' %} class="active" disabled{% endif %} href="{% url 'users:profile' %}">Профиль</a></li>
