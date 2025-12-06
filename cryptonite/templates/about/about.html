@@ -103,19 +103,20 @@
         </div>
     </div>
 </section>
-
-<section class="cta-section">
-    <h2 class="cta-title">Готовы начать?</h2>
-    <p style="font-size: 20px; color: rgba(251, 241, 199, 0.9); margin-bottom: 20px;">
-        Присоединяйтесь к сообществу криптоэнтузиастов уже сегодня!
-    </p>
-    <p style="font-size: 18px; color: rgba(251, 241, 199, 0.8); max-width: 600px; margin: 0 auto;">
-        Решайте шифры дня, создавайте свои алгоритмы, соревнуйтесь с друзьями и становитесь настоящим экспертом в криптографии.
-    </p>
-    <div class="cta-buttons">
-        <a href="{% url 'users:signup' %}" class="btn">Присоединиться</a>
-        <a href="" class="btn btn-secondary">Посмотреть библиотеку</a>
-    </div>
-</section>
+{% if not user.is_authenticated %}
+    <section class="cta-section">
+        <h2 class="cta-title">Готовы начать?</h2>
+        <p style="font-size: 20px; color: rgba(251, 241, 199, 0.9); margin-bottom: 20px;">
+            Присоединяйтесь к сообществу криптоэнтузиастов уже сегодня!
+        </p>
+        <p style="font-size: 18px; color: rgba(251, 241, 199, 0.8); max-width: 600px; margin: 0 auto;">
+            Решайте шифры дня, создавайте свои алгоритмы, соревнуйтесь с друзьями и становитесь настоящим экспертом в криптографии.
+        </p>
+        <div class="cta-buttons">
+            <a href="{% url 'users:signup' %}" class="btn">Присоединиться</a>
+            <a href="" class="btn btn-secondary">Посмотреть библиотеку</a>
+        </div>
+    </section>
+{% endif %}
 <script src="{% static 'js/about.js' %}"></script>
 {% endblock %}
