@@ -24,7 +24,11 @@
                     </form>
                 </li>
             {% else %}
-                <li><a href="{% url 'users:login' %}">Войти</a></li>
+                {% if request.resolver_match.view_name == 'users:login' %}
+                    <li><a href="{% url 'users:signup' %}">Регистрация</a></li>
+                {% else %}
+                    <li><a href="{% url 'users:login' %}">Войти</a></li>
+                {% endif %}
             {% endif %}
         </ul>
     </nav>
