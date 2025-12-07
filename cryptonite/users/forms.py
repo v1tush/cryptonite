@@ -1,7 +1,6 @@
 import django.contrib.auth.forms
 import django.core.exceptions
 import django.forms
-import PIL
 
 import core.forms
 import users.models
@@ -123,26 +122,6 @@ class UserCreationForm(
                     'Разрешены только форматы JPEG и PNG.',
                 )
 
-            try:
-                with PIL.Image.open(avatar) as img:
-                    max_width, max_height = 400, 400
-
-                    # * Проверки разрешения изображений
-                    if img.width > max_width or img.height > max_height:
-                        raise django.core.exceptions.ValidationError(
-                            'Изображение слишком большое',
-                        )
-
-                    if img.width < 300 or img.height < 300:
-                        raise django.core.exceptions.ValidationError(
-                            'Изображение слишком маленькое',
-                        )
-
-            except PIL.UnidentifiedImageError:
-                raise django.core.exceptions.ValidationError(
-                    'Файл не является изображением или с ним что-то не так',
-                )
-
         return avatar
 
     def clean_email(self):  # * небольшая нормальзация email
@@ -152,3 +131,18 @@ class UserCreationForm(
         local = local.split('+')[0]
 
         return f'{local}@{domain}'
+
+
+class UserChangeForm(
+    core.forms.FormInitMixin,
+    django.contrib.auth.forms.UserChangeForm,
+):
+    class Meta:
+        model = users.models.CustomUser
+        fields = (
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'avatar',  # ! при наличии недостатка чего-то подправить саморучно;
+        )
