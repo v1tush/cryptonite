@@ -1,3 +1,4 @@
+import django.contrib.auth
 import django.contrib.auth.forms
 import django.core.exceptions
 import django.forms
@@ -6,69 +7,15 @@ import core.forms
 import users.models
 
 
+User = django.contrib.auth.get_user_model()
+
+
 # ! Форма регистрации
 class UserCreationForm(
     core.forms.FormInitMixin,
+    core.forms.CommonUserRowsMixin,
     django.contrib.auth.forms.UserCreationForm,
 ):
-    # ! Добавление проверки на обязательное наличие поля и тд.
-    username = django.forms.CharField(
-        widget=django.forms.TextInput(
-            attrs={
-                'placeholder': 'Введите ваш @username',
-            },
-        ),
-        error_messages={
-            'required': 'Обязательное поле',
-        },
-        required=True,
-    )
-
-    first_name = django.forms.CharField(
-        widget=django.forms.TextInput(
-            attrs={
-                'placeholder': 'Введите ваше имя',
-            },
-        ),
-        error_messages={
-            'required': 'Обязательное поле',
-        },
-        required=True,
-    )
-
-    last_name = django.forms.CharField(
-        widget=django.forms.TextInput(
-            attrs={
-                'placeholder': 'Введите ваше фамилию',
-            },
-        ),
-        error_messages={
-            'required': 'Обязательное поле',
-        },
-        required=True,
-    )
-
-    email = django.forms.EmailField(
-        widget=django.forms.EmailInput(
-            attrs={
-                'placeholder': 'Введите ваш email',
-            },
-        ),
-        error_messages={
-            'required': 'Обязательное поле',
-        },
-        required=True,
-    )
-
-    avatar = django.forms.ImageField(
-        widget=django.forms.FileInput(
-            attrs={
-                'placeholder': 'Загрузите вашу аватарку',
-            },
-        ),
-        required=False,
-    )
-
     password1 = django.forms.CharField(
         widget=django.forms.PasswordInput(
             attrs={
@@ -107,42 +54,19 @@ class UserCreationForm(
             'password2',
         )
 
-    def clean_avatar(self):  # ** Валидация входящего изображения
-        avatar = self.cleaned_data.get('avatar')
 
-        if avatar:
-            # * Проверка веса изображения
-            if avatar.size > 2 * 1024 * 1024:
-                raise django.core.exceptions.ValidationError(
-                    'Файл слишком большой. Максимум 2 МБ.',
-                )
-
-            if avatar.content_type not in ['image/jpeg', 'image/png']:
-                raise django.core.exceptions.ValidationError(
-                    'Разрешены только форматы JPEG и PNG.',
-                )
-
-        return avatar
-
-    def clean_email(self):  # * небольшая нормальзация email
-        email = self.cleaned_data.get('email')
-
-        local, _, domain = email.partition('@')
-        local = local.split('+')[0]
-
-        return f'{local}@{domain}'
-
-
-class UserChangeForm(
+class ProfileChangeForm(
     core.forms.FormInitMixin,
+    core.forms.CommonUserRowsMixin,
     django.contrib.auth.forms.UserChangeForm,
 ):
+
     class Meta:
-        model = users.models.CustomUser
+        model = User
         fields = (
             'username',
             'first_name',
             'last_name',
             'email',
-            'avatar',  # ! при наличии недостатка чего-то подправить саморучно;
+            'avatar',
         )
