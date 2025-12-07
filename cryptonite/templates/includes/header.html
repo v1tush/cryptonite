@@ -16,7 +16,7 @@
             <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">Библиотека</a></li>
             {% if user.is_authenticated %}
                 <li><a {% if request.resolver_match.view_name == 'users:profile' %} class="active" disabled{% endif %} href="{% url 'users:profile' %}">Профиль</a></li>
-                <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">Создать шифр</a></li>
+                <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher' %} class="active" disabled{% endif %} href="{% url 'ciphers:create_cipher' %}">Создать шифр</a></li>
                 <li>
                     <form method="post" action="{% url 'users:logout' %}">
                         {% csrf_token %}
@@ -60,7 +60,7 @@
         <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">Библиотека</a></li>
         {% if user.is_authenticated %}
             <li><a {% if request.resolver_match.view_name == 'users:profile' %} class="active" disabled{% endif %} href="{% url 'users:profile' %}">Профиль</a></li>
-            <li><a {% if request.resolver_match.view_name == '' %} class="active" disabled{% endif %} href="">Создать шифр</a></li>
+            <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher' %} class="active" disabled{% endif %} href="{% url 'ciphers:create_cipher' %}">Создать шифр</a></li>
             <li>
                 <form method="post" action="{% url 'users:logout' %}">
                     {% csrf_token %}

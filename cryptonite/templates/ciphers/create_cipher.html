@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<h1 class="page-title">{{ title }}</h1>
+
+<div class="validation-rules">
+    <div class="rules-title">Правила создания шифров:</div>
+    <ul class="rules-list">
+        <li>Опишите алгоритм (не менее 100 символов)</li>
+        <li>Укажите правильный ответ для проверки решений</li>
+        <li>Шифр должен быть решаемым (не случайная последовательность)</li>
+        <li>Все шифры проходят модерацию перед публикацией</li>
+    </ul>
+</div>
+
+<div class="create-form">
+    <form method="post" id="cipher-form">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="form-error">
+            {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="form-group">
+            <label class="form-label" for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+            <div class="field-error">
+                {% for error in form.title.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="form-note">Придумайте интересное название для вашего шифра</div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+            <div class="field-error">
+                {% for error in form.description.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="form-note">{{ form.description.help_text }}</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="{{ form.encrypted_phrase.id_for_label }}">{{ form.encrypted_phrase.label }}</label>
+            {{ form.encrypted_phrase }}
+            {% if form.encrypted_phrase.errors %}
+            <div class="field-error">
+                {% for error in form.encrypted_phrase.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="form-note">Введите зашифрованную фразу, которую будут разгадывать пользователи</div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" for="{{ form.answer_phrase.id_for_label }}">{{ form.answer_phrase.label }}</label>
+            {{ form.answer_phrase }}
+            {% if form.answer_phrase.errors %}
+            <div class="field-error">
+                {% for error in form.answer_phrase.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="form-note">Этот ответ будет использоваться для автоматической проверки решений пользователей</div>
+        </div>
+
+        <div class="example-block">
+            <div class="example-title">Пример заполнения для шифра Цезаря:</div>
+            <div>Правильный ответ: "ABC"</div>
+            <div>Зашифрованная фраза: "DEF"</div>
+            <div style="margin-top: 10px; font-size: 14px; color: rgba(251, 241, 199, 0.7);">Это пример для шифра Цезаря со сдвигом 3</div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.difficulty.label }}</label>
+            <div class="difficulty-selector">
+                {% with field=form.difficulty %}
+                    {% for value, label in field.field.choices %}
+                        {% with value_str=value|stringformat:'s' %}
+                        <div class="difficulty-option 
+                            {% if value == 1 %}easy
+                            {% elif value == 2 %}medium
+                            {% elif value == 3 %}hard
+                            {% else %}hardcore{% endif %}
+                            {% if field.value|stringformat:'s' == value_str %}selected{% endif %}"
+                            onclick="selectDifficulty('{{ value_str }}')">
+                            <input type="radio"
+                                name="{{ field.html_name }}"
+                                value="{{ value }}"
+                                id="id_{{ field.html_name }}_{{ forloop.counter0 }}"
+                                {% if field.value|stringformat:'s' == value_str %}checked{% endif %}
+                                class="hidden-radio">
+                            <label for="id_{{ field.html_name }}_{{ forloop.counter0 }}" class="difficulty-name">
+                                {{ label|upper }}
+                            </label>
+                        </div>
+                        {% endwith %}
+                    {% endfor %}
+                {% endwith %}
+            </div>
+            {% if form.difficulty.errors %}
+            <div class="field-error">
+                {% for error in form.difficulty.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" for="{{ form.attempt_limit.id_for_label }}">{{ form.attempt_limit.label }}</label>
+            {{ form.attempt_limit }}
+            {% if form.attempt_limit.errors %}
+            <div class="field-error">
+                {% for error in form.attempt_limit.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="form-note">{{ form.attempt_limit.help_text }}</div>
+        </div>
+        
+        <button type="submit" class="btn btn-large">{{ button_text }}</button>
+    </form>
+</div>
+
+<script src="{% static 'js/create_cipher.js' %}"></script>
+{% endblock %}

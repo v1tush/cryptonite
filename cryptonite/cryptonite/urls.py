@@ -10,6 +10,7 @@ urlpatterns += i18n_patterns(
     django.urls.path('admin/', admin.site.urls),
     django.urls.path('users/', django.urls.include('users.urls')),
     django.urls.path('about/', django.urls.include('about.urls')),
+    django.urls.path('ciphers/', django.urls.include('ciphers.urls')),
     django.urls.path('', django.urls.include('main.urls')),
     prefix_default_language=False,
 )
