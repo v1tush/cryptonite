@@ -55,7 +55,7 @@
     <h3 class="section-title">СОЗДАННЫЕ ШИФРЫ</h3>
     <div class="cipher-grid">
         {% for i in user.ciphers.all %}
-            {% include 'includes/form.html' with cipher=i %}
+            {% include 'includes/cipher-card.html' with cipher=i %}
         {% endfor %}
     </div>
 </div>

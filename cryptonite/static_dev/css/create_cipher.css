@@ -170,10 +170,10 @@
 }
 
 .hard .difficulty-name {
-    color: #ff1900;
+    color: #fb4934;
 }
 .hard.selected {
-    border-color: #ff1900;
+    border-color: #fb4934;
     background-color: rgba(251, 73, 52, 0.15);
 }
 

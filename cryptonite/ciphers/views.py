@@ -80,4 +80,15 @@ class CreateEditCipher(LoginRequiredMixin, django.views.generic.FormView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
+class LibraryCommunityView(django.views.generic.ListView):
+    model = ciphers.models.Cipher
+    template_name = 'ciphers/libary.html'
+    context_object_name = 'ciphers'
+
+
+class LibraryCoursesView(django.views.generic.ListView):
+    model = ciphers.models.Cipher
+    template_name = 'ciphers/libary.html'
+    context_object_name = 'ciphers'
+
 # ! Реализация views для возможности рещения

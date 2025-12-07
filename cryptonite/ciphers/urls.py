@@ -15,4 +15,14 @@ urlpatterns = [
         ciphers.views.CreateEditCipher.as_view(),
         name='edit_cipher',
     ),
+    path(
+        'library_courses/',
+        ciphers.views.LibraryCoursesView.as_view(),
+        name='library_courses',
+    ),
+    path(
+        'library_community/',
+        ciphers.views.LibraryCoursesView.as_view(),
+        name='library_community',
+    ),
 ]
