@@ -1,6 +1,5 @@
 import django.contrib.auth
 import django.contrib.auth.forms
-import django.core.exceptions
 import django.forms
 
 import core.forms
@@ -60,7 +59,6 @@ class ProfileChangeForm(
     core.forms.CommonUserRowsMixin,
     django.contrib.auth.forms.UserChangeForm,
 ):
-
     class Meta:
         model = User
         fields = (
