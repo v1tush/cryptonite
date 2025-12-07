@@ -91,4 +91,5 @@ class LibraryCoursesView(django.views.generic.ListView):
     template_name = 'ciphers/libary.html'
     context_object_name = 'ciphers'
 
+
 # ! Реализация views для возможности рещения
