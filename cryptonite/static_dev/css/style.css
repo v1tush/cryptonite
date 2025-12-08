@@ -224,12 +224,23 @@ nav a:hover, nav a.active, .nav-burger a:hover, .nav-burger a.active, .nav-link:
     gap: 20px;
 }
 
-.difficulty {
+.difficulty, .status {
     padding: 3px 10px;
     border-radius: 15px;
     font-size: 12px;
     font-weight: bold;
 }
+
+.status.is-published {
+    background-color: rgba(106, 153, 85, 0.3);
+    color: #8ec07c;
+}
+
+.status.not-is-published {
+    background-color: rgba(215, 153, 33, 0.3);
+    color: #d79921;
+}
+
 
 .difficulty.easy {
     background-color: rgba(106, 153, 85, 0.3);
@@ -244,6 +255,11 @@ nav a:hover, nav a.active, .nav-burger a:hover, .nav-burger a.active, .nav-link:
 .difficulty.hard {
     background-color: rgba(204, 36, 29, 0.3);
     color: #fb4934;
+}
+
+.difficulty.hardcore {
+    color: #9d0006;
+    background-color: rgba(157, 0, 6, 0.15);
 }
 
 footer {
@@ -289,7 +305,7 @@ footer p:nth-child(2){
     font-size: 14px;
     color: rgba(251, 241, 199, 0.8);
     margin-bottom: 15px;
-    height: 100px;
+    height: 150px;
     overflow: hidden;
 }
 

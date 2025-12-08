@@ -24,11 +24,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # * Созданные приложения
+    'about.apps.AboutConfig',
     'achievements.apps.AchievementsConfig',
     'core.apps.CoreConfig',
     'courses.apps.CoursesConfig',
     'ciphers.apps.CiphersConfig',
     'logs.apps.LogsConfig',
+    'main.apps.MainConfig',
     'users.apps.UsersConfig',
 ]
 
