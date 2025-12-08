@@ -38,23 +38,33 @@ class Cipher(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=False)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='pending',
+    )
     cipher_type = models.CharField(max_length=10, choices=CIPHER_TYPES)
-    course = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE)
+    course = models.ForeignKey(
+        Course,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         ordering = ['-created_at']
 
-
     def clean(self):
         if self.cipher_type == 'course' and not self.course:
             raise ValidationError('Шифр курса должен быть привязан к курсу')
+
         if self.cipher_type == 'community' and self.course:
             raise ValidationError('Шифр сообщества не должен иметь курс')
 
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+
 
 class CipherHelp(models.Model):
     cipher = models.ForeignKey(
@@ -93,6 +103,7 @@ class CipherComment(models.Model):
 class CipherDayHistory(models.Model):
     cipher = models.ForeignKey(Cipher, on_delete=models.CASCADE)
     date = models.DateField()
+
 
 class CipherLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

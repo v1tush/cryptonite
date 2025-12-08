@@ -1,5 +1,4 @@
 class CommunityCipherValidator:
-
     def __init__(self, json_cipher_data) -> None:
         self.json_cipher_data = json_cipher_data
 
