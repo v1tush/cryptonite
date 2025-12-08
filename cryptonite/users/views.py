@@ -50,11 +50,16 @@ class ProfileView(
         initial = super().get_initial()
 
         initial.update(
-            'username', self.request.user.username,
-            'first_name', self.request.user.first_name,
-            'last_name', self.request.user.last_name,
-            'email', self.request.user.email,
-            'avatar', self.request.user.avatar,
+            'username',
+            self.request.user.username,
+            'first_name',
+            self.request.user.first_name,
+            'last_name',
+            self.request.user.last_name,
+            'email',
+            self.request.user.email,
+            'avatar',
+            self.request.user.avatar,
         )
 
         return initial
