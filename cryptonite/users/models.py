@@ -5,6 +5,7 @@ from django.db import models
 class CustomUser(AbstractUser):
     xp = models.PositiveIntegerField(default=0)
     email = models.EmailField(unique=True, verbose_name='email address')
+    about_me = models.TextField(max_length=500, blank=True)
     avatar = models.ImageField(
         upload_to='uploads/users/avatars/',
         null=True,

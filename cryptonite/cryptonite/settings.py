@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     # * Созданные приложения
     'achievements.apps.AchievementsConfig',
     'core.apps.CoreConfig',
+    'courses.apps.CoursesConfig',
     'ciphers.apps.CiphersConfig',
     'logs.apps.LogsConfig',
     'users.apps.UsersConfig',
