@@ -44,11 +44,20 @@ class ProfileView(
     template_name = 'users/profile.html'
     form_class = users.forms.ProfileChangeForm
     login_url = django.urls.reverse_lazy('users:login')
-    success_url = django.urls.reverse_lazy('users:profile')
     # ! Прошу фронтендера перепроверить корректность путей
 
-    def get_object(self, queryset=None):
-        return self.request.user
+    def get_initial(self):
+        initial = super().get_initial()
+
+        initial.update(
+            'username', self.request.user.username,
+            'first_name', self.request.user.first_name,
+            'last_name', self.request.user.last_name,
+            'email', self.request.user.email,
+            'avatar', self.request.user.avatar,
+        )
+
+        return initial
 
     def form_valid(self, form):
         django.contrib.messages.success(
