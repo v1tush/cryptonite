@@ -2,8 +2,8 @@
 {% block content %}
 {% load i18n %}
 {% load static %}
-<div {% if user.background %} style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(photo_2024-03-10_10-30-50.jpg); background-size: cover; background-position: center; background-repeat: no-repeat;" {% endif %} class="profile-header">
-    <div class="profile-avatar"><img src="{% if user.avatar %} {{ user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
+<div {% if user.background %} style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/media/{{user.background}}); background-size: cover; background-position: center; background-repeat: no-repeat;" {% endif %} class="profile-header">
+    <div class="profile-avatar"><img src="{% if user.avatar %} /media/{{ user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
     <div class="profile-info">
         <div class="profile-name">{{ user.username }}</div>
         <div class="profile-title">Уровень {{ user.level }}</div>
