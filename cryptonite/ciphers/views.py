@@ -90,7 +90,9 @@ class HideCipherView(LoginRequiredMixin, View):
         cipher = get_object_or_404(Cipher, id=cipher_id, author=request.user)
 
         if cipher.status == 'pending' or cipher.status == 'rejected':
-            return HttpResponseForbidden('Нельзя скрыть шифр на модерации или заблокированный шифр')
+            return HttpResponseForbidden(
+                'Нельзя скрыть шифр на модерации или заблокированный шифр',
+            )
 
         cipher.status = 'hidden'
         cipher.is_published = False
