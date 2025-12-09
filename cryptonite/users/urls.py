@@ -27,7 +27,7 @@ urlpatterns = [
     ),
     path(
         'profile_edit/',
-        users.views.ProfileView.as_view(),
+        users.views.ProfileDetailView.as_view(),
         name='profile_edit',
     ),
     path(
