@@ -437,6 +437,33 @@ footer p:nth-child(2){
     background: rgba(251, 241, 199, 0.08);
 }
 
+.auth-form input[type="file"] {
+    padding: 10px;
+    background: rgba(251, 241, 199, 0.05);
+    border: 2px solid rgba(215, 153, 33, 0.3);
+    border-radius: 8px;
+    color: #fbf1c7;
+    width: 100%;
+    cursor: pointer;
+}
+
+.auth-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(251, 241, 199, 0.05);
+    border: 2px solid rgba(215, 153, 33, 0.3);
+    border-radius: 8px;
+    color: #fbf1c7;
+    font-size: 16px;
+    min-height: 120px;
+}
+
+.auth-form textarea:focus {
+    outline: none;
+    border-color: #d79921;
+    background: rgba(251, 241, 199, 0.08);
+}
+
 .btn-large {
     width: 100%;
     padding: 15px;
@@ -499,4 +526,59 @@ footer p:nth-child(2){
         flex-direction: column;
         align-items: start;
     }
+}
+
+/*
+.error {
+    color: #fb4934;
+    font-size: 14px;
+    margin-top: 5px;
+}
+*/
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: rgba(28, 28, 28, 1);
+    border-radius: 10px;
+    padding: 20px;
+    width: 320px;
+    color: #fbf1c7;
+    text-align: center;
+}
+
+.modal-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.modal-actions button {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    color: #282828;
+}
+
+.modal-cancel {
+    background-color: rgba(204, 36, 29, 0.7);
+}
+
+.modal-confirm {
+    background-color: rgba(106, 153, 85, 0.8);
+}
+.hidden {
+    display: none;
 }

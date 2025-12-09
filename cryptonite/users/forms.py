@@ -45,8 +45,6 @@ class UserCreationForm(
         # * Поля формы для CustomUser (users/models.py/CustomUser)
         fields = (
             'username',
-            'first_name',
-            'last_name',
             'email',
             'avatar',
             'password1',
@@ -63,8 +61,8 @@ class ProfileChangeForm(
         model = User
         fields = (
             'username',
-            'first_name',
-            'last_name',
             'email',
+            'about_me',
             'avatar',
+            'background',
         )

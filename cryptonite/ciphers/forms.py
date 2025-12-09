@@ -9,14 +9,17 @@ class CipherForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author', None)
         self.create_flag = kwargs.pop('create_flag', True)
+
         super().__init__(*args, **kwargs)
+
+        for filed in self.visible_fields():
+            filed.field.widget.attrs['class'] = 'form-input'
 
     title = forms.CharField(
         label='Название шифра',
         widget=forms.TextInput(
             attrs={
                 'placeholder': 'Введите название шифра',
-                'class': 'form-input',
                 'id': 'cipher-name',
             },
         ),
@@ -31,7 +34,6 @@ class CipherForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'placeholder': 'Введите зашифрованное слово',
-                'class': 'form-input',
                 'id': 'encrypted-phrase',
             },
         ),
@@ -46,7 +48,6 @@ class CipherForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 'placeholder': 'Введите расшифрованное слово',
-                'class': 'form-input',
                 'id': 'answer-phrase',
             },
         ),
@@ -91,7 +92,6 @@ class CipherForm(forms.ModelForm):
             attrs={
                 'min': 1,
                 'placeholder': 'Введите количество попыток',
-                'class': 'form-input',
             },
         ),
         error_messages={

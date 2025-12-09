@@ -12,16 +12,30 @@ class SolutionLog(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='solution_logs',
+        verbose_name='пользователь',
     )
     cipher = models.ForeignKey(
         Cipher,
         on_delete=models.CASCADE,
         related_name='solution_logs',
+        verbose_name='шифр',
     )
-    correct = models.BooleanField()
-    attempted_answer = models.CharField(max_length=100, null=True, blank=True)
-    attempts_used = models.PositiveIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    correct = models.BooleanField(verbose_name='правильный ответ')
+    attempted_answer = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        verbose_name='текст попытки ответа',
+    )
+    attempts_used = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        verbose_name='использованные попытки',
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='дата создания',
+    )
 
     def save(self, *args, **kwargs):
         if self.attempts_used is None:

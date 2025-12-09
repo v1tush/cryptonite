@@ -6,14 +6,18 @@ User = get_user_model()
 
 
 class Achievement(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField(max_length=500)
+    title = models.CharField(max_length=100, verbose_name='название')
+    description = models.TextField(max_length=500, verbose_name='описание')
     image = models.ImageField(
         upload_to='uploads/achievements/',
         null=True,
         blank=True,
+        verbose_name='изображение',
     )
-    xp_reward = models.PositiveIntegerField(default=0)
+    xp_reward = models.PositiveIntegerField(
+        default=0,
+        verbose_name='количество опыта для достижения',
+    )
 
 
 class UserAchievement(models.Model):
@@ -21,6 +25,14 @@ class UserAchievement(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='achievements',
+        verbose_name='пользователь',
     )
-    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
-    achieved_at = models.DateTimeField(auto_now_add=True)
+    achievement = models.ForeignKey(
+        Achievement,
+        on_delete=models.CASCADE,
+        verbose_name='достижение',
+    )
+    achieved_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='дата получения',
+    )

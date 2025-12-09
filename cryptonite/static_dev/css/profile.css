@@ -9,7 +9,7 @@
 
 .profile-background-img {
     background-size: cover;
-    background-position: center; 
+    background-position: center;
     background-repeat: no-repeat;
 }
 
@@ -113,4 +113,9 @@
     .profile-header{
         flex-direction: column;
     }
+}
+
+.edit-profile-button {
+    margin-bottom: 40px; /* Отступ снизу до блока achievements */
+    display: inline-block;
 }
