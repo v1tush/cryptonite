@@ -10,10 +10,10 @@ class CipherForm(forms.ModelForm):
         self.author = kwargs.pop('author', None)
         self.create_flag = kwargs.pop('create_flag', True)
 
+        super().__init__(*args, **kwargs)
+
         for filed in self.visible_fields():
             filed.field.widget.attrs['class'] = 'form-input'
-
-        super().__init__(*args, **kwargs)
 
     title = forms.CharField(
         label='Название шифра',

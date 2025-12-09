@@ -16,6 +16,16 @@ urlpatterns = [
         name='edit_cipher',
     ),
     path(
+        '<int:cipher_id>/hide/',
+        ciphers.views.HideCipherView.as_view(),
+        name='hide_cipher',
+    ),
+    path(
+        '<int:cipher_id>/open/',
+        ciphers.views.OpenCipherView.as_view(),
+        name='open_cipher',
+    ),
+    path(
         'library_courses/',
         ciphers.views.LibraryCoursesView.as_view(),
         name='library_courses',

@@ -6,7 +6,7 @@
 <div class="header-container">
     <a href="{% url 'main:main' %}" class="logo">
         <span class="logo-icon">🔐</span>
-        <span>CryptoNite</span>
+        <span>Cryptonite</span>
     </a>
     
     <nav>
@@ -15,14 +15,14 @@
             <li><a {% if request.resolver_match.view_name == 'about:about' %} class="active" {% else %}href="{% url 'about:about' %}"{% endif %}>О Проекте</a></li>
             <li><a {% if request.resolver_match.view_name == 'ciphers:library_community' or  request.resolver_match.view_name == 'ciphers:library_courses'%} class="active" {% else %}href="{% url 'ciphers:library_community' %}"{% endif %}>Библиотека</a></li>
             {% if user.is_authenticated %}
-                <li><a {% if request.resolver_match.view_name == 'users:profile' %} class="active" {% else %}href="{% url 'users:profile' %}"{% endif %}>Профиль</a></li>
-                <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>Создать шифр</a></li>
-                <li>
-                    <form method="post" action="{% url 'users:logout' %}">
-                        {% csrf_token %}
-                        <button class="nav-link" type="submit"><span>Выйти</span></button>
-                    </form>
-                </li>
+            <li><a {% if request.resolver_match.view_name == 'users:profile' and request.resolver_match.kwargs.username == user.username %} class="active" {% else %}href="{% url 'users:profile' user.username %}"{% endif %}>Профиль</a></li>
+            <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>Создать шифр</a></li>
+            <li>
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button class="nav-link" type="submit"><span>Выйти</span></button>
+                </form>
+            </li>
             {% else %}
                 {% if request.resolver_match.view_name == 'users:login' %}
                     <li><a href="{% url 'users:signup' %}">Регистрация</a></li>
@@ -43,7 +43,7 @@
             </div>
             <div>
                 <div class="avatar-and-username">
-                    <div class="avatar"><a style="display: inline-block; width: 40px; height: 40px;" href="{% url 'users:profile' %}"><img src="{% if user.avatar %} /media/{{ user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></a></div>
+                    <div class="avatar"><a style="display: inline-block; width: 40px; height: 40px;" href="{% url 'users:profile' user.username %}"><img src="{% if user.avatar %} /media/{{ user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></a></div>
                     <div>
                         <div>{{ user.username }}</div>
                         <div class="user-rating">Счёт: {{ user.xp }}</div>
@@ -59,7 +59,7 @@
         <li><a {% if request.resolver_match.view_name == 'about:about' %} class="active" {% else %}href="{% url 'about:about' %}"{% endif %}>О Проекте</a></li>
         <li><a {% if request.resolver_match.view_name == 'ciphers:library_community' or  request.resolver_match.view_name == 'ciphers:library_courses'%} class="active" {% else %}href="{% url 'ciphers:library_community' %}"{% endif %}>Библиотека</a></li>
         {% if user.is_authenticated %}
-            <li><a {% if request.resolver_match.view_name == 'users:profile' %} class="active" {% else %}href="{% url 'users:profile' %}"{% endif %}>Профиль</a></li>
+            <li><a {% if request.resolver_match.view_name == 'users:profile' and request.resolver_match.kwargs.username == user.username %} class="active" {% else %}href="{% url 'users:profile' user.username %}"{% endif %}>Профиль</a></li>
             <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>Создать шифр</a></li>
             <li>
                 <form method="post" action="{% url 'users:logout' %}">

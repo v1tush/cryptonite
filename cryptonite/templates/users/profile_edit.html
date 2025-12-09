@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div {% if user.background %}
+     style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(/media/{{ user.background }}); background-size: cover; background-position: center;"
+     {% endif %}
+     class="profile-header">
+
+    <div class="profile-avatar">
+        {% if user.avatar %}
+            <img src="/media/{{ user.avatar }}" alt="Аватар" style="width:120px; height:120px; object-fit:cover; border-radius:50%;">
+        {% else %}
+            <img src="{% static 'images/avatar.jpg' %}" alt="Аватар" style="width:120px; height:120px; object-fit:cover; border-radius:50%;">
+        {% endif %}
+    </div>
+
+    <div class="profile-info">
+        <div class="profile-name">{{ user.username }}</div>
+        <div class="profile-title">Уровень {{ user.level }}</div>
+        <p class="sub-text">Участник с {{ user.date_joined|date:"d.m.Y" }}</p>
+    </div>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="auth-form">
+    {% csrf_token %}
+
+    {% for field in form %}
+        <div class="form-group">
+            {{ field.label_tag }}
+
+            {% if field.name == "avatar" %}
+                {% if user.avatar %}
+                    <img src="/media/{{ user.avatar }}" alt="Аватар" style="width:100px; height:100px; object-fit:cover; display:block; margin-bottom:5px;">
+                {% endif %}
+                {{ field }}
+            {% elif field.name == "background" %}
+                {% if user.background %}
+                    <img src="/media/{{ user.background }}" alt="Фон" style="width:200px; height:100px; object-fit:cover; display:block; margin-bottom:5px;">
+                {% endif %}
+                {{ field }}
+            {% else %}
+                {{ field }}
+            {% endif %}
+
+            {% if field.errors %}
+                <div class="error">{{ field.errors }}</div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-large" style="margin-top: 20px;">Сохранить</button>
+</form>
+
+{% endblock %}
