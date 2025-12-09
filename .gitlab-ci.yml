@@ -4,7 +4,9 @@ stages:
 
 black:
   stage: lint
-  image: registry.gitlab.com/pipeline-components/black:latest
+  image: python:3.11-slim
+  before_script:
+    - pip install black==23.7.0
   script:
     - black --check .
 
