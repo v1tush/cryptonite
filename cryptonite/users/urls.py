@@ -18,6 +18,11 @@ urlpatterns = [
     path('signup/', users.views.SignupView.as_view(), name='signup'),
     path('profile/', users.views.ProfileView.as_view(), name='profile'),
     path(
+        'profile_edit/',
+        users.views.ProfileView.as_view(),
+        name='profile_edit',
+    ),
+    path(
         'login/',
         LoginView.as_view(
             template_name='users/login.html',

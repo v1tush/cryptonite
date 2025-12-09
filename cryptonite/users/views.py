@@ -7,6 +7,7 @@ import django.views.generic
 import django.views.generic.edit
 
 import users.forms
+from users.models import CustomUser
 
 
 # ! Форма регистрации пользователя
@@ -39,12 +40,15 @@ class SignupView(django.views.generic.FormView):
 class ProfileView(
     django.contrib.auth.mixins.LoginRequiredMixin,
     django.views.generic.edit.UpdateView,
-    django.views.generic.FormView,
 ):
+    model = CustomUser
     template_name = 'users/profile.html'
     form_class = users.forms.ProfileChangeForm
     login_url = django.urls.reverse_lazy('users:login')
     # ! Прошу фронтендера перепроверить корректность путей
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
     def get_initial(self):
         initial = super().get_initial()
@@ -68,3 +72,6 @@ class ProfileView(
         )
 
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return django.urls.reverse_lazy('main:')

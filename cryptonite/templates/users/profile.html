@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
-{% block content %}
 {% load i18n %}
 {% load static %}
+
+{% block content %}
 <div {% if user.background %} style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/media/{{user.background}}); background-size: cover; background-position: center; background-repeat: no-repeat;" {% endif %} class="profile-header">
     <div class="profile-avatar"><img src="{% if user.avatar %} /media/{{ user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
     <div class="profile-info">
@@ -38,6 +39,8 @@
         </div>
     </div>
 </div>
+
+<a href="{% url 'users:profile_edit' %}" class="btn edit-profile-button">Изменить профиль</a>
 
 <div class="achievements">
     <h3 class="section-title">ИЗБРАННЫЕ ДОСТИЖЕНИЯ</h3>
