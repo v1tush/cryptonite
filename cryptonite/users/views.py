@@ -1,6 +1,6 @@
-from django.contrib.auth.views import LoginView
 import django.contrib.auth
 import django.contrib.auth.mixins
+from django.contrib.auth.views import LoginView
 import django.contrib.messages
 import django.shortcuts
 import django.urls
@@ -25,7 +25,8 @@ class SignupView(django.views.generic.FormView):
 
     def get_success_url(self):
         return django.urls.reverse_lazy(
-            'users:profile', kwargs={'username': self.request.user.username},
+            'users:profile',
+            kwargs={'username': self.request.user.username},
         )
 
     def dispatch(self, request, *args, **kwargs):
@@ -39,7 +40,10 @@ class CustomLoginView(LoginView):
     template_name = 'users/login.html'
 
     def get_success_url(self):
-        return django.urls.reverse_lazy('users:profile', kwargs={'username': self.request.user.username})
+        return django.urls.reverse_lazy(
+            'users:profile',
+            kwargs={'username': self.request.user.username},
+        )
 
 
 class ProfileDetailView(
