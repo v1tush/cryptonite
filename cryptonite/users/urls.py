@@ -26,11 +26,6 @@ urlpatterns = [
         name='profile_edit',
     ),
     path(
-        'profile_edit/',
-        users.views.ProfileDetailView.as_view(),
-        name='profile_edit',
-    ),
-    path(
         'login/',
         users.views.CustomLoginView.as_view(
             template_name='users/login.html',
