@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 from courses.models import Course
+from ciphers.managers import CipherManager, CipherLikeManager
 
 User = get_user_model()
 
@@ -79,6 +80,8 @@ class Cipher(models.Model):
         verbose_name='курс',
     )
 
+    objects = CipherManager()
+
     class Meta:
         ordering = ['-created_at']
 
@@ -151,26 +154,34 @@ class CipherDayHistory(models.Model):
     cipher = models.ForeignKey(
         Cipher,
         on_delete=models.CASCADE,
+        related_name='cipher_day_history',
         verbose_name='шифр',
     )
     date = models.DateField(verbose_name='дата')
+
+    class Meta:
+        ordering = ['date']
 
 
 class CipherLike(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='likes',
         verbose_name='пользователь',
     )
     cipher = models.ForeignKey(
         Cipher,
         on_delete=models.CASCADE,
+        related_name='likes',
         verbose_name='шифр',
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='дата создания',
     )
+
+    objects = CipherLikeManager()
 
     class Meta:
         unique_together = ('user', 'cipher')

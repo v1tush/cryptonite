@@ -582,3 +582,19 @@ footer p:nth-child(2){
 .hidden {
     display: none;
 }
+
+.cipher-wrapper {
+    display: flex;
+    flex-direction: column; /* карточка сверху, кнопка снизу */
+    gap: 8px; /* расстояние между шифром и кнопкой */
+}
+
+.cipher-like-container {
+    display: flex;
+    justify-content: flex-end; /* кнопка справа */
+}
+
+.cipher-like-container .btn-like {
+    padding: 6px 12px;
+    font-size: 14px;
+}

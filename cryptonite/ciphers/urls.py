@@ -21,6 +21,11 @@ urlpatterns = [
         name='hide_cipher',
     ),
     path(
+        '<int:cipher_id>/like/',
+        ciphers.views.LikeCipherView.as_view(),
+        name='like_cipher',
+    ),
+    path(
         '<int:cipher_id>/open/',
         ciphers.views.OpenCipherView.as_view(),
         name='open_cipher',

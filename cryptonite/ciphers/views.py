@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseForbidden
+from django.db import IntegrityError, transaction
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -7,7 +8,7 @@ from django.views.generic import FormView, ListView
 
 
 from ciphers.forms import CipherForm
-from ciphers.models import Cipher
+from ciphers.models import Cipher, CipherLike
 
 
 class CreateEditCipher(LoginRequiredMixin, FormView):
@@ -77,6 +78,10 @@ class LibraryCommunityView(ListView):
     model = Cipher
     template_name = 'ciphers/libary.html'
     context_object_name = 'ciphers'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Cipher.objects.with_user_likes(self.request.user)
 
 
 class LibraryCoursesView(ListView):
@@ -112,5 +117,27 @@ class OpenCipherView(LoginRequiredMixin, View):
         cipher.save()
         return redirect(request.META.get('HTTP_REFERER', '/'))
 
+
+class LikeCipherView(LoginRequiredMixin, View):
+    def post(self, request, **kwargs):
+        cipher = get_object_or_404(Cipher, pk=self.kwargs.get('cipher_id'))
+
+        liked = False
+        try:
+            with transaction.atomic():
+                like, created = CipherLike.objects.get_or_create(user=request.user, cipher=cipher)
+                if not created:
+                    like.delete()
+                else:
+                    liked = True
+        except IntegrityError:
+            liked = True
+
+        likes_count = CipherLike.objects.cipher_count_likes(cipher=cipher)
+
+        return JsonResponse({
+            'liked': liked,
+            'likes_count': likes_count
+        })
 
 # ! Реализация views для возможности решения
