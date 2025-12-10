@@ -21,10 +21,10 @@
 </div>
 
 <div class="cipher-grid">
-    {% for i in ciphers.all %}
+    {% for i in ciphers %}
         {% include 'includes/cipher-card.html' with cipher=i %}
     {% endfor %}
-</div>   
+</div>
 <script src="{% static 'js/libary.js' %}"></script>
 <script src="{% static 'js/common.js' %}"></script>
 {% endblock %}

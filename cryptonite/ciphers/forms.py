@@ -150,7 +150,6 @@ class CipherForm(forms.ModelForm):
         cipher = super().save(commit=False)
         try:
             cipher.author = self.author
-            cipher.is_published = False
         except ValidationError:
             return None
 

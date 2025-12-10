@@ -44,7 +44,7 @@
                 {% endif %}
             </span>
         {% else %}
-            <a href="" class="btn btn-small btn-cipher">РЕШИТЬ</a>
+            <a href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}" class="btn btn-small btn-cipher">РЕШИТЬ</a>
         {% endif %}
     </div>
     <div class="cipher-like-container" data-cipher-id="{{ cipher.id }}">

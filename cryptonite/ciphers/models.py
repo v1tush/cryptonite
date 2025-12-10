@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 
+from ciphers.managers import CipherLikeManager, CipherManager
 from courses.models import Course
-from ciphers.managers import CipherManager, CipherLikeManager
 
 User = get_user_model()
 
@@ -56,10 +56,6 @@ class Cipher(models.Model):
         auto_now=True,
         verbose_name='дата обновления',
     )
-    is_published = models.BooleanField(
-        default=False,
-        verbose_name='опубликован',
-    )
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
@@ -95,6 +91,10 @@ class Cipher(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+
+    @property
+    def is_published(self):
+        return self.status == 'approved'
 
 
 class CipherHelp(models.Model):

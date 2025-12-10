@@ -31,13 +31,18 @@ urlpatterns = [
         name='open_cipher',
     ),
     path(
+        '<int:cipher_id>/solve/',
+        ciphers.views.SolveCipherView.as_view(),
+        name='solve_cipher',
+    ),
+    path(
         'library_courses/',
         ciphers.views.LibraryCoursesView.as_view(),
         name='library_courses',
     ),
     path(
         'library_community/',
-        ciphers.views.LibraryCoursesView.as_view(),
+        ciphers.views.LibraryCommunityView.as_view(),
         name='library_community',
     ),
 ]

@@ -3,6 +3,13 @@
 {% load static %}
 
 {% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
 <div {% if profile_user.background %} style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/media/{{profile_user.background}}); background-size: cover; background-position: center; background-repeat: no-repeat;" {% endif %} class="profile-header">
     <div class="profile-avatar"><img src="{% if user.avatar %} /media/{{ profile_user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
     <div class="profile-info">
@@ -55,7 +62,7 @@
 <div class="user-ciphers">
     <h3 class="section-title">СОЗДАННЫЕ ШИФРЫ</h3>
     <div class="cipher-grid">
-        {% for i in profile_user.ciphers.all %}
+        {% for i in ciphers %}
             {% include 'includes/cipher-card.html' with cipher=i %}
         {% endfor %}
     </div>

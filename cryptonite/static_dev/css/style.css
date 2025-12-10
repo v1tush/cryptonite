@@ -598,3 +598,50 @@ footer p:nth-child(2){
     padding: 6px 12px;
     font-size: 14px;
 }
+
+.solution-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* расстояние между карточками */
+    margin-top: 10px;
+}
+
+.solution-cell {
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+
+    /* Новое для текста */
+    word-break: break-word;   /* перенос длинных слов */
+    overflow-wrap: anywhere;  /* перенос текста по необходимости */
+    white-space: normal;      /* разрешает перенос строк */
+    max-width: 100%;          /* не выходит за пределы родителя */
+}
+
+.attempt-status {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.solution-cell.solved {
+    background-color: #44513c; /* мягкий зелёный */
+    color: #f5f5f5;
+}
+
+.solution-cell.failed {
+    background-color: #422b2a; /* мягкий красный */
+    color: #f5f5f5;
+}
+
+.attempt-status {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-like.liked {
+    color: #e34934; /* меняем цвет текста и сердечка */
+    border-color: #e34934; /* если есть рамка */
+}

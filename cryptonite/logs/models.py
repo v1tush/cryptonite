@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.db import models
+from django.db import models, transaction
 
 from ciphers.models import Cipher
-
+from logs.managers import SolutionLogManager
 
 User = get_user_model()
 
@@ -37,15 +37,21 @@ class SolutionLog(models.Model):
         verbose_name='дата создания',
     )
 
+    objects = SolutionLogManager()
+
     def save(self, *args, **kwargs):
         if self.attempts_used is None:
-            last_attempt = (
-                SolutionLog.objects.filter(user=self.user, cipher=self.cipher)
-                .order_by('-attempts_used')
-                .first()
-            )
-            self.attempts_used = (
-                (last_attempt.attempts_used + 1) if last_attempt else 1
-            )
+            with transaction.atomic():
+                obj = SolutionLog.objects.select_for_update()
+                last = (
+                    obj.filter(user=self.user, cipher=self.cipher)
+                    .order_by('-attempts_used')
+                    .first()
+                )
+                self.attempts_used = (last.attempts_used + 1) if last else 1
 
         super().save(*args, **kwargs)
+
+    @property
+    def is_solved(self):
+        return self.correct

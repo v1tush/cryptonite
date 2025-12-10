@@ -4,11 +4,13 @@ from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import FormView, ListView
-
+from django.views.generic import DetailView, FormView, ListView
+from django.views.generic.edit import FormMixin
 
 from ciphers.forms import CipherForm
 from ciphers.models import Cipher, CipherLike
+from logs.forms import SolutionLogForm
+from logs.models import SolutionLog
 
 
 class CreateEditCipher(LoginRequiredMixin, FormView):
@@ -81,7 +83,12 @@ class LibraryCommunityView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Cipher.objects.with_user_likes(self.request.user)
+        if self.request.user.is_authenticated:
+            return Cipher.objects.with_user_likes_and_approved(
+                self.request.user,
+            )
+
+        return Cipher.objects.approved()
 
 
 class LibraryCoursesView(ListView):
@@ -100,7 +107,6 @@ class HideCipherView(LoginRequiredMixin, View):
             )
 
         cipher.status = 'hidden'
-        cipher.is_published = False
         cipher.save()
         return redirect(request.META.get('HTTP_REFERER', '/'))
 
@@ -113,7 +119,6 @@ class OpenCipherView(LoginRequiredMixin, View):
             return HttpResponseForbidden('Можно открыть только скрытые шифры')
 
         cipher.status = 'approved'
-        cipher.is_published = True
         cipher.save()
         return redirect(request.META.get('HTTP_REFERER', '/'))
 
@@ -125,7 +130,10 @@ class LikeCipherView(LoginRequiredMixin, View):
         liked = False
         try:
             with transaction.atomic():
-                like, created = CipherLike.objects.get_or_create(user=request.user, cipher=cipher)
+                like, created = CipherLike.objects.get_or_create(
+                    user=request.user,
+                    cipher=cipher,
+                )
                 if not created:
                     like.delete()
                 else:
@@ -135,9 +143,51 @@ class LikeCipherView(LoginRequiredMixin, View):
 
         likes_count = CipherLike.objects.cipher_count_likes(cipher=cipher)
 
-        return JsonResponse({
-            'liked': liked,
-            'likes_count': likes_count
-        })
+        return JsonResponse({'liked': liked, 'likes_count': likes_count})
+
 
 # ! Реализация views для возможности решения
+class SolveCipherView(FormMixin, DetailView):
+    model = Cipher
+    template_name = 'ciphers/solve.html'
+    form_class = SolutionLogForm
+    context_object_name = 'cipher'
+
+    def get_success_url(self):
+        return self.request.path
+
+    def get_object(self, queryset=None):
+        return Cipher.objects.get(id=self.kwargs['cipher_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)  # базовый контекст
+        context[
+            'user_attempts'
+        ] = SolutionLog.objects.user_solutions_for_cipher(
+            self.request.user,
+            self.get_object(),
+        )
+        return context
+
+    def post(self, request, **kwargs):
+        self.cipher = self.get_object()
+        form = self.get_form()
+
+        if form.is_valid():
+            return self.form_valid(form)
+
+        return self.form_invalid(form)
+
+    def form_valid(self, form):
+        solution = form.save(commit=False)
+        solution.cipher = self.cipher
+        solution.user = self.request.user
+
+        solution.correct = (
+            solution.attempted_answer.strip()
+            == self.cipher.answer_phrase.strip()
+        )
+
+        solution.save()
+
+        return redirect(self.get_success_url())

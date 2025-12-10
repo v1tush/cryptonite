@@ -61,6 +61,13 @@ class ProfileDetailView(
             username=username,
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ciphers'] = self.get_object().ciphers.with_user_likes(
+            self.request.user,
+        )
+        return context
+
 
 class ProfileEditView(
     django.contrib.auth.mixins.LoginRequiredMixin,
