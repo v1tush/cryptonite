@@ -45,12 +45,14 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
         is_edit = self.cipher_id is not None
         context.update(
             {
-                'title': 'Редактирование шифра'
-                if is_edit
-                else 'Создание нового шифра',
-                'button_text': 'СОХРАНИТЬ ИЗМЕНЕНИЯ'
-                if is_edit
-                else 'СОЗДАТЬ ШИФР',
+                'title': (
+                    'Редактирование шифра'
+                    if is_edit
+                    else 'Создание нового шифра'
+                ),
+                'button_text': (
+                    'СОХРАНИТЬ ИЗМЕНЕНИЯ' if is_edit else 'СОЗДАТЬ ШИФР'
+                ),
                 'is_edit': is_edit,
             },
         )
@@ -82,13 +84,13 @@ class LibraryCommunityView(ListView):
     context_object_name = 'ciphers'
     paginate_by = 20
 
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            return Cipher.objects.with_user_likes_and_approved(
-                self.request.user,
-            )
+    # def get_queryset(self):
+    #     if self.request.user.is_authenticated:
+    #         return Cipher.objects.with_user_likes_and_approved(
+    #             self.request.user,
+    #         )
 
-        return Cipher.objects.approved()
+    #     return Cipher.objects.approved()
 
 
 class LibraryCoursesView(ListView):
@@ -149,7 +151,7 @@ class LikeCipherView(LoginRequiredMixin, View):
 # ! Реализация views для возможности решения
 class SolveCipherView(FormMixin, DetailView):
     model = Cipher
-    template_name = 'ciphers/solve.html'
+    template_name = 'ciphers/cipher.html'
     form_class = SolutionLogForm
     context_object_name = 'cipher'
 
@@ -167,16 +169,53 @@ class SolveCipherView(FormMixin, DetailView):
             self.request.user,
             self.get_object(),
         )
+        context['likes_ciphers'] = (
+            CipherLike.objects.filter(
+                user=self.request.user,
+                cipher__pk=self.kwargs['cipher_id'],
+            )
+            .first()
+            .cipher
+            if CipherLike.objects.filter(
+                user=self.request.user,
+                cipher__pk=self.kwargs['cipher_id'],
+            ).first()
+            else None
+        )
+        context['last_attempt'] = SolutionLog.objects.get_last_attempt(
+            self.request.user,
+            self.get_object(),
+        )
+        if context['last_attempt']:
+            context['left_attempt_cnt'] = (
+                self.get_object().attempt_limit
+                - context['last_attempt'].attempts_used
+            )
+
         return context
 
     def post(self, request, **kwargs):
+        self.object = self.get_object()
         self.cipher = self.get_object()
-        form = self.get_form()
+        self.form = self.get_form()
+        self.user = request.user
+        if self.form.is_valid():
+            last_attempt = SolutionLog.objects.get_last_attempt(
+                self.user,
+                self.cipher,
+            )
+            is_correct = last_attempt.correct if last_attempt else False
+            left_attempt_cnt = (
+                self.cipher.attempt_limit - last_attempt.attempts_used
+                if last_attempt
+                else self.cipher.attempt_limit
+            )
+            if left_attempt_cnt <= 0 or is_correct:
+                return self.form_invalid(self.form)
 
-        if form.is_valid():
-            return self.form_valid(form)
+            return self.form_valid(self.form)
 
-        return self.form_invalid(form)
+        return self.form_invalid(self.form)
 
     def form_valid(self, form):
         solution = form.save(commit=False)
@@ -187,7 +226,6 @@ class SolveCipherView(FormMixin, DetailView):
             solution.attempted_answer.strip()
             == self.cipher.answer_phrase.strip()
         )
-
         solution.save()
 
         return redirect(self.get_success_url())

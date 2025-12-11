@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load i18n %}
+{% load static %}
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+<div class="cipher-header">
+    <div class="cipher-info">
+        <h1 class="cipher-title">
+            {{cipher.title}}
+            <span class="difficulty-badge-cipher {% if cipher.difficulty == 1 %}easy{% elif cipher.difficulty == 2 %}medium{% elif cipher.difficulty == 3 %}hard{% else %}hardcore{% endif %}">
+                {% if cipher.difficulty == 1 %}ЛЕГКАЯ СЛОЖНОСТЬ{% elif cipher.difficulty == 2 %}СРЕДНЯЯ СЛОЖНОСТЬ{% elif cipher.difficulty == 3 %}СЛОЖНАЯ СЛОЖНОСТЬ{% else %}ОЧЕНЬ СЛОЖНАЯ СЛОЖНОСТЬ{% endif %}
+            </span>
+        </h1>
+        
+        <div class="cipher-author">
+            Автор: <strong><a href="{% url 'users:profile' username=cipher.author.username %}">{{cipher.author.username}}</a></strong> • Создан: {{cipher.created_at|date:"d.m.Y"}}
+        </div>
+        
+        <div class="cipher-stats">
+            <div class="cipher-stats-info">
+                <div class="stat-item">
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">решили</div>
+                </div>
+                <div class="stat-item">
+                    <div id="likes-cnt" class="stat-value">{{cipher.likes.count}}</div>
+                    <div class="stat-label">лайков</div>
+                </div>
+            </div>
+            <div data-cipher-id="{{ cipher.id }}" class="likes likes-cipher {% if cipher == likes_ciphers %} yellow-text {% endif %}">♥</div>
+        </div>
+
+        <div class="solution-section">
+            <div class="cipher-word-container">
+                <h3>Зашифрованное слово</h3>
+                <p>{{cipher.encrypted_phrase}}</p>
+            </div>
+            <div class="cipher-description">
+                <h3>Описание алгоритма</h3>
+                {{cipher.description}}
+            </div>
+            {% if user.id != cipher.author.id %}
+                <h3 class="hint-title">Разгдать шифр</h3>
+                
+                <div class="attempts-counter">
+                    <span>Осталось попыток:</span>
+                    <div class="attempts-dots">
+                        {% if last_attempt%}
+                            {% if last_attempt.attempts_used < cipher.attempt_limit %}
+                                {% for i in "x"|rjust:last_attempt.attempts_used %}
+                                    <div class="attempt-dot used"></div>
+                                {% endfor %}
+                                {% if left_attempt_cnt > 0 %}
+                                    {% for i in "x"|rjust:left_attempt_cnt%}
+                                        <div class="attempt-dot available"></div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% else %}
+                                {% for i in "x"|rjust:cipher.attempt_limit %}
+                                    <div class="attempt-dot used"></div>
+                                {% endfor %}
+                            {% endif %}
+                        {% else %}
+                            {% for i in "x"|rjust:cipher.attempt_limit %}
+                                <div class="attempt-dot available"></div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% if last_attempt %}
+                    {% if last_attempt.correct %}
+                    <p class="solution-resalt success">Правильно! Шифр решен!</p>
+                    {% elif not last_attempt.correct and left_attempt_cnt <= 0%}
+                    <p class="solution-resalt fail">К сожелению попытки закончились</p>
+                    {% else %}
+                        <div class="solution-input">
+                            <form method="post">
+                                {% csrf_token %}
+                                {% for field in form %}
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="error">{{ field.errors }}</div>
+                                    {% endif %}
+                                    <button class="btn" id="submit-solution">Проверить</button>
+                                {% endfor %}
+                            </form>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="solution-input">
+                        <form method="post">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="error">{{ field.errors }}</div>
+                                {% endif %}
+                                <button class="btn" id="submit-solution">Проверить</button>
+                            {% endfor %}
+                        </form>
+                    </div>
+                {% endif %}
+                {% if user_attempts %}
+                    <div class="solution-history">
+                        <h3>Ваши предыдущие попытки:</h3>
+                        <div class="solution-list">
+                            {% for log in user_attempts %}
+                                <div class="solution-cell {% if log.is_solved %}solved{% else %}failed{% endif %}">
+                                    <span class="attempt-text">{{ log.attempted_answer }}</span>
+                                    <span class="attempt-status">
+                                        {% if log.is_solved %}
+                                            ✔
+                                        {% else %}
+                                            ✖
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {%endif%}
+        </div>
+    </div>
+    
+    <div class="cipher-sidebar">
+        <div class="sidebar-section">
+            <h4 class="sidebar-title">
+                Топ решивших
+            </h4>
+            <div class="top-solvers">
+                <a href="">
+                    <div class="solver-item">
+                        <div class="solver-info">
+                            <div class="solver-avatar"><img src="photo_2024-03-10_10-30-50.jpg"></div>
+                            <div>
+                                <div>CryptoQueen</div>
+                                <div class="solver-stats">2 попытки</div>
+                            </div>
+                        </div>
+                        <div class="yellow-text bold-text">1-е место</div>
+                    </div>
+                </a>
+                
+                <a href="">
+                    <div class="solver-item">
+                        <div class="solver-info">
+                            <div class="solver-avatar"><img src="photo_2024-03-10_10-30-50.jpg"></div>
+                            <div>
+                                <div>Neo_Cipher</div>
+                                <div class="solver-stats">3 попытки</div>
+                            </div>
+                        </div>
+                        <div class="yellow-text bold-text">2-е место</div>
+                    </div>
+                </a>
+
+                <a href="">
+                    <div class="solver-item">
+                        <div class="solver-info">
+                            <div class="solver-avatar"><img src="photo_2024-03-10_10-30-50.jpg"></div>
+                            <div>
+                                <div>Decryptor</div>
+                                <div class="solver-stats">4 попытки</div>
+                            </div>
+                        </div>
+                        <div class="yellow-text bold-text">3-е место</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% if user.id == cipher.author.id %}
+            <a href="{% url 'ciphers:edit_cipher' cipher.id %}" class="complain-button btn-edit">Редактировать</a>
+
+            {% if cipher.status != "pending" and cipher.status != "rejected" %}
+                {% if cipher.status == 'hidden' %}
+                    <button class="complain-button" data-hide-url="{% url 'ciphers:open_cipher' cipher.id %}">
+                        Выложить
+                    </button>
+                {% else %}
+                    <button class="complain-button" data-hide-url="{% url 'ciphers:hide_cipher' cipher.id %}">
+                        Скрыть
+                    </button>
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <a class="complain-button">Пожаловаться</a>
+        {% endif %}
+    </div>
+</div>
+<script src="{% static 'js/cipher.js' %}"></script>
+<script src="{% static 'js/allow_hide.js' %}"></script>
+{% endblock %}

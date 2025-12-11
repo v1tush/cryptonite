@@ -7,6 +7,7 @@ import django.urls
 import django.views.generic
 import django.views.generic.edit
 
+from ciphers.models import CipherLike
 import users.forms
 from users.models import CustomUser
 
@@ -65,6 +66,12 @@ class ProfileDetailView(
         context = super().get_context_data(**kwargs)
         context['ciphers'] = self.get_object().ciphers.with_user_likes(
             self.request.user,
+        )
+        context['likes_ciphers'] = list(
+            map(
+                lambda x: x.cipher,
+                CipherLike.objects.filter(user=self.request.user),
+            ),
         )
         return context
 

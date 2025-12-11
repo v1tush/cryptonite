@@ -307,6 +307,10 @@ footer p:nth-child(2){
     margin-bottom: 15px;
     height: 150px;
     overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    max-width: 100%;
 }
 
 .stats {
@@ -583,26 +587,10 @@ footer p:nth-child(2){
     display: none;
 }
 
-.cipher-wrapper {
-    display: flex;
-    flex-direction: column; /* карточка сверху, кнопка снизу */
-    gap: 8px; /* расстояние между шифром и кнопкой */
-}
-
-.cipher-like-container {
-    display: flex;
-    justify-content: flex-end; /* кнопка справа */
-}
-
-.cipher-like-container .btn-like {
-    padding: 6px 12px;
-    font-size: 14px;
-}
-
 .solution-list {
     display: flex;
     flex-direction: column;
-    gap: 8px; /* расстояние между карточками */
+    gap: 8px;
     margin-top: 10px;
 }
 
@@ -613,12 +601,10 @@ footer p:nth-child(2){
     justify-content: space-between;
     align-items: center;
     font-weight: 500;
-
-    /* Новое для текста */
-    word-break: break-word;   /* перенос длинных слов */
-    overflow-wrap: anywhere;  /* перенос текста по необходимости */
-    white-space: normal;      /* разрешает перенос строк */
-    max-width: 100%;          /* не выходит за пределы родителя */
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    max-width: 100%; 
 }
 
 .attempt-status {
@@ -627,12 +613,12 @@ footer p:nth-child(2){
 }
 
 .solution-cell.solved {
-    background-color: #44513c; /* мягкий зелёный */
+    background-color: #44513c;
     color: #f5f5f5;
 }
 
 .solution-cell.failed {
-    background-color: #422b2a; /* мягкий красный */
+    background-color: #422b2a;
     color: #f5f5f5;
 }
 
@@ -642,6 +628,6 @@ footer p:nth-child(2){
 }
 
 .btn-like.liked {
-    color: #e34934; /* меняем цвет текста и сердечка */
-    border-color: #e34934; /* если есть рамка */
+    color: #e34934; 
+    border-color: #e34934; 
 }

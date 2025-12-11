@@ -10,3 +10,13 @@ class SolutionLogManager(models.Manager):
 
     def has_attempts(self, user, cipher):
         return self.user_solutions_for_cipher(user, cipher).exists()
+
+    def get_success_attempt(self, user, cipher):
+        return (
+            self.user_solutions_for_cipher(user, cipher)
+            .filter(correct=True)
+            .first()
+        )
+
+    def get_last_attempt(self, user, cipher):
+        return self.user_solutions_for_cipher(user, cipher).first()

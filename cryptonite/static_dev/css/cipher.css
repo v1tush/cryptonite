@@ -22,13 +22,31 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(215, 153, 33, 0.3);
-    color: #d79921;
     padding: 8px 20px;
     border-radius: 20px;
     font-weight: bold;
     font-size: 14px;
     border: 1px solid rgba(215, 153, 33, 0.5);
+}
+
+.difficulty-badge-cipher.easy {
+    background-color: rgba(106, 153, 85, 0.3);
+    color: #8ec07c;
+}
+
+.difficulty-badge-cipher.medium {
+    background-color: rgba(215, 153, 33, 0.3);
+    color: #d79921;
+}
+
+.difficulty-badge-cipher.hard {
+    background-color: rgba(204, 36, 29, 0.3);
+    color: #fb4934;
+}
+
+.difficulty-badge-cipher.hardcore {
+    color: #9d0006;
+    background-color: rgba(157, 0, 6, 0.15);
 }
 
 .cipher-stats {
@@ -40,6 +58,12 @@
     background: rgba(251, 241, 199, 0.05);
     border-radius: 10px;
 }
+.cipher-description {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    max-width: 100%;
+}
 
 .cipher-description, .cipher-word-container {
     background: rgba(251, 241, 199, 0.05);
@@ -49,7 +73,7 @@
     border: 1px solid rgba(215, 153, 33, 0.2);
 }
 
-.cipher-description h3, .cipher-word-container h3 {
+.cipher-description h3, .cipher-word-container h3, .solution-history h3 {
     color: #d79921;
     margin-bottom: 15px;
     font-size: 22px;
@@ -68,13 +92,13 @@
     margin: 40px 0;
 }
 
-.solution-input {
+.solution-input form{
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
 }
 
-.solution-input input {
+.solution-input form input {
     flex: 1;
     padding: 15px 20px;
     background: rgba(251, 241, 199, 0.05);
@@ -84,7 +108,7 @@
     font-size: 16px;
 }
 
-.solution-input input:focus {
+.solution-input form input:focus {
     outline: none;
     border-color: #d79921;
 }
@@ -98,11 +122,12 @@
 }
 
 .attempts-dots {
-    display: flex;
-    gap: 8px;
+    display: inline-block;
+    margin-right: 8px;
 }
 
 .attempt-dot {
+    display: inline-block;
     width: 12px;
     height: 12px;
     border-radius: 50%;
@@ -204,6 +229,27 @@
 
 .likes-cipher {
     font-size: 30px;
+}
+
+.solution-resalt {
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-bottom: 15px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.solution-resalt.success {
+    background-color: rgba(106, 153, 85, 0.3);
+    color: #8ec07c;
+    border-color: #8ec07c;
+}
+
+.solution-resalt.fail {
+    background-color: rgba(204, 36, 29, 0.3);
+    color: #fb4934;
+    border-color: #fb4934;
 }
 
 @media screen and (max-width: 1200px){
