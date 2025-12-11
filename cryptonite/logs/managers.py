@@ -20,3 +20,8 @@ class SolutionLogManager(models.Manager):
 
     def get_last_attempt(self, user, cipher):
         return self.user_solutions_for_cipher(user, cipher).first()
+
+    def get_solved_users_cnt(self, cipher):
+        return (
+            self.all_solutions_for_cipher(cipher).filter(correct=True).count()
+        )

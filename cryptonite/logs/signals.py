@@ -8,6 +8,8 @@ from logs.utils import check_achievements_for_log
 
 
 # ! TODO: Проверить сигнал на рвботоспособность
+# Юля: ААААААА я даже не смогла решить задачу:
+# AttributeError: 'Cipher' object has no attribute 'solved_ciphers_count'
 @receiver(post_save, sender=SolutionLog)
 def update_solved_ciphers_count(sender, instance, created, **kwargs):
     if not created:

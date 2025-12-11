@@ -1,4 +1,4 @@
 [flake8]
 exclude = .git,__pycache__,.venv,*/migrations/*,venv
 import-order-style = google
-application-import-names = about,achievements,cryptonite,courses,ciphers,logs,main,users,core
+application-import-names = about,achievements,cryptonite,courses,ciphers,feedback,logs,main,users,core

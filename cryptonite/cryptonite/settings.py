@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'courses.apps.CoursesConfig',
     'ciphers.apps.CiphersConfig',
+    'feedback.apps.FeedbackConfig',
     'logs.apps.LogsConfig',
     'main.apps.MainConfig',
     'users.apps.UsersConfig',

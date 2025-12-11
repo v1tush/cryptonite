@@ -7,7 +7,9 @@ import django.urls
 import django.views.generic
 import django.views.generic.edit
 
-from ciphers.models import CipherLike
+from ciphers.models import Cipher, CipherLike
+from core.functions import get_user_ranking_position
+from logs.models import SolutionLog
 import users.forms
 from users.models import CustomUser
 
@@ -71,6 +73,21 @@ class ProfileDetailView(
             map(
                 lambda x: x.cipher,
                 CipherLike.objects.filter(user=self.request.user),
+            ),
+        )
+        context['rank'] = get_user_ranking_position(self.get_object())
+        ciphers = []
+        for i in Cipher.objects.filter(author=self.get_object()).all():
+            ciphers.append(SolutionLog.objects.get_solved_users_cnt(i))
+
+        context['solved_users_cnt'] = ciphers
+        context['solved_users_ciphers'] = list(
+            map(
+                lambda x: x.cipher,
+                SolutionLog.objects.filter(
+                    user=self.request.user,
+                    correct=True,
+                ).all(),
             ),
         )
         return context

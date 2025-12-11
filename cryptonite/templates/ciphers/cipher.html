@@ -19,7 +19,7 @@
         <div class="cipher-stats">
             <div class="cipher-stats-info">
                 <div class="stat-item">
-                    <div class="stat-value">47</div>
+                    <div class="stat-value">{{solved_users_cnt}}</div>
                     <div class="stat-label">решили</div>
                 </div>
                 <div class="stat-item">
@@ -184,7 +184,7 @@
                 {% endif %}
             {% endif %}
         {% else %}
-            <a class="complain-button">Пожаловаться</a>
+            <a href="{% url 'feedback:feedback' cipher_id=cipher.id %}" class="complain-button">Пожаловаться</a>
         {% endif %}
     </div>
 </div>

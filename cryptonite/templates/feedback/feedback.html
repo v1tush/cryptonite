@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+<h3 class="yellow-text bold-text" style="font-size: 30px; margin-bottom: 30px;">Жалоба на шифр {{ cipher.title }}</h3>
+{% include 'includes/form.html' with button_text='Отправить' %}
+{% endblock %}

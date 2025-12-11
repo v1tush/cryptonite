@@ -84,6 +84,30 @@ class LibraryCommunityView(ListView):
     context_object_name = 'ciphers'
     paginate_by = 20
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['likes_ciphers'] = list(
+            map(
+                lambda x: x.cipher,
+                CipherLike.objects.filter(user=self.request.user),
+            ),
+        )
+        ciphers = []
+        for i in Cipher.objects.all():
+            ciphers.append(SolutionLog.objects.get_solved_users_cnt(i))
+
+        context['solved_users_cnt'] = ciphers
+        context['solved_users_ciphers'] = list(
+            map(
+                lambda x: x.cipher,
+                SolutionLog.objects.filter(
+                    user=self.request.user,
+                    correct=True,
+                ).all(),
+            ),
+        )
+        return context
+
     # def get_queryset(self):
     #     if self.request.user.is_authenticated:
     #         return Cipher.objects.with_user_likes_and_approved(
@@ -95,7 +119,7 @@ class LibraryCommunityView(ListView):
 
 class LibraryCoursesView(ListView):
     model = Cipher
-    template_name = 'ciphers/libary.html'
+    template_name = 'ciphers/courses.html'
     context_object_name = 'ciphers'
 
 
@@ -192,6 +216,9 @@ class SolveCipherView(FormMixin, DetailView):
                 - context['last_attempt'].attempts_used
             )
 
+        context['solved_users_cnt'] = SolutionLog.objects.get_solved_users_cnt(
+            self.get_object(),
+        )
         return context
 
     def post(self, request, **kwargs):
@@ -227,5 +254,9 @@ class SolveCipherView(FormMixin, DetailView):
             == self.cipher.answer_phrase.strip()
         )
         solution.save()
+        if solution.correct:
+            self.user.xp += 100
+            self.user.money += 25
+            self.user.save()
 
         return redirect(self.get_success_url())
