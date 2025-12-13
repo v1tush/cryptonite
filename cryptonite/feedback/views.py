@@ -1,5 +1,3 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 import django.views.generic
@@ -9,22 +7,10 @@ from ciphers.models import Cipher
 from feedback.forms import FeedbackForm
 
 
-class FeedbackView(
-    LoginRequiredMixin,
-    SingleObjectMixin,
-    django.views.generic.FormView,
-):
+class FeedbackView(SingleObjectMixin, django.views.generic.FormView):
     form_class = FeedbackForm
     template_name = 'feedback/feedback.html'
     model = Cipher
-
-    def dispatch(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
-        if self.object.author == request.user:
-            raise PermissionDenied('Нельзя жаловаться на собственный шифр')
-
-        return super().dispatch(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         return get_object_or_404(Cipher, id=self.kwargs['cipher_id'])

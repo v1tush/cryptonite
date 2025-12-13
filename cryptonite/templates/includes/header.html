@@ -13,9 +13,8 @@
         <ul>
             <li><a {% if request.resolver_match.view_name == 'main:main' %} class="active" {% else %} href="{% url 'main:main' %}"{% endif %}>Главная</a></li>
             <li><a {% if request.resolver_match.view_name == 'about:about' %} class="active" {% else %}href="{% url 'about:about' %}"{% endif %}>О Проекте</a></li>
-            
-            {% if user.is_authenticated %}
             <li><a {% if request.resolver_match.view_name == 'ciphers:library_community' or  request.resolver_match.view_name == 'ciphers:library_courses'%} class="active" {% else %}href="{% url 'ciphers:library_community' %}"{% endif %}>Библиотека</a></li>
+            {% if user.is_authenticated %}
             <li><a {% if request.resolver_match.view_name == 'users:profile' and request.resolver_match.kwargs.username == user.username %} class="active" {% else %}href="{% url 'users:profile' user.username %}"{% endif %}>Профиль</a></li>
             <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>Создать шифр</a></li>
             <li>
