@@ -189,18 +189,12 @@ class SolveCipherView(FormMixin, DetailView):
         )
 
         _lks_crs = CipherLike.objects.filter(
-                user=self.request.user,
-                cipher__pk=self.kwargs['cipher_id'],
-            )
+            user=self.request.user,
+            cipher__pk=self.kwargs['cipher_id'],
+        )
 
         context['likes_ciphers'] = (
-            _lks_crs
-            .first()
-            .cipher
-
-            if _lks_crs.first()
-
-            else None
+            _lks_crs.first().cipher if _lks_crs.first() else None
         )
 
         context['last_attempt'] = SolutionLog.objects.get_last_attempt(
