@@ -92,9 +92,11 @@ class LibraryCommunityView(ListView):
                 CipherLike.objects.filter(user=self.request.user),
             ),
         )
-        ciphers = []
-        for i in Cipher.objects.all():
-            ciphers.append(SolutionLog.objects.get_solved_users_cnt(i))
+
+        ciphers = [
+            SolutionLog.objects.get_solved_users_cnt(i)
+            for i in Cipher.objects.all()
+        ]
 
         context['solved_users_cnt'] = ciphers
         context['solved_users_ciphers'] = list(
@@ -107,14 +109,6 @@ class LibraryCommunityView(ListView):
             ),
         )
         return context
-
-    # def get_queryset(self):
-    #     if self.request.user.is_authenticated:
-    #         return Cipher.objects.with_user_likes_and_approved(
-    #             self.request.user,
-    #         )
-
-    #     return Cipher.objects.approved()
 
 
 class LibraryCoursesView(ListView):
@@ -193,19 +187,22 @@ class SolveCipherView(FormMixin, DetailView):
             self.request.user,
             self.get_object(),
         )
-        context['likes_ciphers'] = (
-            CipherLike.objects.filter(
+
+        _lks_crs = CipherLike.objects.filter(
                 user=self.request.user,
                 cipher__pk=self.kwargs['cipher_id'],
             )
+
+        context['likes_ciphers'] = (
+            _lks_crs
             .first()
             .cipher
-            if CipherLike.objects.filter(
-                user=self.request.user,
-                cipher__pk=self.kwargs['cipher_id'],
-            ).first()
+
+            if _lks_crs.first()
+
             else None
         )
+
         context['last_attempt'] = SolutionLog.objects.get_last_attempt(
             self.request.user,
             self.get_object(),
@@ -226,6 +223,7 @@ class SolveCipherView(FormMixin, DetailView):
         self.cipher = self.get_object()
         self.form = self.get_form()
         self.user = request.user
+
         if self.form.is_valid():
             last_attempt = SolutionLog.objects.get_last_attempt(
                 self.user,
