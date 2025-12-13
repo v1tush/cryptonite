@@ -6,4 +6,12 @@ class UsersConfig(AppConfig):
     name = 'users'
 
     def ready(self):
-        import users.signals  # noqa: F401
+        from django.db.models.signals import post_save
+
+        import logs.models
+        import users.signals
+
+        post_save.connect(
+            users.signals.update_solved_count,
+            sender=logs.models.SolutionLog,
+        )

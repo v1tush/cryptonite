@@ -18,9 +18,10 @@ class HomeView(ListView):
                 CipherLike.objects.filter(user=self.request.user),
             ),
         )
-        ciphers = []
-        for i in Cipher.objects.all():
-            ciphers.append(SolutionLog.objects.get_solved_users_cnt(i))
+        ciphers = [
+            SolutionLog.objects.get_solved_users_cnt(i)
+            for i in Cipher.objects.all()
+        ]
 
         context['solved_users_cnt'] = ciphers
         context['solved_users_ciphers'] = list(

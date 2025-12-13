@@ -4,6 +4,7 @@ from django.db import models, transaction
 from ciphers.models import Cipher
 from logs.managers import SolutionLogManager
 
+
 User = get_user_model()
 
 
@@ -38,6 +39,13 @@ class SolutionLog(models.Model):
     )
 
     objects = SolutionLogManager()
+
+    class Meta:
+        verbose_name = 'лог решения'
+        verbose_name_plural = 'логи решений'
+
+    def __str__(self):
+        return f'{self.user} - {self.cipher}'
 
     def save(self, *args, **kwargs):
         if self.attempts_used is None:

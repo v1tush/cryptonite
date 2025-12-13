@@ -39,6 +39,13 @@ class CustomUser(AbstractUser):
         verbose_name='количество решённых шифров',
     )
 
+    class Meta:
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
+
+    def __str__(self):
+        return f'{self.username} ({self.email})'
+
     @property
     def level(self):
         if self.xp < 100:
