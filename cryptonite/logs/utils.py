@@ -25,23 +25,28 @@ def grant_achievement(user, achievement_code):
 
 
 def check_achievements_for_log(log):
+    if not log.correct:
+        return
+
     user = log.user
 
-    if log.correct:
-        correct_logs = user.solution_logs.filter(correct=True)
-        solved_count = correct_logs.values('cipher').distinct().count()
-        if solved_count == 1:
-            grant_achievement(user, 'Первый шаг')
+    correct_logs = user.solution_logs.filter(correct=True)
+    solved_count = correct_logs.values('cipher').distinct().count()
 
-    if log.correct and solved_count == 10:
+    if solved_count == 1:
+        grant_achievement(user, 'Первый шаг')
+
+    if solved_count == 10:
         grant_achievement(user, 'Охотник за шифрами')
 
-    if log.correct and log.attempts_used == 1:
+    if log.attempts_used == 1:
         grant_achievement(user, 'Снайпер')
 
-    last_logs = user.solution_logs.order_by('-id')[:5].values_list(
-        'correct',
-        flat=True,
+    last_logs = list(
+        user.solution_logs.order_by('-id').values_list('correct', flat=True)[
+            :5
+        ],
     )
-    if all(last_logs) and len(last_logs) == 5:
+
+    if len(last_logs) == 5 and all(last_logs):
         grant_achievement(user, 'Серия побед')
