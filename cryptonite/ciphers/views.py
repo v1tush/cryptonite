@@ -78,7 +78,7 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
 
 
 # TODO: исправить
-class LibraryCommunityView(ListView):
+class LibraryCommunityView(LoginRequiredMixin, ListView):
     model = Cipher
     template_name = 'ciphers/libary.html'
     context_object_name = 'ciphers'
@@ -111,7 +111,7 @@ class LibraryCommunityView(ListView):
         return context
 
 
-class LibraryCoursesView(ListView):
+class LibraryCoursesView(LoginRequiredMixin, ListView):
     model = Cipher
     template_name = 'ciphers/courses.html'
     context_object_name = 'ciphers'
@@ -167,7 +167,11 @@ class LikeCipherView(LoginRequiredMixin, View):
 
 
 # ! Реализация views для возможности решения
-class SolveCipherView(FormMixin, DetailView):
+class SolveCipherView(
+    LoginRequiredMixin,
+    FormMixin,
+    DetailView,
+):
     model = Cipher
     template_name = 'ciphers/cipher.html'
     form_class = SolutionLogForm
