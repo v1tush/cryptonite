@@ -80,6 +80,11 @@ class Cipher(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        verbose_name = 'шифр'
+        verbose_name_plural = 'шифры'
+
+    def __str__(self):
+        return f'{self.author.username} {self.title[:10]}'
 
     def clean(self):
         if self.cipher_type == 'course' and not self.course:
@@ -119,6 +124,13 @@ class CipherHelp(models.Model):
         verbose_name='дата обновления',
     )
 
+    class Meta:
+        verbose_name = 'подсказка к шифру'
+        verbose_name_plural = 'подсказки к шифрам'
+
+    def __str__(self):
+        return f'{self.cipher.title} {self.order}'
+
     def save(self, *args, **kwargs):
         if self.order is None:
             last = (
@@ -149,6 +161,13 @@ class CipherComment(models.Model):
         verbose_name='дата создания',
     )
 
+    class Meta:
+        verbose_name = 'комментарий к шифру'
+        verbose_name_plural = 'комментарии к шифрам'
+
+    def __str__(self):
+        return f'{self.user.username} {self.cipher.title[:10]}'
+
 
 class CipherDayHistory(models.Model):
     cipher = models.ForeignKey(
@@ -161,6 +180,11 @@ class CipherDayHistory(models.Model):
 
     class Meta:
         ordering = ['date']
+        verbose_name = 'история шифров дня'
+        verbose_name_plural = 'истории шифров дня'
+
+    def __str__(self):
+        return f'{self.cipher.title} {self.date}'
 
 
 class CipherLike(models.Model):
@@ -185,3 +209,8 @@ class CipherLike(models.Model):
 
     class Meta:
         unique_together = ('user', 'cipher')
+        verbose_name = 'лайк шифра'
+        verbose_name_plural = 'лайки шифров'
+
+    def __str__(self):
+        return f'{self.user.username}'
