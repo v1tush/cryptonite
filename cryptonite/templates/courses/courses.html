@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+<div class="tabs">
+    <a class="tab {% if request.resolver_match.view_name == 'ciphers:library_community' %}active {% endif %}" {% if request.resolver_match.view_name != 'ciphers:library_community' %}href="{% url 'ciphers:library_community' %}"{% endif %}>Шифры сообщества</a>
+    <a class="tab {% if request.resolver_match.view_name == 'courses:library_courses' %}active {% endif %}" {% if request.resolver_match.view_name != 'courses:library_courses' %}href="{% url 'courses:library_courses' %}"{% endif %}>Обучающие курсы</a>
+</div>
+<a href="{% url 'courses:create_course' %}" class="btn btn-large">Создать курс</a>
+{% if not courses %}
+    <p class="sub-text" style="display: block; width: 100%; text-align: center; padding: 200px;">Пока нет курсов</p>
+{% else %}
+    <div class="courses">
+        {% for course in courses %}
+        <a href="{% url 'courses:detail' course_id=course.id %}">
+            <div class="course-wrapper">
+                <h3>{{course.title}}</h3>
+                <p>{{course.description}}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+{% endif %}
+<script src="{% static 'js/library.js' %}"></script>
+<script src="{% static 'js/common.js' %}"></script>
+{% endblock %}

@@ -4,7 +4,7 @@
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 <div class="cipher-wrapper">
-    {% if user.id == cipher.author.id %} <a href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}"> {% endif %}
+    {% if user.is_authenticated and user.id == cipher.author.id %} <a href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}"> {% endif %}
     <div data-difficulty="{% if cipher.difficulty == 1 %}Легкий{% elif cipher.difficulty == 2 %}Средний{% elif cipher.difficulty == 3 %}Сложный{% else %}Очень сложный{% endif %}" class="cipher-card {% if cipher in solved_users_ciphers %} solved {% endif %}">
         <h4>{{ cipher.title }}</h4>
         <div class="cipher-author">Автор: {{ cipher.author.username }}</div>
@@ -17,7 +17,7 @@
             </div>
             <div class="stats">
                 <div>Решили: {{solved_users_cnt}}</div>
-                <div style="display: inline-block;" data-cipher-id="{{ cipher.id }}" class="likes {% if cipher in likes_ciphers %} yellow-text {% endif %}">♥ <span id="likes-cnt">{{ cipher.likes.count }}</span></div>
+                <div style="display: inline-block;" data-cipher-id="{{ cipher.id }}" class="likes {% if cipher in likes_ciphers %} yellow-text {% endif %}">♥ <span class="likes-cnt">{{ cipher.likes.count }}</span></div>
             </div>
         </div>
 
@@ -30,8 +30,8 @@
                 {% endif %}
             </span>
         {% else %}
-            <a href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}" class="btn btn-small btn-cipher">РЕШИТЬ</a>
+            <a {% if user.is_authenticated %} href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}" {% else %} href="{% url 'users:login' %}" {% endif %} class="btn btn-small btn-cipher">РЕШИТЬ</a>
         {% endif %}
     </div>
-    {% if user.id == cipher.author.id %}</a>{% endif %}
+    {% if user.is_authenticated and user.id == cipher.author.id %}</a>{% endif %}
 </div>

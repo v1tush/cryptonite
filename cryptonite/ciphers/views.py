@@ -80,41 +80,39 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
 # TODO: исправить
 class LibraryCommunityView(ListView):
     model = Cipher
-    template_name = 'ciphers/libary.html'
+    template_name = 'ciphers/library.html'
     context_object_name = 'ciphers'
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['likes_ciphers'] = list(
-            map(
-                lambda x: x.cipher,
-                CipherLike.objects.filter(user=self.request.user),
-            ),
-        )
-
         ciphers = [
             SolutionLog.objects.get_solved_users_cnt(i)
             for i in Cipher.objects.all()
         ]
-
         context['solved_users_cnt'] = ciphers
-        context['solved_users_ciphers'] = list(
-            map(
-                lambda x: x.cipher,
-                SolutionLog.objects.filter(
-                    user=self.request.user,
-                    correct=True,
-                ).all(),
-            ),
-        )
+        if self.request.user.is_authenticated:
+            context['likes_ciphers'] = list(
+                map(
+                    lambda x: x.cipher,
+                    CipherLike.objects.filter(user=self.request.user),
+                ),
+            )
+            context['solved_users_ciphers'] = list(
+                map(
+                    lambda x: x.cipher,
+                    SolutionLog.objects.filter(
+                        user=self.request.user,
+                        correct=True,
+                    ).all(),
+                ),
+            )
+        else:
+            context['likes_ciphers'] = []
+            context['solved_users_ciphers'] = []
+            context['rank'] = None
+
         return context
-
-
-class LibraryCoursesView(ListView):
-    model = Cipher
-    template_name = 'ciphers/courses.html'
-    context_object_name = 'ciphers'
 
 
 class HideCipherView(LoginRequiredMixin, View):
@@ -167,7 +165,7 @@ class LikeCipherView(LoginRequiredMixin, View):
 
 
 # ! Реализация views для возможности решения
-class SolveCipherView(FormMixin, DetailView):
+class SolveCipherView(FormMixin, DetailView, LoginRequiredMixin):
     model = Cipher
     template_name = 'ciphers/cipher.html'
     form_class = SolutionLogForm

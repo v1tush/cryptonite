@@ -36,11 +36,6 @@ urlpatterns = [
         name='solve_cipher',
     ),
     path(
-        'library_courses/',
-        ciphers.views.LibraryCoursesView.as_view(),
-        name='library_courses',
-    ),
-    path(
         'library_community/',
         ciphers.views.LibraryCommunityView.as_view(),
         name='library_community',

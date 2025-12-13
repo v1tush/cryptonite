@@ -25,7 +25,7 @@ Array.from(document.getElementsByClassName('likes')).forEach(like_btn => {
         .then(data => {
             if (!data) return;
             this.classList.toggle('yellow-text', data.liked);
-            this.querySelector('#likes-cnt').textContent = data.likes_count;
+            this.querySelector('.likes-cnt').textContent = data.likes_count;
         })
         .catch(err => {
             console.error('Error:', err);

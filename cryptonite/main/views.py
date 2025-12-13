@@ -12,26 +12,32 @@ class HomeView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['likes_ciphers'] = list(
-            map(
-                lambda x: x.cipher,
-                CipherLike.objects.filter(user=self.request.user),
-            ),
-        )
+        context['ciphers'] = Cipher.objects.all()
         ciphers = [
             SolutionLog.objects.get_solved_users_cnt(i)
             for i in Cipher.objects.all()
         ]
-
         context['solved_users_cnt'] = ciphers
-        context['solved_users_ciphers'] = list(
-            map(
-                lambda x: x.cipher,
-                SolutionLog.objects.filter(
-                    user=self.request.user,
-                    correct=True,
-                ).all(),
-            ),
-        )
-        context['rank'] = get_user_ranking_position(self.request.user)
+        if self.request.user.is_authenticated:
+            context['likes_ciphers'] = list(
+                map(
+                    lambda x: x.cipher,
+                    CipherLike.objects.filter(user=self.request.user),
+                ),
+            )
+            context['solved_users_ciphers'] = list(
+                map(
+                    lambda x: x.cipher,
+                    SolutionLog.objects.filter(
+                        user=self.request.user,
+                        correct=True,
+                    ).all(),
+                ),
+            )
+            context['rank'] = get_user_ranking_position(self.request.user)
+        else:
+            context['likes_ciphers'] = []
+            context['solved_users_ciphers'] = []
+            context['rank'] = None
+
         return context

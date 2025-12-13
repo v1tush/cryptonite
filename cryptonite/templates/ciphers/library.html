@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+<div class="tabs">
+    <a class="tab {% if request.resolver_match.view_name == 'ciphers:library_community' %}active {% endif %}" {% if request.resolver_match.view_name != 'ciphers:library_community' %}href="{% url 'ciphers:library_community' %}"{% endif %}>Шифры сообщества</a>
+    <a class="tab {% if request.resolver_match.view_name == 'courses:library_courses' %}active {% endif %}" {% if request.resolver_match.view_name != 'courses:library_courses' %}href="{% url 'courses:library_courses' %}"{% endif %}>Обучающие курсы</a>
+</div>
+
+<div class="filters">
+    <div class="filter-group">
+        <div class="filter-label">Сложность</div>
+        <div class="filter-buttons">
+            <button class="filter-btn active difficulty-filter-button">Все</button>
+            <button class="filter-btn difficulty-filter-button">Легкий</button>
+            <button class="filter-btn difficulty-filter-button">Средний</button>
+            <button class="filter-btn difficulty-filter-button">Сложный</button>
+            <button class="filter-btn difficulty-filter-button">Очень сложный</button>
+        </div>
+    </div>
+</div>
+
+<div class="cipher-grid">
+    {% for i in ciphers %}
+        {% if forloop.counter <= solved_users_cnt|length %}
+            {% include 'includes/cipher-card.html' with cipher=i solved_users_cnt=solved_users_cnt|slice:forloop.counter|last %}
+        {% endif %}
+    {% endfor %}
+</div>
+<script src="{% static 'js/library.js' %}"></script>
+<script src="{% static 'js/common.js' %}"></script>
+{% endblock %}
