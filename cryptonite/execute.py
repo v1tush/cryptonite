@@ -6,7 +6,6 @@ import scheduler_jobs
 
 
 def start():
-
     if any(
         cmd in sys.argv
         for cmd in [

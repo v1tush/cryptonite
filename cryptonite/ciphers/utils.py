@@ -5,8 +5,7 @@ from ciphers.models import CipherDayHistory
 
 def get_today_cipher():
     obj = (
-        CipherDayHistory.objects
-        .select_related('cipher')
+        CipherDayHistory.objects.select_related('cipher')
         .filter(date=date.today())
         .first()
     )

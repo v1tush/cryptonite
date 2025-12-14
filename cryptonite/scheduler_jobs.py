@@ -15,7 +15,6 @@ def setting_daily_cipher():
         return
 
     with transaction.atomic():
-
         available_ciphers = ciphers.models.Cipher.objects.filter(
             status='approved',
         ).exclude(
