@@ -1,5 +1,4 @@
 import datetime
-import random
 
 from django.db import transaction
 
@@ -35,7 +34,7 @@ def setting_daily_cipher():
         if not available_ciphers.exists():
             return
 
-        cipher = random.choice(list(available_ciphers))
+        cipher = available_ciphers.order_by('?').first()
 
         ciphers.models.CipherDayHistory.objects.create(
             cipher=cipher,

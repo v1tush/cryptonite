@@ -1,3 +1,4 @@
+from datetime import datetime
 import sys
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -25,5 +26,6 @@ def start():
         scheduler_jobs.setting_daily_cipher,
         'interval',
         seconds=86400,
+        next_run_time=datetime.now(utc),
     )
     scheduler.start()
