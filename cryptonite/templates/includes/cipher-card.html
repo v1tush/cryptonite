@@ -17,9 +17,9 @@
                 </div>
             </div>
             <div class="stats">
-                <div>Решили: {{ cipher.correct_solutions_count }}</div>
+                <div>Решили: {{ cipher.correct_solutions_count|default:0 }}</div>
                 <div style="display: inline-block;" data-cipher-id="{{ cipher.id }}" class="likes {% if cipher.liked_by_user %} yellow-text {% endif %}">
-                    ♥ <span class="likes-cnt">{{ cipher.likes_count }}</span>
+                    ♥ <span class="likes-cnt">{{ cipher.likes_count|default:0 }}</span>
                 </div>
             </div>
         </div>

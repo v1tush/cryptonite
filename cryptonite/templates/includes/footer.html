@@ -4,3 +4,4 @@
 {% if user.is_authenticated %}
     <p>Профиль: {{ user.username }} | Уровень: {{ user.level }}</p>
 {% endif %}
+<a href="{% url 'core:privacy_policy' %}">Политика конфиденциальности</a>

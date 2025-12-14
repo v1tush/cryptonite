@@ -12,7 +12,7 @@ class CustomUser(AbstractUser):
         validators=[validate_username],
         verbose_name='имя пользователя',
     )
-    email = models.EmailField(unique=True, verbose_name='email address')
+    email = models.EmailField(unique=True, verbose_name='электронная почта')
     about_me = models.TextField(
         max_length=500,
         blank=True,

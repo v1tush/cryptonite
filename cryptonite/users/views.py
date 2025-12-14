@@ -9,7 +9,6 @@ import django.views.generic.edit
 
 from ciphers.models import Cipher, CipherLike
 from core.functions import get_user_ranking_position
-from logs.models import SolutionLog
 import users.forms
 from users.models import CustomUser
 
@@ -65,33 +64,14 @@ class ProfileDetailView(
         )
 
     def get_context_data(self, **kwargs):
+        user_whose_profile = self.get_object()
         context = super().get_context_data(**kwargs)
-        context[
-            'ciphers'
-        ] = self.get_object().ciphers.with_user_likes_and_solutions(
-            self.request.user,
+        context['created_ciphers'] = user_whose_profile.ciphers.all().with_user_likes_and_solutions(self.request.user)
+        context['rank'] = get_user_ranking_position(user_whose_profile)
+        context['solved_users_ciphers'] = Cipher.objects.all().get_all_user_solved_ciphers(
+            user_whose_profile
         )
-        context['likes_ciphers'] = list(
-            map(
-                lambda x: x.cipher,
-                CipherLike.objects.filter(user=self.request.user),
-            ),
-        )
-        context['rank'] = get_user_ranking_position(self.get_object())
-        ciphers = []
-        for i in Cipher.objects.filter(author=self.get_object()).all():
-            ciphers.append(SolutionLog.objects.get_solved_users_cnt(i))
-
-        context['solved_users_cnt'] = ciphers
-        context['solved_users_ciphers'] = list(
-            map(
-                lambda x: x.cipher,
-                SolutionLog.objects.filter(
-                    user=self.request.user,
-                    correct=True,
-                ).all(),
-            ),
-        )
+        context['solved_ciphers_count'] = len(context['solved_users_ciphers'])
         return context
 
 
@@ -109,10 +89,11 @@ class ProfileEditView(
         return self.request.user
 
     def form_valid(self, form):
-        django.contrib.messages.success(
-            self.request,
-            'Ваш профиль успешно обновлен.',
-        )
+        if form.has_changed():
+            django.contrib.messages.success(
+                self.request,
+                'Ваш профиль успешно обновлен.',
+            )
 
         return super().form_valid(form)
 

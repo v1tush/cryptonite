@@ -55,7 +55,7 @@ class UserCreationForm(
 class ProfileChangeForm(
     core.forms.FormInitMixin,
     core.forms.CommonUserRowsMixin,
-    django.contrib.auth.forms.UserChangeForm,
+    django.forms.ModelForm,
 ):
     class Meta:
         model = User

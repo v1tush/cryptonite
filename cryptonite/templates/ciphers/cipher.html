@@ -27,7 +27,7 @@
                     <div class="stat-label">лайков</div>
                 </div>
             </div>
-            <div data-cipher-id="{{ cipher.id }}" class="likes likes-cipher {% if cipher == likes_ciphers %} yellow-text {% endif %}">♥</div>
+            <div data-cipher-id="{{ cipher.id }}" class="likes likes-cipher {% if cipher == likes_ciphers %} yellow-text {% endif %}" style="cursor: pointer;">♥</div>
         </div>
 
         <div class="solution-section">
@@ -189,5 +189,5 @@
     </div>
 </div>
 <script src="{% static 'js/cipher.js' %}"></script>
-<script src="{% static 'js/allow_hide.js' %}"></script>
+<script src="{% static 'js/allow-hide.js' %}"></script>
 {% endblock %}

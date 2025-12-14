@@ -204,7 +204,6 @@ class SolveCipherView(FormMixin, DetailView, LoginRequiredMixin):
         return context
 
     def post(self, request, **kwargs):
-        self.object = self.get_object()
         self.cipher = self.get_object()
         self.form = self.get_form()
         self.user = request.user

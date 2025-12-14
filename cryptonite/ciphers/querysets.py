@@ -3,10 +3,9 @@ from django.db.models import Count, Exists, OuterRef, Q
 
 
 class CipherQuerySet(models.QuerySet):
-    def approved(self):
+    def all(self):
         return (
-            self.filter(status='approved')
-            .select_related('author')
+            self.select_related('author')
             .prefetch_related('likes')
             .annotate(
                 likes_count=Count('likes', distinct=True),
@@ -17,6 +16,9 @@ class CipherQuerySet(models.QuerySet):
                 ),
             )
         )
+
+    def approved(self):
+        return self.all().filter(status='approved')
 
     def with_user_likes_and_solutions(self, user):
         from ciphers.models import CipherLike
@@ -32,3 +34,6 @@ class CipherQuerySet(models.QuerySet):
                 ),
             ),
         )
+
+    def get_all_user_solved_ciphers(self, user):
+        return self.filter(solution_logs__user=user, solution_logs__correct=True)

@@ -23,7 +23,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # * Созданные приложения
     'about.apps.AboutConfig',
     'achievements.apps.AchievementsConfig',
     'core.apps.CoreConfig',

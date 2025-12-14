@@ -36,7 +36,7 @@
                 <div class="stat-label">дней страйк</div>
             </div>
             <div class="stat-item">
-                <div class="stat-value">{{rank}}</div>
+                <div class="stat-value">{{ rank }}</div>
                 <div class="stat-label">место в рейтинге</div>
             </div>
         </div>
@@ -45,6 +45,7 @@
 
 {% if user == profile_user %}
     <a href="{% url 'users:profile_edit' %}" class="btn edit-profile-button">Изменить профиль</a>
+    <a href="{% url 'users:password_change' %}" class="btn edit-profile-button">Сменить пароль</a>
 {% endif %}
 
 <div class="achievements">
@@ -59,15 +60,41 @@
     </div>
 </div>
 
-<div class="user-ciphers">
-    <h3 class="section-title">СОЗДАННЫЕ ШИФРЫ</h3>
-    <div class="cipher-grid">
-        {% for i in ciphers %}
-            {% if forloop.counter <= solved_users_cnt|length %}
-                {% include 'includes/cipher-card.html' with cipher=i solved_users_cnt=solved_users_cnt|slice:forloop.counter|last %}
-            {% endif %}
-        {% endfor %}
-    </div>
+<div class="profile-tabs">
+    <span class="profile-tab active" data-tab="created">
+        Созданные ({{ created_ciphers|length }})
+    </span>
+    <span class="profile-tab" data-tab="solved">
+        Решённые ({{ solved_users_ciphers|length }})
+    </span>
 </div>
+
+<div class="user-ciphers">
+
+    <div class="cipher-tab active" id="tab-created">
+        <h3 class="section-title">СОЗДАННЫЕ ШИФРЫ</h3>
+        <div class="cipher-grid">
+            {% for cipher in created_ciphers %}
+                {% include 'includes/cipher-card.html' with cipher=cipher solved_users_cnt=cipher.correct_solutions_count %}
+            {% empty %}
+                <p class="sub-text">Шифров нет</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="cipher-tab" id="tab-solved">
+        <h3 class="section-title">РЕШЁННЫЕ ШИФРЫ</h3>
+        <div class="cipher-grid">
+            {% for cipher in solved_users_ciphers %}
+                {% include 'includes/cipher-card.html' with cipher=cipher solved_users_cnt=cipher.correct_solutions_count %}
+            {% empty %}
+                <p class="sub-text">Решённых шифров нет</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
 <script src="{% static 'js/common.js' %}"></script>
+<script src="{% static 'js/profile-menu.js' %}"></script>
 {% endblock %}
