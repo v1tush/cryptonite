@@ -182,6 +182,12 @@ class CipherDayHistory(models.Model):
         ordering = ['date']
         verbose_name = 'история шифров дня'
         verbose_name_plural = 'истории шифров дня'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['date'],
+                name='unique_cipher_day',
+            ),
+        ]
 
     def __str__(self):
         return f'{self.cipher.title} {self.date}'

@@ -1,6 +1,7 @@
 from django.views.generic import ListView
 
 from ciphers.models import Cipher, CipherLike
+from ciphers.utils import get_today_cipher
 from core.functions import get_user_ranking_position
 from logs.models import SolutionLog
 
@@ -18,7 +19,10 @@ class HomeView(ListView):
             for i in Cipher.objects.all()
         ]
         context['solved_users_cnt'] = ciphers
+
         if self.request.user.is_authenticated:
+            context['cipher_daily'] = get_today_cipher()
+
             context['likes_ciphers'] = list(
                 map(
                     lambda x: x.cipher,
