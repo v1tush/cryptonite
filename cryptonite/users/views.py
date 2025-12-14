@@ -7,7 +7,7 @@ import django.urls
 import django.views.generic
 import django.views.generic.edit
 
-from ciphers.models import Cipher, CipherLike
+from ciphers.models import Cipher
 from core.functions import get_user_ranking_position
 import users.forms
 from users.models import CustomUser
@@ -66,10 +66,16 @@ class ProfileDetailView(
     def get_context_data(self, **kwargs):
         user_whose_profile = self.get_object()
         context = super().get_context_data(**kwargs)
-        context['created_ciphers'] = user_whose_profile.ciphers.all().with_user_likes_and_solutions(self.request.user)
+        context[
+            'created_ciphers'
+        ] = user_whose_profile.ciphers.all().with_user_likes_and_solutions(
+            self.request.user,
+        )
         context['rank'] = get_user_ranking_position(user_whose_profile)
-        context['solved_users_ciphers'] = Cipher.objects.all().get_all_user_solved_ciphers(
-            user_whose_profile
+        context[
+            'solved_users_ciphers'
+        ] = Cipher.objects.all().get_all_user_solved_ciphers(
+            user_whose_profile,
         )
         context['solved_ciphers_count'] = len(context['solved_users_ciphers'])
         return context

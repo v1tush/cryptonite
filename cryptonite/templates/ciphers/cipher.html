@@ -4,8 +4,6 @@
 {% load static %}
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
-{% include 'includes/allow-hide.html' %}
-
 <div class="cipher-header">
     <div class="cipher-info">
         <h1 class="cipher-title">
@@ -74,7 +72,7 @@
                     {% if last_attempt.correct %}
                     <p class="solution-resalt success">Правильно! Шифр решен!</p>
                     {% elif not last_attempt.correct and left_attempt_cnt <= 0%}
-                    <p class="solution-resalt fail">К сожелению попытки закончились</p>
+                    <p class="solution-resalt fail">К сожалению попытки закончились</p>
                     {% else %}
                         <div class="solution-input">
                             <form method="post">
@@ -174,46 +172,10 @@
         </div>
         {% if user.id == cipher.author.id %}
             <a href="{% url 'ciphers:edit_cipher' cipher.id %}" class="complain-button btn-edit">Редактировать</a>
-
-            {% if cipher.status != "pending" and cipher.status != "rejected" %}
-                {% if cipher.status == 'hidden' %}
-                    <button class="complain-button" data-hide-url="{% url 'ciphers:open_cipher' cipher.id %}">
-                        Выложить
-                    </button>
-                {% else %}
-                    <button class="complain-button" data-hide-url="{% url 'ciphers:hide_cipher' cipher.id %}">
-                        Скрыть
-                    </button>
-                {% endif %}
-            {% endif %}
         {% else %}
             <a href="{% url 'feedback:feedback' cipher_id=cipher.id %}" class="complain-button">Пожаловаться</a>
         {% endif %}
     </div>
 </div>
-<script>
-function handleClick(event) {
-    event.preventDefault(); // Предотвращаем стандартное поведение
-    alert('клик сработал!');
-
-    const url = event.target.dataset.hideUrl;
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log('Данные отправлены');
-        } else {
-            console.error('Ошибка запроса');
-        }
-    })
-    .catch(error => console.error('Ошибка при отправке:', error));
-}
-</script>
-
 <script src="{% static 'js/cipher.js' %}"></script>
-<script src="{% static 'js/allow-hide.js' %}"></script>
 {% endblock %}

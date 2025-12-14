@@ -30,10 +30,18 @@ class CipherQuerySet(models.QuerySet):
             ),
             solved_by_user=Exists(
                 SolutionLog.objects.filter(
-                    user=user, cipher=OuterRef('pk'), correct=True,
+                    user=user,
+                    cipher=OuterRef('pk'),
+                    correct=True,
                 ),
             ),
         )
 
     def get_all_user_solved_ciphers(self, user):
-        return self.filter(solution_logs__user=user, solution_logs__correct=True)
+        return self.filter(
+            solution_logs__user=user,
+            solution_logs__correct=True,
+        )
+
+    def get_some_most_popular_ciphers(self, num):
+        return self.approved().order_by('-correct_solutions_count')[:num]

@@ -23,6 +23,9 @@ class CipherManager(models.Manager):
     def get_all_user_solved_ciphers(self, user):
         return self.get_queryset().get_all_user_solved_ciphers(user)
 
+    def get_some_most_popular_ciphers(self, num):
+        return self.get_queryset().get_some_most_popular_ciphers(num)
+
 
 class CipherLikeManager(models.Manager):
     def cipher_count_likes(self, cipher):

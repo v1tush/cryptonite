@@ -25,6 +25,7 @@
         {% include 'includes/cipher-card.html' with cipher=cipher solved_users_cnt=cipher.correct_solutions_count %}
     {% endfor %}
 </div>
+<script src="{% static 'js/allow-hide.js' %}"></script>
 <script src="{% static 'js/library.js' %}"></script>
 <script src="{% static 'js/common.js' %}"></script>
 {% endblock %}

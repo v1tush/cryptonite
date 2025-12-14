@@ -1,9 +1,9 @@
 from django.views.generic import ListView
 
-from ciphers.models import Cipher, CipherLike
-from ciphers.utils import get_today_cipher
-from core.functions import get_user_ranking_position
-from logs.models import SolutionLog
+from ciphers.models import Cipher
+
+# from ciphers.utils import get_today_cipher
+# from core.functions import get_user_ranking_position
 
 
 class HomeView(ListView):
@@ -11,37 +11,16 @@ class HomeView(ListView):
     template_name = 'main/main.html'
     context_object_name = 'ciphers'
 
+    def get_queryset(self):
+        approved_and_popular = Cipher.objects.get_some_most_popular_ciphers(10)
+        if not self.request.user.is_authenticated:
+            return approved_and_popular
+
+        return approved_and_popular.with_user_likes_and_solutions(
+            self.request.user,
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['ciphers'] = Cipher.objects.all()
-        ciphers = [
-            SolutionLog.objects.get_solved_users_cnt(i)
-            for i in Cipher.objects.all()
-        ]
-        context['solved_users_cnt'] = ciphers
-
-        if self.request.user.is_authenticated:
-            context['cipher_daily'] = get_today_cipher()
-
-            context['likes_ciphers'] = list(
-                map(
-                    lambda x: x.cipher,
-                    CipherLike.objects.filter(user=self.request.user),
-                ),
-            )
-            context['solved_users_ciphers'] = list(
-                map(
-                    lambda x: x.cipher,
-                    SolutionLog.objects.filter(
-                        user=self.request.user,
-                        correct=True,
-                    ).all(),
-                ),
-            )
-            context['rank'] = get_user_ranking_position(self.request.user)
-        else:
-            context['likes_ciphers'] = []
-            context['solved_users_ciphers'] = []
-            context['rank'] = None
-
+        context.setdefault('rank', None)
         return context

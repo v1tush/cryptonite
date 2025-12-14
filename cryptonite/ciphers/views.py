@@ -89,6 +89,7 @@ class LibraryCommunityView(ListView):
         approved = Cipher.objects.approved()
         if not self.request.user.is_authenticated:
             return approved
+
         return approved.with_user_likes_and_solutions(
             self.request.user,
         )
