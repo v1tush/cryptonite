@@ -11,6 +11,7 @@ from ciphers.forms import CipherForm
 from ciphers.models import Cipher, CipherLike
 from logs.forms import SolutionLogForm
 from logs.models import SolutionLog
+from qr.utils import create_qr_for_cipher
 
 
 class CreateEditCipher(LoginRequiredMixin, FormView):
@@ -164,7 +165,6 @@ class LikeCipherView(LoginRequiredMixin, View):
         return JsonResponse({'liked': liked, 'likes_count': likes_count})
 
 
-# ! Реализация views для возможности решения
 class SolveCipherView(FormMixin, DetailView, LoginRequiredMixin):
     model = Cipher
     template_name = 'ciphers/cipher.html'
@@ -179,6 +179,15 @@ class SolveCipherView(FormMixin, DetailView, LoginRequiredMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)  # базовый контекст
+
+        cipher = self.get_object()
+
+        if not hasattr(cipher, 'qr_code'):
+            create_qr_for_cipher(cipher)
+
+        # ! TODO: подключить поддержку QR-кодов на странице шифра
+        context['qr'] = cipher.qr_code
+
         context[
             'user_attempts'
         ] = SolutionLog.objects.user_solutions_for_cipher(
