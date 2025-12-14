@@ -66,7 +66,9 @@ class ProfileDetailView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['ciphers'] = self.get_object().ciphers.with_user_likes(
+        context[
+            'ciphers'
+        ] = self.get_object().ciphers.with_user_likes_and_solutions(
             self.request.user,
         )
         context['likes_ciphers'] = list(

@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import Count, Exists, OuterRef
+
+from ciphers.querysets import CipherQuerySet
 
 
 User = get_user_model()
@@ -8,22 +9,13 @@ User = get_user_model()
 
 class CipherManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().annotate(likes_count=Count('likes'))
-
-    def with_user_likes(self, user):
-        from ciphers.models import CipherLike
-
-        return self.get_queryset().annotate(
-            liked_by_user=Exists(
-                CipherLike.objects.filter(user=user, cipher=OuterRef('pk')),
-            ),
-        )
+        return CipherQuerySet(self.model, using=self._db)
 
     def approved(self):
-        return self.get_queryset().filter(status='approved')
+        return self.get_queryset().approved()
 
-    def with_user_likes_and_approved(self, user):
-        return self.with_user_likes(user).filter(status='approved')
+    def with_user_likes_and_solutions(self, user):
+        return self.get_queryset().with_user_likes_and_solutions(user)
 
 
 class CipherLikeManager(models.Manager):

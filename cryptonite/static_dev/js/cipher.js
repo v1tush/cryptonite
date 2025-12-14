@@ -2,7 +2,6 @@ Array.from(document.getElementsByClassName('likes')).forEach(like_btn => {
     like_btn.addEventListener('click', function() {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const cipherId = this.getAttribute('data-cipher-id');
-        
         fetch(`/ciphers/${cipherId}/like/`, {
             method: 'POST',
             headers: {

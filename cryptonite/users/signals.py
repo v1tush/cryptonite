@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -17,5 +18,5 @@ def update_solved_count(sender, instance, created, **kwargs):
         )
 
         if not already_solved:
-            user.solved_ciphers_count += 1
+            user.solved_ciphers_count = F('solved_ciphers_count') + 1
             user.save(update_fields=['solved_ciphers_count'])

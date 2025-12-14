@@ -85,34 +85,17 @@ class LibraryCommunityView(ListView):
     context_object_name = 'ciphers'
     paginate_by = 20
 
+    def get_queryset(self):
+        approved = Cipher.objects.approved()
+        if not self.request.user.is_authenticated:
+            return approved
+        return approved.with_user_likes_and_solutions(
+            self.request.user,
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        ciphers = [
-            SolutionLog.objects.get_solved_users_cnt(i)
-            for i in Cipher.objects.all()
-        ]
-        context['solved_users_cnt'] = ciphers
-        if self.request.user.is_authenticated:
-            context['likes_ciphers'] = list(
-                map(
-                    lambda x: x.cipher,
-                    CipherLike.objects.filter(user=self.request.user),
-                ),
-            )
-            context['solved_users_ciphers'] = list(
-                map(
-                    lambda x: x.cipher,
-                    SolutionLog.objects.filter(
-                        user=self.request.user,
-                        correct=True,
-                    ).all(),
-                ),
-            )
-        else:
-            context['likes_ciphers'] = []
-            context['solved_users_ciphers'] = []
-            context['rank'] = None
-
+        context.setdefault('rank', None)
         return context
 
 
@@ -157,6 +140,7 @@ class LikeCipherView(LoginRequiredMixin, View):
                     like.delete()
                 else:
                     liked = True
+
         except IntegrityError:
             liked = True
 
