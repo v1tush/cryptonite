@@ -3,6 +3,9 @@
 {% load i18n %}
 {% load static %}
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+{% include 'includes/allow-hide.html' %}
+
 <div class="cipher-header">
     <div class="cipher-info">
         <h1 class="cipher-title">
@@ -188,6 +191,29 @@
         {% endif %}
     </div>
 </div>
+<script>
+function handleClick(event) {
+    event.preventDefault(); // Предотвращаем стандартное поведение
+    alert('клик сработал!');
+
+    const url = event.target.dataset.hideUrl;
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Данные отправлены');
+        } else {
+            console.error('Ошибка запроса');
+        }
+    })
+    .catch(error => console.error('Ошибка при отправке:', error));
+}
+</script>
+
 <script src="{% static 'js/cipher.js' %}"></script>
 <script src="{% static 'js/allow-hide.js' %}"></script>
 {% endblock %}
