@@ -16,7 +16,7 @@ app_name = 'users'
 urlpatterns = [
     path('signup/', users.views.SignupView.as_view(), name='signup'),
     path(
-        'users/<str:username>/',
+        'profile/<str:username>/',
         users.views.ProfileDetailView.as_view(),
         name='profile',
     ),

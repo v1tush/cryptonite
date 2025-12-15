@@ -67,15 +67,21 @@ class ProfileDetailView(
         user_whose_profile = self.get_object()
         context = super().get_context_data(**kwargs)
 
-        context[
-            'created_ciphers'
-        ] = user_whose_profile.ciphers.all().with_user_likes_and_solutions(
-            self.request.user,
+        created_ciphers = (
+            user_whose_profile.ciphers.all().with_user_likes_and_solutions(
+                self.request.user,
+            )
         )
+
+        if user_whose_profile == self.request.user:
+            context['created_ciphers'] = created_ciphers
+        else:
+            context['created_ciphers'] = created_ciphers.approved()
+
         context['rank'] = get_user_ranking_position(user_whose_profile)
         context['solved_users_ciphers'] = (
-            Cipher.objects.all()
-            .with_user_likes_and_solutions(user_whose_profile)
+            Cipher.objects.approved()
+            .with_user_likes_and_solutions(self.request.user)
             .get_all_user_solved_ciphers(
                 user_whose_profile,
             )

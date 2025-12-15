@@ -3,7 +3,7 @@ import json
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError, transaction
 from django.http import HttpResponseForbidden, JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, Http404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import DetailView, FormView, ListView
@@ -191,8 +191,12 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         return self.request.path
 
     def get_object(self, queryset=None):
-        cipher_id = self.kwargs['cipher_id']
-        return get_object_or_404(Cipher, id=cipher_id)
+        cipher = get_object_or_404(Cipher, id=self.kwargs['cipher_id'])
+
+        if cipher.status != 'approved' and cipher.author != self.request.user:
+            raise Http404()
+
+        return cipher
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)  # базовый контекст
