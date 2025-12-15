@@ -10,7 +10,7 @@ class CipherQuerySet(models.QuerySet):
             .annotate(
                 likes_count=Count('likes', distinct=True),
                 correct_solutions_count=Count(
-                    'solution_logs',
+                    'solution_logs__user',
                     filter=Q(solution_logs__correct=True),
                     distinct=True,
                 ),

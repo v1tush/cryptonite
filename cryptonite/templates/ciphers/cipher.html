@@ -103,11 +103,11 @@
             </div>
             {% if user.id != cipher.author.id %}
                 <h3 class="hint-title">Разгдать шифр</h3>
-                
+                {% if has_limit %}
                 <div class="attempts-counter">
                     <span>Осталось попыток:</span>
                     <div class="attempts-dots">
-                        {% if last_attempt%}
+                        {% if last_attempt %}
                             {% if last_attempt.attempts_used < cipher.attempt_limit %}
                                 {% for i in "x"|rjust:last_attempt.attempts_used %}
                                     <div class="attempt-dot used"></div>
@@ -129,10 +129,11 @@
                         {% endif %}
                     </div>
                 </div>
+                {% endif %}
                 {% if last_attempt %}
                     {% if last_attempt.correct %}
                     <p class="solution-resalt success">Правильно! Шифр решен!</p>
-                    {% elif not last_attempt.correct and left_attempt_cnt <= 0%}
+                    {% elif not last_attempt.correct and left_attempt_cnt <= 0 and not has_limit %}
                     <p class="solution-resalt fail">К сожалению попытки закончились</p>
                     {% else %}
                         <div class="solution-input">

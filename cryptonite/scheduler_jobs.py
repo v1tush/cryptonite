@@ -1,42 +1,42 @@
-import datetime
+import random
 
 from django.db import transaction
+from django.utils import timezone
 
-import ciphers.models
+from ciphers.models import Cipher, CipherDayHistory
 
 
-def setting_daily_cipher():
-    today = datetime.date.today()
+def get_approved_ciphers(exclude_used: bool = True):
+    qs = Cipher.objects.filter(status='approved')
 
-    if ciphers.models.CipherDayHistory.objects.filter(
-        date=today,
-    ).exists():
-        return
-
-    with transaction.atomic():
-        available_ciphers = ciphers.models.Cipher.objects.filter(
-            status='approved',
-        ).exclude(
-            id__in=ciphers.models.CipherDayHistory.objects.values_list(
-                'cipher_id',
-                flat=True,
-            ),
+    if exclude_used:
+        used_ids = CipherDayHistory.objects.values_list(
+            'cipher_id',
+            flat=True,
         )
 
+    return qs.exclude(id__in=used_ids)
+
+
+def setting_daily_cipher() -> None:
+    today = timezone.localdate()
+
+    with transaction.atomic():
+        if CipherDayHistory.objects.filter(date=today).exists():
+            return
+
+        available_ciphers = get_approved_ciphers(exclude_used=True)
+
         if not available_ciphers.exists():
-            ciphers.models.CipherDayHistory.objects.all().delete()
+            CipherDayHistory.objects.all().delete()
+            available_ciphers = get_approved_ciphers(exclude_used=False)
 
-            available_ciphers = ciphers.models.Cipher.objects.filter(
-                status='approved',
-            )
-
-        # Если база данных пуста
         if not available_ciphers.exists():
             return
 
-        cipher = available_ciphers.order_by('?').first()
+        cipher = random.choice(list(available_ciphers))
 
-        ciphers.models.CipherDayHistory.objects.create(
+        CipherDayHistory.objects.create(
             cipher=cipher,
             date=today,
         )
