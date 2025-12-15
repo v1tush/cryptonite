@@ -17,7 +17,8 @@ urlpatterns += i18n_patterns(
     django.urls.path('feedback/', django.urls.include('feedback.urls')),
     django.urls.path('courses/', django.urls.include('courses.urls')),
     django.urls.path(
-        'notifications/', django.urls.include('notifications.urls'),
+        'notifications/',
+        django.urls.include('notifications.urls'),
     ),
     django.urls.path('', django.urls.include('main.urls')),
     prefix_default_language=False,
