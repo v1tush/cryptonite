@@ -3,6 +3,7 @@ from django.views.generic import ListView
 from ciphers.models import Cipher
 from ciphers.utils import get_today_cipher
 from core.functions import get_user_ranking_position
+from logs.models import SolutionLog
 
 # from core.functions import get_user_ranking_position
 
@@ -24,6 +25,15 @@ class HomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cipher_daily'] = get_today_cipher()
+        if context['cipher_daily']:
+            context[
+                'cipher_daily_solvers_cnt'
+            ] = SolutionLog.objects.get_solved_users_cnt(
+                context['cipher_daily'],
+            )
+            context[
+                'daily_top_users'
+            ] = SolutionLog.objects.get_daily_top_users()
         # context.setdefault('rank', None)
         # Убрала потому что даже у
         # авторизованных пользователей rank был None.
