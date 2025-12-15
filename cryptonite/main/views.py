@@ -1,8 +1,8 @@
 from django.views.generic import ListView
 
 from ciphers.models import Cipher
+from ciphers.utils import get_today_cipher
 
-# from ciphers.utils import get_today_cipher
 # from core.functions import get_user_ranking_position
 
 
@@ -22,5 +22,6 @@ class HomeView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['cipher_daily'] = get_today_cipher()
         context.setdefault('rank', None)
         return context
