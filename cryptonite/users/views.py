@@ -75,9 +75,9 @@ class ProfileDetailView(
         context['rank'] = get_user_ranking_position(user_whose_profile)
         context['solved_users_ciphers'] = (
             Cipher.objects.all()
-            .get_all_user_solved_ciphers(user_whose_profile)
-            .with_user_likes_and_solutions(
-                self.request.user,
+            .with_user_likes_and_solutions(user_whose_profile)
+            .get_all_user_solved_ciphers(
+                user_whose_profile,
             )
         )
         context['solved_ciphers_count'] = len(context['solved_users_ciphers'])
