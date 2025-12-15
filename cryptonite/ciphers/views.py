@@ -230,11 +230,11 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         context['hints_count'] = hints.count()
         context['user_balance'] = user.money
         context['hint_price'] = HINT_PRICE
-        context['user_attempts'] = (
-            SolutionLog.objects.user_solutions_for_cipher(
-                self.request.user,
-                self.get_object(),
-            )
+        context[
+            'user_attempts'
+        ] = SolutionLog.objects.user_solutions_for_cipher(
+            self.request.user,
+            self.get_object(),
         )
 
         _lks_crs = CipherLike.objects.filter(

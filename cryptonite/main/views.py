@@ -26,14 +26,14 @@ class HomeView(ListView):
         context = super().get_context_data(**kwargs)
         context['cipher_daily'] = get_today_cipher()
         if context['cipher_daily']:
-            context['cipher_daily_solvers_cnt'] = (
-                SolutionLog.objects.get_solved_users_cnt(
-                    context['cipher_daily'],
-                )
+            context[
+                'cipher_daily_solvers_cnt'
+            ] = SolutionLog.objects.get_solved_users_cnt(
+                context['cipher_daily'],
             )
-            context['daily_top_users'] = SolutionLog.objects.get_daily_top_users()
-            for i in context['daily_top_users']:
-                print(i)
+            context[
+                'daily_top_users'
+            ] = SolutionLog.objects.get_daily_top_users()
         # context.setdefault('rank', None)
         # Убрала потому что даже у
         # авторизованных пользователей rank был None.
