@@ -10,9 +10,9 @@ from feedback.forms import FeedbackForm
 
 
 class FeedbackView(
+    LoginRequiredMixin,
     SingleObjectMixin,
     django.views.generic.FormView,
-    LoginRequiredMixin,
 ):
     form_class = FeedbackForm
     template_name = 'feedback/feedback.html'

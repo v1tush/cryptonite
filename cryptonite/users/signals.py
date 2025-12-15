@@ -1,11 +1,8 @@
 from django.db.models import F
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 from logs.models import SolutionLog
 
 
-@receiver(post_save, sender=SolutionLog)
 def update_solved_count(sender, instance, created, **kwargs):
     if created and instance.correct:
         user = instance.user
