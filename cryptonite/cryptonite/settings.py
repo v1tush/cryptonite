@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'feedback.apps.FeedbackConfig',
     'logs.apps.LogsConfig',
     'main.apps.MainConfig',
+    'notifications.apps.NotificationsConfig',
     'qr.apps.QrConfig',
     'users.apps.UsersConfig',
 ]

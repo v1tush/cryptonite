@@ -7,7 +7,7 @@ from ciphers.models import Cipher, CipherDayHistory
 
 
 def get_approved_ciphers(exclude_used: bool = True):
-    qs = Cipher.objects.filter(status='approved')
+    qs = Cipher.objects.approved()
 
     if exclude_used:
         used_ids = CipherDayHistory.objects.values_list(
