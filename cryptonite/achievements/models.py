@@ -9,7 +9,9 @@ class Achievement(models.Model):
     code = models.CharField(
         max_length=50,
         unique=True,
+        null=True,
         verbose_name='код достижения',
+
     )
     title = models.CharField(max_length=100, verbose_name='название')
     description = models.TextField(max_length=500, verbose_name='описание')

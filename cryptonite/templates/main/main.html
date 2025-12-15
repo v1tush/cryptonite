@@ -9,33 +9,23 @@
         <div class="difficulty-badge">{% if cipher_daily.difficulty == 1 %}ЛЕГКАЯ СЛОЖНОСТЬ{% elif cipher_daily.difficulty == 2 %}СРЕДНЯЯ СЛОЖНОСТЬ{% elif cipher_daily.difficulty == 3 %}СЛОЖНАЯ СЛОЖНОСТЬ{% else %}ОЧЕНЬ СЛОЖНАЯ СЛОЖНОСТЬ{% endif %}</div>
         <p class="cipher-desc-daily">{{cipher_daily.description}}</p>
         <div style="margin-bottom: 20px;">
-            <div  class="sub-text">Уже решили: {{cipher_daily_solved}}</div>
+            <div  class="sub-text">Уже решили: {{ cipher_daily_solvers_cnt|default:0 }}</div>
         </div>
         <a href="{% url 'ciphers:solve_cipher' cipher_id=cipher_daily.id %}" class="btn">РЕШИТЬ</a>
     </div>
     
     <div class="stats-main">
         <h3>ТОП ДНЯ</h3>
-        <div class="stat-item-main">
-            <span>CryptoQueen</span>
-            <span style="color: #d79921;">+120 очков</span>
-        </div>
-        <div class="stat-item-main">
-            <span>Decryptor</span>
-            <span style="color: #d79921;">+95 очков</span>
-        </div>
-        <div class="stat-item-main">
-            <span>ByteMaster</span>
-            <span style="color: #d79921;">+87 очков</span>
-        </div>
-        <div class="stat-item-main">
-            <span>Neo_Cipher</span>
-            <span style="color: #d79921;">+76 очков</span>
-        </div>
-        <div class="stat-item-main">
-            <span>Agent_K</span>
-            <span style="color: #d79921;">+65 очков</span>
-        </div>
+        {% if daily_top_users %}
+            {% for daily_top_user in daily_top_users %}
+            <div class="stat-item-main">
+                <a href="{% url 'users:profile' username=daily_top_user.user__username %}">{{daily_top_user.user__username}}</a>
+                <span style="color: #d79921;">+{{daily_top_user.total_score}} очков</span>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Еще никто не заработал баллов</p>
+        {% endif %}
         {% if user.is_authenticated %}
         <div style="margin-top: 20px;">
             <div style="font-size: 14px; color: rgba(251, 241, 199, 0.7);">Ваш страйк: <span style="color: #d79921; font-weight: bold;">{{user.strike}} дней</span></div>

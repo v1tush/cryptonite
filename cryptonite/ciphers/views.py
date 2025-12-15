@@ -392,6 +392,8 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         if solution.correct:
             self.user.xp += 100
             self.user.money += 25
+            solution.score = 100
+            solution.save()
             self.user.save()
 
         return redirect(self.get_success_url())

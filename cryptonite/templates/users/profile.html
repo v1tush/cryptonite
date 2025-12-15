@@ -11,7 +11,7 @@
 {% endif %}
 
 <div {% if profile_user.background %} style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/media/{{profile_user.background}}); background-size: cover; background-position: center; background-repeat: no-repeat;" {% endif %} class="profile-header">
-    <div class="profile-avatar"><img src="{% if user.avatar and user.avatar != ' ' %} /media/{{ profile_user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
+    <div class="profile-avatar"><img src="{% if profile_user.avatar %} /media/{{ profile_user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
     <div class="profile-info">
         <div class="profile-name">{{ profile_user.username }}</div>
         <div class="profile-title">Уровень {{ profile_user.level }}</div>
