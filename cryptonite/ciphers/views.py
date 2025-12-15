@@ -151,7 +151,7 @@ class LikeCipherView(LoginRequiredMixin, View):
         return JsonResponse({'liked': liked, 'likes_count': likes_count})
 
 
-class SolveCipherView(LoginRequiredMixin, DetailView, FormMixin):
+class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
     model = Cipher
     template_name = 'ciphers/cipher.html'
     form_class = SolutionLogForm
@@ -170,7 +170,7 @@ class SolveCipherView(LoginRequiredMixin, DetailView, FormMixin):
             'user_attempts'
         ] = SolutionLog.objects.user_solutions_for_cipher(
             self.request.user,
-            self.get_object(),
+            self.object,
         )
 
         _lks_crs = CipherLike.objects.filter(
@@ -184,36 +184,40 @@ class SolveCipherView(LoginRequiredMixin, DetailView, FormMixin):
 
         context['last_attempt'] = SolutionLog.objects.get_last_attempt(
             self.request.user,
-            self.get_object(),
+            self.object,
         )
-        if context['last_attempt']:
+        if context['last_attempt'] and self.object.attempt_limit is not None:
             context['left_attempt_cnt'] = (
-                self.get_object().attempt_limit
+                self.object.attempt_limit
                 - context['last_attempt'].attempts_used
             )
 
         context['solved_users_cnt'] = SolutionLog.objects.get_solved_users_cnt(
-            self.get_object(),
+            self.object,
         )
+        context['has_limit'] = self.object.attempt_limit is not None
         return context
 
     def post(self, request, **kwargs):
         self.object = self.get_object()
-        self.cipher = self.get_object()
         self.form = self.get_form()
         self.user = request.user
 
         if self.form.is_valid():
             last_attempt = SolutionLog.objects.get_last_attempt(
                 self.user,
-                self.cipher,
+                self.object,
             )
             is_correct = last_attempt.correct if last_attempt else False
-            left_attempt_cnt = (
-                self.cipher.attempt_limit - last_attempt.attempts_used
-                if last_attempt
-                else self.cipher.attempt_limit
-            )
+            if self.object.attempt_limit is not None:
+                left_attempt_cnt = (
+                    self.object.attempt_limit - last_attempt.attempts_used
+                    if last_attempt
+                    else self.object.attempt_limit
+                )
+            else:
+                left_attempt_cnt = float('inf')
+
             if left_attempt_cnt <= 0 or is_correct:
                 return self.form_invalid(self.form)
 
@@ -223,12 +227,12 @@ class SolveCipherView(LoginRequiredMixin, DetailView, FormMixin):
 
     def form_valid(self, form):
         solution = form.save(commit=False)
-        solution.cipher = self.cipher
+        solution.cipher = self.object
         solution.user = self.request.user
 
         solution.correct = (
             solution.attempted_answer.strip()
-            == self.cipher.answer_phrase.strip()
+            == self.object.answer_phrase.strip()
         )
         solution.save()
         if solution.correct:

@@ -92,13 +92,12 @@ class CipherForm(forms.ModelForm):
             attrs={
                 'min': 1,
                 'max': 15,
-                'placeholder': 'Введите количество попыток',
+                'placeholder': 'Введите количество попыток '
+                '(оставьте это поле пустым, '
+                'если количество попыток бесконечно)',
             },
         ),
-        error_messages={
-            'required': 'Обязательное поле',
-        },
-        required=True,
+        required=False,
     )
 
     class Meta:

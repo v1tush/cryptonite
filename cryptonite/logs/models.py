@@ -44,6 +44,13 @@ class SolutionLog(models.Model):
         verbose_name = 'лог решения'
         verbose_name_plural = 'логи решений'
 
+        constraints = [
+            models.UniqueConstraint(
+                fields=['cipher', 'user', 'attempts_used'],
+                name='unique_cipher_solution_per_user',
+            ),
+        ]
+
     def __str__(self):
         return f'{self.user} - {self.cipher}'
 
