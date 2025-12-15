@@ -4,6 +4,10 @@
 {% load static %}
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
+<div id="wrapper" class="wrapper">
+    <img id="img-qr" src="{% static 'images/avatar.jpg' %}">
+</div>
+<button onclick="show_QR()" id="btn-for-qr" class="btn btn-for-qr">QR-код</button>
 <div class="cipher-header">
     <div class="cipher-info">
         <h1 class="cipher-title">
@@ -30,6 +34,63 @@
             </div>
             <div data-cipher-id="{{ cipher.id }}" class="likes likes-cipher {% if cipher == likes_ciphers %} yellow-text {% endif %}" style="cursor: pointer;">♥</div>
         </div>
+
+        {% if hints_count > 0 and user.id != cipher.author.id %}
+        <div class="hints-section">
+            <h3 class="hint-title">
+                <span class="hint-icon">💡</span>
+                Подсказки
+                <span class="hints-count">({{ hints_count }})</span>
+            </h3>
+        
+            <div class="hints-container">
+                {% for hint in purchased_hints %}
+                    <div class="hint-card purchased" data-hint-id="{{ hint.id }}">
+                        <div class="hint-header">
+                            <div class="hint-number">Подсказка {{ hint.order }}</div>
+                            <div class="hint-price purchased-badge">
+                                <span class="purchased-icon">✓</span>
+                                <span class="purchased-text">Куплена</span>
+                            </div>
+                        </div>
+                        <div class="hint-content">
+                            {{ hint.text|linebreaks }}
+                        </div>
+                    </div>
+                {% endfor %}
+            
+                {% for hint in available_hints %}
+                    <div class="hint-card available" data-hint-id="{{ hint.id }}">
+                        <div class="hint-header">
+                            <div class="hint-number">Подсказка {{ hint.order }}</div>
+                            <div class="hint-price">
+                                <span class="price-amount">{{ hint_price }}</span>
+                                <span class="price-icon">🪙</span>
+                            </div>
+                        </div>
+                        <div class="hint-content locked">
+                            <div class="locked-content">
+                                <div class="lock-icon">🔒</div>
+                                <p class="locked-text">Подсказка заблокирована</p>
+                                <button class="btn btn-small buy-hint-btn" 
+                                        data-hint-id="{{ hint.id }}"
+                                        {% if user_balance < hint_price %}disabled{% endif %}>
+                                    Купить за {{ hint_price }} монет
+                                </button>
+                                {% if user_balance < hint_price %}
+                                <p class="insufficient-funds">Недостаточно монет</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="hints-info">
+                <p>💡 Каждая подсказка стоит {{ hint_price }} монет.</p>
+            </div>
+        </div>
+        {% endif %}
 
         <div class="solution-section">
             <div class="cipher-word-container">
@@ -131,44 +192,24 @@
                 Топ решивших
             </h4>
             <div class="top-solvers">
-                <a href="">
-                    <div class="solver-item">
-                        <div class="solver-info">
-                            <div class="solver-avatar"><img src="photo_2024-03-10_10-30-50.jpg"></div>
-                            <div>
-                                <div>CryptoQueen</div>
-                                <div class="solver-stats">2 попытки</div>
+                {% if top_users %}
+                    {% for top_user in top_users %}
+                    <a href="{% url 'users:profile' username=top_user.user__username %}">
+                        <div class="solver-item">
+                            <div class="solver-info">
+                                <div class="solver-avatar"><img src="{% if top_user.user__avatar %} /media/{{ top_user.user__avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
+                                <div>
+                                    <div class="solver-name">{{top_user.user__username}}</div>
+                                    <div class="solver-stats">Количество попыток: {{top_user.min_attempts}}</div>
+                                </div>
                             </div>
+                            <div class="yellow-text bold-text">{{ forloop.counter }}-е место</div>
                         </div>
-                        <div class="yellow-text bold-text">1-е место</div>
-                    </div>
-                </a>
-                
-                <a href="">
-                    <div class="solver-item">
-                        <div class="solver-info">
-                            <div class="solver-avatar"><img src="photo_2024-03-10_10-30-50.jpg"></div>
-                            <div>
-                                <div>Neo_Cipher</div>
-                                <div class="solver-stats">3 попытки</div>
-                            </div>
-                        </div>
-                        <div class="yellow-text bold-text">2-е место</div>
-                    </div>
-                </a>
-
-                <a href="">
-                    <div class="solver-item">
-                        <div class="solver-info">
-                            <div class="solver-avatar"><img src="photo_2024-03-10_10-30-50.jpg"></div>
-                            <div>
-                                <div>Decryptor</div>
-                                <div class="solver-stats">4 попытки</div>
-                            </div>
-                        </div>
-                        <div class="yellow-text bold-text">3-е место</div>
-                    </div>
-                </a>
+                    </a>
+                    {% endfor %}
+                {% else %}
+                    <p>Шифр пока никто не решил</p>
+                {% endif %}
             </div>
         </div>
         {% if user.id == cipher.author.id %}
@@ -178,5 +219,8 @@
         {% endif %}
     </div>
 </div>
+<div id="message-container"></div>
+
+<script src="{% static 'js/hints.js' %}"></script>
 <script src="{% static 'js/cipher.js' %}"></script>
 {% endblock %}

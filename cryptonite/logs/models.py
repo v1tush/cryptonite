@@ -37,6 +37,10 @@ class SolutionLog(models.Model):
         auto_now_add=True,
         verbose_name='дата создания',
     )
+    score = models.PositiveIntegerField(
+        default=0,
+        verbose_name='балл',
+    )
 
     objects = SolutionLogManager()
 

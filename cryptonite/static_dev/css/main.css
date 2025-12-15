@@ -29,6 +29,10 @@
     margin-bottom: 20px;
     color: #fbf1c7;
     opacity: 0.9;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    max-width: 100%;
 }
 
 .difficulty-badge {

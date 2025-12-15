@@ -39,3 +39,14 @@ document.getElementById('submit-solution').addEventListener('click', function ()
 document.getElementById('buyHint').addEventListener('click', function () {
     const result = confirm("Вы уверены?");
 })
+
+function show_QR() {
+    const wrapper = document.getElementById('wrapper');
+    const img = document.getElementById('img-qr');
+    img.style.display = 'block';
+    wrapper.style.position = 'fixed';
+    wrapper.addEventListener('click', function () {
+        img.style.display = 'none';
+        wrapper.style.position = 'static';
+    })
+}

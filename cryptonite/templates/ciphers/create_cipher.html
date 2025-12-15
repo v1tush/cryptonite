@@ -133,10 +133,54 @@
             {% endif %}
             <div class="form-note">{{ form.attempt_limit.help_text }}</div>
         </div>
+
+        <div class="form-group hints-section">
+            <div class="hints-header">
+                <label class="form-label">Подсказки (необязательно)</label>
+                <button type="button" id="add-hint-btn" class="btn btn-small">
+                    + Добавить подсказку
+                </button>
+            </div>
+            <div class="hints-note">Вы можете добавить подсказки, которые будут постепенно открываться пользователям при решении шифра</div>
+            
+            <div id="hints-container" class="hints-container">
+                {% if existing_hints %}
+                    {% for hint in existing_hints %}
+                    <div class="hint-field-group" data-index="{{ forloop.counter0 }}">
+                        <div class="hint-field-header">
+                            <span class="hint-number">Подсказка {{ forloop.counter }}</span>
+                            <button type="button" class="remove-hint-btn btn btn-small btn-danger">Удалить</button>
+                        </div>
+                        <textarea 
+                            class="hint-textarea" 
+                            name="hints[]" 
+                            placeholder="Введите текст подсказки...">{{ hint.text }}</textarea>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="hint-field-group" data-index="0">
+                        <div class="hint-field-header">
+                            <span class="hint-number">Подсказка 1</span>
+                            <button type="button" class="remove-hint-btn btn btn-small btn-danger">Удалить</button>
+                        </div>
+                        <textarea 
+                            class="hint-textarea" 
+                            name="hints[]" 
+                            placeholder="Введите текст подсказки..."></textarea>
+                    </div>
+                {% endif %}
+            </div>
+            <input type="hidden" id="cipher_id" value="{{ cipher_id|default:'' }}">
+        </div>
         
         <button type="submit" class="btn btn-large">{{ button_text }}</button>
     </form>
 </div>
 
+<form id="hints-form" style="display: none;">
+    {% csrf_token %}
+</form>
+
 <script src="{% static 'js/create_cipher.js' %}"></script>
+<script src="{% static 'js/hints.js' %}"></script>
 {% endblock %}

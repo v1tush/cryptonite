@@ -1,4 +1,7 @@
+from datetime import timedelta
+
 from django.db import models
+from django.utils import timezone
 
 
 class SolutionLogManager(models.Manager):
@@ -24,4 +27,31 @@ class SolutionLogManager(models.Manager):
     def get_solved_users_cnt(self, cipher):
         return (
             self.all_solutions_for_cipher(cipher).filter(correct=True).count()
+        )
+
+    def get_top_solvers(self, cipher, limit=3):
+        queryset = (
+            self.filter(cipher=cipher, correct=True)
+            .select_related('user')
+            .values(
+                'user__id',
+                'user__username',
+                'user__avatar',
+            )
+        )
+        return queryset.annotate(
+            min_attempts=models.Min('attempts_used'),
+            first_solved=models.Min('created_at'),
+        ).order_by('min_attempts', 'first_solved')[:limit]
+
+    def get_daily_top_users(self, days_ago=0, limit=5):
+        target_date = timezone.now().date() - timedelta(days=days_ago)
+        return (
+            self.filter(
+                created_at__date=target_date,
+                score__gt=0,
+            )
+            .values('user__username')
+            .annotate(total_score=models.Sum('score'))
+            .order_by('-total_score')[:limit]
         )
