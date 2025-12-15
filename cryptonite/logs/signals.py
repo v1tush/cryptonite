@@ -1,14 +1,12 @@
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.db import transaction
+
+from achievements.utils import collect_achievements_for_user
 
 
-from logs.models import SolutionLog
-from logs.utils import check_achievements_for_log
-
-
-@receiver(post_save, sender=SolutionLog)
-def achievements_from_logs(sender, instance, created, **kwargs):
+def update_achievements_on_log(sender, instance, created, **kwargs):
     if not created:
         return
 
-    check_achievements_for_log(instance)
+    transaction.on_commit(
+        lambda: collect_achievements_for_user(instance.user),
+    )

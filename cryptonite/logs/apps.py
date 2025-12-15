@@ -12,6 +12,7 @@ class LogsConfig(AppConfig):
         import logs.models
 
         post_save.connect(
-            logs.signals.achievements_from_logs,
+            logs.signals.update_achievements_on_log,
             sender=logs.models.SolutionLog,
+            dispatch_uid='update_achievements_on_log',
         )
