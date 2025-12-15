@@ -1,6 +1,5 @@
 from io import BytesIO
 
-from django.conf import settings
 from django.core.files.base import ContentFile
 from django.urls import reverse
 import segno
@@ -8,10 +7,12 @@ import segno
 from qr.models import QR
 
 
-def create_qr_for_cipher(cipher):
-    url = settings.SITE_URL + reverse(
-        'ciphers:solve_cipher',
-        kwargs={'cipher_id': cipher.pk},
+def create_qr_for_cipher(cipher, request):
+    url = request.build_absolute_uri(
+        reverse(
+            'ciphers:solve_cipher',
+            kwargs={'cipher_id': cipher.pk},
+        ),
     )
 
     if hasattr(cipher, 'qr_code') and cipher.qr_code.image:

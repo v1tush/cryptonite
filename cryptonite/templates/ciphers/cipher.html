@@ -5,7 +5,7 @@
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 <div id="wrapper" class="wrapper">
-    <img id="img-qr" src="{% static 'images/avatar.jpg' %}">
+    <img id="img-qr" src="{{ qr_code.image.url }}">
 </div>
 <button onclick="show_QR()" id="btn-for-qr" class="btn btn-for-qr">QR-код</button>
 <div class="cipher-header">
