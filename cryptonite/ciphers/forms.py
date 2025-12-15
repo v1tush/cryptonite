@@ -91,6 +91,7 @@ class CipherForm(forms.ModelForm):
         widget=forms.NumberInput(
             attrs={
                 'min': 1,
+                'max': 15,
                 'placeholder': 'Введите количество попыток',
             },
         ),
