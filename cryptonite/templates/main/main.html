@@ -36,11 +36,12 @@
             <span>Agent_K</span>
             <span style="color: #d79921;">+65 очков</span>
         </div>
-        
+        {% if user.is_authenticated %}
         <div style="margin-top: 20px;">
             <div style="font-size: 14px; color: rgba(251, 241, 199, 0.7);">Ваш страйк: <span style="color: #d79921; font-weight: bold;">{{user.strike}} дней</span></div>
             <div style="font-size: 14px; color: rgba(251, 241, 199, 0.7); margin-top: 5px;">Ваше место: <span style="color: #d79921; font-weight: bold;">{{rank}}</span></div>
         </div>
+        {% endif %}
     </div>
     {% else %}
     <p class="yellow-text bold-text" style="display: block; width: 100%; font-size: 30px; padding: 20px; text-align: center;" >Упс... Похоже шифр дня отсутсвует</p>

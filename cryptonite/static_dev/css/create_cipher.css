@@ -25,7 +25,7 @@
     color: #fbf1c7;
 }
 
-.form-note {
+.form-note, .hints-note {
     font-size: 14px;
     color: rgba(251, 241, 199, 0.6);
     margin-top: 5px;
@@ -46,7 +46,7 @@
     resize: vertical;
 }
 
-.form-input:focus, .form-textarea:focus, .form-select:focus {
+.form-input:focus, .form-textarea:focus, .form-select:focus, .hint-textarea:focus {
     outline: none;
     border-color: #d79921;
     box-shadow: 0 0 5px rgba(215, 153, 33, 0.5);
@@ -183,6 +183,71 @@
 .hardcore.selected {
     border-color: #9d0006;
     background-color: rgba(157, 0, 6, 0.15);
+}
+
+.hints-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #282828;
+    border-radius: 8px;
+    border: 1px solid rgba(215, 153, 33, 0.3);
+}
+
+.hints-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.hints-container {
+    margin-top: 15px;
+}
+
+.hint-field-group {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(251, 241, 199, 0.05);
+    border-radius: 6px;
+    border: 1px solid rgba(215, 153, 33, 0.3);
+}
+
+.hint-field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.hint-number {
+    font-weight: 600;
+    color: #d79921
+}
+
+.hint-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    background: #282828;
+    border: 1px solid rgba(215, 153, 33, 0.3);
+    border-radius: 4px;
+    color: #f8f8f2;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.remove-hint-btn {
+    background: rgba(255, 85, 85, 0.2);
+    border-color: rgba(255, 85, 85, 0.5);
+    color: #ff5555;
+    font-size: 12px;
+    padding: 5px 10px;
+}
+
+.remove-hint-btn:hover {
+    background: rgba(255, 85, 85, 0.3);
+    border-color: #ff5555;
 }
 
 @media (max-width: 768px) {

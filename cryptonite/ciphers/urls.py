@@ -40,4 +40,9 @@ urlpatterns = [
         ciphers.views.LibraryCommunityView.as_view(),
         name='library_community',
     ),
+    path(
+        'save-hints/',
+        ciphers.views.SaveCipherHintsView.as_view(),
+        name='save_cipher_hints',
+    ),
 ]

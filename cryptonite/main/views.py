@@ -2,6 +2,7 @@ from django.views.generic import ListView
 
 from ciphers.models import Cipher
 from ciphers.utils import get_today_cipher
+from core.functions import get_user_ranking_position
 
 # from core.functions import get_user_ranking_position
 
@@ -23,5 +24,11 @@ class HomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cipher_daily'] = get_today_cipher()
-        context.setdefault('rank', None)
+        # context.setdefault('rank', None)
+        # Убрала потому что даже у
+        # авторизованных пользователей rank был None.
+        # Я тупенькая и не знаю способа лучше чем тот что в профиле,
+        # поэтому не бейте тапками, я просто отлаживаю фронт
+        # и мне нужна инфа о месте человека.
+        context['rank'] = get_user_ranking_position(self.request.user)
         return context

@@ -36,16 +36,16 @@
         <div id="burger-menu" class="burger-menu">&#9776;</div>
         {% if user.is_authenticated %}
             <div class="user-balance">
-                <a href="-">
+                <p>
                     <span>🪙</span>
-                    <span>{{ user.money }}</span>
-                </a>
+                    <span id="user-balance">{{ user.money }}</span>
+                </p>
             </div>
             <div>
                 <div class="avatar-and-username">
                     <div class="avatar"><a style="display: inline-block; width: 40px; height: 40px;" href="{% url 'users:profile' user.username %}"><img src="{% if user.avatar %} /media/{{ user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></a></div>
                     <div>
-                        <div>{{ user.username }}</div>
+                        <div id="username">{{ user.username }}</div>
                         <div class="user-rating">Счёт: {{ user.xp }}</div>
                     </div>
                 </div>
@@ -77,3 +77,4 @@
     </ul>
 </div>
 <script src="{% static 'js/burger-menu.js' %}"></script>
+<script src="{% static 'js/header.js' %}"></script>

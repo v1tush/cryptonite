@@ -25,3 +25,18 @@ class SolutionLogManager(models.Manager):
         return (
             self.all_solutions_for_cipher(cipher).filter(correct=True).count()
         )
+
+    def get_top_solvers(self, cipher, limit=3):
+        queryset = (
+            self.filter(cipher=cipher, correct=True)
+            .select_related('user')
+            .values(
+                'user__id',
+                'user__username',
+                'user__avatar',
+            )
+        )
+        return queryset.annotate(
+            min_attempts=models.Min('attempts_used'),
+            first_solved=models.Min('created_at'),
+        ).order_by('min_attempts', 'first_solved')[:limit]

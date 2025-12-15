@@ -143,6 +143,36 @@ class CipherHelp(models.Model):
         super().save(*args, **kwargs)
 
 
+class PurchasedHint(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='purchased_hints',
+        verbose_name='пользователь',
+    )
+    hint = models.ForeignKey(
+        CipherHelp,
+        on_delete=models.CASCADE,
+        related_name='purchases',
+        verbose_name='подсказка',
+    )
+    purchased_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='дата покупки',
+    )
+
+    class Meta:
+        verbose_name = 'купленная подсказка'
+        verbose_name_plural = 'купленные подсказки'
+        unique_together = ['user', 'hint']
+
+    def __str__(self):
+        return (
+            f'{self.user.username}'
+            f' → {self.hint.cipher.title} (подсказка {self.hint.order})'
+        )
+
+
 class CipherComment(models.Model):
     cipher = models.ForeignKey(
         Cipher,
