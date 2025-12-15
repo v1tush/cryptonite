@@ -9,7 +9,8 @@ def collect_achievements_for_user(user):
 
     user_codes = set(
         UserAchievement.objects.filter(user=user).values_list(
-            'achievement__code', flat=True,
+            'achievement__code',
+            flat=True,
         ),
     )
 
