@@ -3,6 +3,7 @@ from django.db import models
 from ciphers.models import Cipher
 from users.models import CustomUser
 
+import feedback.managers
 
 class Feedback(models.Model):
     STATUS_CHOICES = [
@@ -37,6 +38,8 @@ class Feedback(models.Model):
         related_name='feedback',
         verbose_name='Шифр',
     )
+
+    objects = feedback.managers.FeedbackManager()
 
     class Meta:
         verbose_name = 'жалоба'
