@@ -190,6 +190,7 @@ nav a:hover, nav a.active, .nav-burger a:hover, .nav-burger a.active, .nav-link:
     position: relative;
     background-color: rgba(251, 241, 199, 0.05);
     padding: 20px;
+    min-height: 366px;
     border-radius: 10px;
     transition: all 0.3s;
     border: 1px solid rgba(215, 153, 33, 0.2);
@@ -204,6 +205,10 @@ nav a:hover, nav a.active, .nav-burger a:hover, .nav-burger a.active, .nav-link:
 .cipher-card h4 {
     color: #fbf1c7;
     margin-bottom: 10px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    max-width: 100%;
 }
 
 .cipher-meta {
