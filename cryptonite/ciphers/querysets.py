@@ -20,6 +20,9 @@ class CipherQuerySet(models.QuerySet):
     def approved(self):
         return self.all().filter(status='approved')
 
+    def pending(self):
+        return self.all().filter(status='pending')
+
     def with_user_likes_and_solutions(self, user):
         from ciphers.models import CipherLike
         from logs.models import SolutionLog
