@@ -2,7 +2,6 @@ from django.db import models
 
 
 class FeedbackQuerySet(models.QuerySet):
-
     def all(self):
         return self.select_related('author', 'cipher')
 
