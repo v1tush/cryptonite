@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="auth-container">
     <div class="auth-card">
-        <h2 class="section-title">Вход</h2>
-        <p class="sub-text-form">Войдите, чтобы продолжить свое путешествие в мир криптографии</p>
+        <h2 class="section-title">{% trans 'Вход' %}</h2>
+        <p class="sub-text-form">{% trans 'Войдите, чтобы продолжить свое путешествие в мир криптографии' %}</p>
         
         {% include 'includes/form.html' with button_text='Войти' %}
         
         <div class="auth-links">
-            <p><a href="{% url 'users:password_reset' %}">Забыли пароль?</a></p>
-            <p>Нет аккаунта? <a href="{% url 'users:signup' %}">Зарегистрироваться</a></p>
+            <p><a href="{% url 'users:password_reset' %}">{% trans 'Забыли пароль?' %}</a></p>
+            <p>{% trans 'Нет аккаунта?' %} <a href="{% url 'users:signup' %}">{% trans 'Зарегистрироваться' %}</a></p>
         </div>
     </div>
 </div>

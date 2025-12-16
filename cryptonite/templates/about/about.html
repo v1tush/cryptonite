@@ -5,71 +5,71 @@
 <section class="hero">
     <div class="hero-content">
         <h1>Cryptonite</h1>
-        <p>Первая геймифицированная платформа для изучения, создания и разгадывания шифров. Объединяем криптографию, образование и игровую механику в одном месте.</p>
+        <p>{% trans 'Первая геймифицированная платформа для изучения, создания и разгадывания шифров. Объединяем криптографию, образование и игровую механику в одном месте.' %}</p>
         <div class="cta-buttons">
-            <a href="{% url 'main:main' %}" class="btn">Начать сейчас</a>
-            <a href="#screenshots" class="btn btn-secondary">Смотреть скриншоты</a>
+            <a href="{% url 'main:main' %}" class="btn">{% trans 'Начать сейчас' %}</a>
+            <a href="#screenshots" class="btn btn-secondary">{% trans 'Смотреть скриншоты' %}</a>
         </div>
     </div>
 </section>
 
 <section class="section">
-    <h2 class="section-title">Что такое Cryptonite?</h2>
+    <h2 class="section-title">{% trans 'Что такое Cryptonite?' %}</h2>
     <div class="section-content">
-        <p>Cryptonite — это инновационная образовательная платформа, которая превращает изучение криптографии в увлекательную игру. Мы создали уникальную экосистему, где каждый может:</p>
+        <p>{% trans 'Cryptonite — это инновационная образовательная платформа, которая превращает изучение криптографии в увлекательную игру. Мы создали уникальную экосистему, где каждый может:' %}</p>
         
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">🎓</div>
-                <h3 class="feature-title">Изучать</h3>
-                <p>Осваивать криптографию через интерактивные уроки и практические задания от базовых шифров до продвинутых алгоритмов.</p>
+                <h3 class="feature-title">{% trans 'Изучать' %}</h3>
+                <p>{% trans 'Осваивать криптографию через интерактивные уроки и практические задания от базовых шифров до продвинутых алгоритмов.' %}</p>
             </div>
             
             <div class="feature-card">
                 <div class="feature-icon">🎮</div>
-                <h3 class="feature-title">Играть</h3>
-                <p>Участвовать в ежедневных челленджах, соревноваться с друзьями и зарабатывать достижения в геймифицированной системе.</p>
+                <h3 class="feature-title">{% trans 'Играть' %}</h3>
+                <p>{% trans 'Участвовать в ежедневных челленджах, соревноваться с друзьями и зарабатывать достижения в геймифицированной системе.' %}</p>
             </div>
             
             <div class="feature-card">
                 <div class="feature-icon">🛠️</div>
-                <h3 class="feature-title">Создавать</h3>
-                <p>Разрабатывать собственные шифры, тестировать их на прочность и делиться ими с сообществом.</p>
+                <h3 class="feature-title">{% trans 'Создавать' %}</h3>
+                <p>{% trans 'Разрабатывать собственные шифры, тестировать их на прочность и делиться ими с сообществом.' %}</p>
             </div>
         </div>
     </div>
 </section>
 
 <section class="section" id="screenshots">
-    <h2 class="section-title">Интерфейс платформы</h2>
-    <p class="section-content">Вот как выглядит CryptoNite изнутри. Мы создали интуитивно понятный и современный интерфейс для максимального комфорта пользователей.</p>
+    <h2 class="section-title">{% trans 'Интерфейс платформы' %}</h2>
+    <p class="section-content">{% trans 'Вот как выглядит CryptoNite изнутри. Мы создали интуитивно понятный и современный интерфейс для максимального комфорта пользователей.' %}</p>
     
     <div class="screenshot-container">
         <div class="screenshot-nav">
-            <button class="screenshot-btn active" data-screenshot="main">Главная страница</button>
-            <button class="screenshot-btn" data-screenshot="library">Библиотека</button>
-            <button class="screenshot-btn" data-screenshot="profile">Профиль</button>
-            <button class="screenshot-btn" data-screenshot="create">Создание шифра</button>
+            <button class="screenshot-btn active" data-screenshot="main">{% trans 'Главная страница' %}</button>
+            <button class="screenshot-btn" data-screenshot="library">{% trans 'Библиотека' %}</button>
+            <button class="screenshot-btn" data-screenshot="profile">{% trans 'Профиль' %}</button>
+            <button class="screenshot-btn" data-screenshot="create">{% trans 'Создание шифра' %}</button>
         </div>
         
         <div class="screenshot-display">
             <div class="screenshot-frame active" id="screenshot-main">
-                <div class="screenshot-title">Главная страница</div>
+                <div class="screenshot-title">{% trans 'Главная страница' %}</div>
                 <img src="{% static 'images/main.jpg' %}" width="100%" height="100%">
             </div>
             
             <div class="screenshot-frame" id="screenshot-library">
-                <div class="screenshot-title">Библиотека шифров</div>
+                <div class="screenshot-title">{% trans 'Библиотека шифров' %}</div>
                 <img src="{% static 'images/library.jpg' %}" width="100%" height="100%">
             </div>
             
             <div class="screenshot-frame" id="screenshot-profile">
-                <div class="screenshot-title">Личный профиль</div>
+                <div class="screenshot-title">{% trans 'Личный профиль' %}</div>
                 <img src="{% static 'images/profile.jpg' %}" width="100%" height="100%">
             </div>
             
             <div class="screenshot-frame" id="screenshot-create">
-                <div class="screenshot-title">Создание шифра</div>
+                <div class="screenshot-title">{% trans 'Создание шифра' %}</div>
                 <img src="{% static 'images/create_cipher.jpg' %}" width="100%" height="100%">
             </div>
         </div>
@@ -77,29 +77,29 @@
 </section>
 
 <section class="section">
-    <h2 class="section-title">Команда проекта</h2>
-    <p class="section-content">Над созданием CryptoNite работает команда энтузиастов, объединенных любовью к криптографии и образовательным технологиям.</p>
+    <h2 class="section-title">{% trans 'Команда проекта' %}</h2>
+    <p class="section-content">{% trans 'Над созданием CryptoNite работает команда энтузиастов, объединенных любовью к криптографии и образовательным технологиям.' %}</p>
     
     <div class="team-grid">
         <div class="team-card">
             <div class="team-avatar"><img src="{% static 'images/avatar.jpg' %}"></div>
-            <h3 class="team-name">Андрей</h3>
+            <h3 class="team-name">{% trans 'Андрей' %}</h3>
             <div class="team-role">Lead Developer</div>
-            <p>Руководит проектом и следит чтобы всё работало</p>
+            <p>{% trans 'Руководит проектом и следит чтобы всё работало' %}</p>
         </div>
         
         <div class="team-card">
             <div class="team-avatar"><img src="{% static 'images/avatar.jpg' %}"></div>
-            <h3 class="team-name">Юля</h3>
+            <h3 class="team-name">{% trans 'Юля' %}</h3>
             <div class="team-role">UX/UI Designer</div>
-            <p>Создает интуитивные интерфейсы и геймифицированные механики.</p>
+            <p>{% trans 'Создает интуитивные интерфейсы и геймифицированные механики.' %}</p>
         </div>
         
         <div class="team-card">
             <div class="team-avatar"><img src="{% static 'images/avatar.jpg' %}"></div>
-            <h3 class="team-name">Виталий</h3>
+            <h3 class="team-name">{% trans 'Виталий' %}</h3>
             <div class="team-role">SQL Developer</div>
-            <p>Разрабатывает и создаёт базы данных.</p>
+            <p>{% trans 'Разрабатывает и создаёт базы данных.' %}</p>
         </div>
     </div>
 </section>
@@ -107,14 +107,14 @@
     <section class="cta-section">
         <h2 class="cta-title">Готовы начать?</h2>
         <p style="font-size: 20px; color: rgba(251, 241, 199, 0.9); margin-bottom: 20px;">
-            Присоединяйтесь к сообществу криптоэнтузиастов уже сегодня!
+            {% trans 'Присоединяйтесь к сообществу криптоэнтузиастов уже сегодня!' %}
         </p>
         <p style="font-size: 18px; color: rgba(251, 241, 199, 0.8); max-width: 600px; margin: 0 auto;">
-            Решайте шифры дня, создавайте свои алгоритмы, соревнуйтесь с друзьями и становитесь настоящим экспертом в криптографии.
+            {% trans 'Решайте шифры дня, создавайте свои алгоритмы, соревнуйтесь с друзьями и становитесь настоящим экспертом в криптографии.' %}
         </p>
         <div class="cta-buttons">
-            <a href="{% url 'users:signup' %}" class="btn">Присоединиться</a>
-            <a href="" class="btn btn-secondary">Посмотреть библиотеку</a>
+            <a href="{% url 'users:signup' %}" class="btn">{% trans 'Присоединиться' %}</a>
+            <a href="" class="btn btn-secondary">{% trans 'Посмотреть библиотеку' %}</a>
         </div>
     </section>
 {% endif %}

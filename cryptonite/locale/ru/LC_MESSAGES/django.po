@@ -1,0 +1,932 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-16 21:19+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+#: .\cryptonite\settings.py:106
+msgid "Русский"
+msgstr ""
+
+#: .\cryptonite\settings.py:107
+msgid "English"
+msgstr ""
+
+#: .\templates\about\about.html:8
+msgid ""
+"Первая геймифицированная платформа для изучения, создания и разгадывания "
+"шифров. Объединяем криптографию, образование и игровую механику в одном "
+"месте."
+msgstr ""
+
+#: .\templates\about\about.html:10
+msgid "Начать сейчас"
+msgstr ""
+
+#: .\templates\about\about.html:11
+msgid "Смотреть скриншоты"
+msgstr ""
+
+#: .\templates\about\about.html:17
+msgid "Что такое Cryptonite?"
+msgstr ""
+
+#: .\templates\about\about.html:19
+msgid ""
+"Cryptonite — это инновационная образовательная платформа, которая превращает "
+"изучение криптографии в увлекательную игру. Мы создали уникальную "
+"экосистему, где каждый может:"
+msgstr ""
+
+#: .\templates\about\about.html:24
+msgid "Изучать"
+msgstr ""
+
+#: .\templates\about\about.html:25
+msgid ""
+"Осваивать криптографию через интерактивные уроки и практические задания от "
+"базовых шифров до продвинутых алгоритмов."
+msgstr ""
+
+#: .\templates\about\about.html:30
+msgid "Играть"
+msgstr ""
+
+#: .\templates\about\about.html:31
+msgid ""
+"Участвовать в ежедневных челленджах, соревноваться с друзьями и зарабатывать "
+"достижения в геймифицированной системе."
+msgstr ""
+
+#: .\templates\about\about.html:36
+msgid "Создавать"
+msgstr ""
+
+#: .\templates\about\about.html:37
+msgid ""
+"Разрабатывать собственные шифры, тестировать их на прочность и делиться ими "
+"с сообществом."
+msgstr ""
+
+#: .\templates\about\about.html:44
+msgid "Интерфейс платформы"
+msgstr ""
+
+#: .\templates\about\about.html:45
+msgid ""
+"Вот как выглядит CryptoNite изнутри. Мы создали интуитивно понятный и "
+"современный интерфейс для максимального комфорта пользователей."
+msgstr ""
+
+#: .\templates\about\about.html:49 .\templates\about\about.html:57
+msgid "Главная страница"
+msgstr ""
+
+#: .\templates\about\about.html:50 .\templates\includes\header.html:28
+#: .\templates\includes\header.html:75
+msgid "Библиотека"
+msgstr ""
+
+#: .\templates\about\about.html:51 .\templates\includes\footer.html:5
+#: .\templates\includes\header.html:30 .\templates\includes\header.html:77
+msgid "Профиль"
+msgstr ""
+
+#: .\templates\about\about.html:52 .\templates\about\about.html:72
+msgid "Создание шифра"
+msgstr ""
+
+#: .\templates\about\about.html:62
+msgid "Библиотека шифров"
+msgstr ""
+
+#: .\templates\about\about.html:67
+msgid "Личный профиль"
+msgstr ""
+
+#: .\templates\about\about.html:80
+msgid "Команда проекта"
+msgstr ""
+
+#: .\templates\about\about.html:81
+msgid ""
+"Над созданием CryptoNite работает команда энтузиастов, объединенных любовью "
+"к криптографии и образовательным технологиям."
+msgstr ""
+
+#: .\templates\about\about.html:86
+msgid "Андрей"
+msgstr ""
+
+#: .\templates\about\about.html:88
+msgid "Руководит проектом и следит чтобы всё работало"
+msgstr ""
+
+#: .\templates\about\about.html:93
+msgid "Юля"
+msgstr ""
+
+#: .\templates\about\about.html:95
+msgid "Создает интуитивные интерфейсы и геймифицированные механики."
+msgstr ""
+
+#: .\templates\about\about.html:100
+msgid "Виталий"
+msgstr ""
+
+#: .\templates\about\about.html:102
+msgid "Разрабатывает и создаёт базы данных."
+msgstr ""
+
+#: .\templates\about\about.html:110
+msgid "Присоединяйтесь к сообществу криптоэнтузиастов уже сегодня!"
+msgstr ""
+
+#: .\templates\about\about.html:113
+msgid ""
+"Решайте шифры дня, создавайте свои алгоритмы, соревнуйтесь с друзьями и "
+"становитесь настоящим экспертом в криптографии."
+msgstr ""
+
+#: .\templates\about\about.html:116
+msgid "Присоединиться"
+msgstr ""
+
+#: .\templates\about\about.html:117
+msgid "Посмотреть библиотеку"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:10
+msgid "QR-код"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:16 .\templates\main\main.html:9
+msgid "ЛЕГКАЯ СЛОЖНОСТЬ"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:16 .\templates\main\main.html:9
+msgid "СРЕДНЯЯ СЛОЖНОСТЬ"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:16 .\templates\main\main.html:9
+msgid "СЛОЖНАЯ СЛОЖНОСТЬ"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:16 .\templates\main\main.html:9
+msgid "ОЧЕНЬ СЛОЖНАЯ СЛОЖНОСТЬ"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:21 .\templates\includes\cipher-card.html:13
+msgid "Автор"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:21
+msgid "Создан"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:30
+msgid "Одобрить"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:38
+msgid "Отклонить"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:49
+msgid "решили"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:53
+msgid "лайков"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:63
+msgid "Подсказки"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:71 .\templates\ciphers\cipher.html:86
+#: .\templates\ciphers\create_cipher.html:151
+#: .\templates\ciphers\create_cipher.html:163
+msgid "Подсказка"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:74
+msgid "Куплена"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:95
+msgid "Подсказка заблокирована"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:99
+msgid "Купить за"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:99 .\templates\ciphers\cipher.html:111
+msgid "монет"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:102
+msgid "Недостаточно монет"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:111
+msgid "Каждая подсказка стоит"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:118
+msgid "Зашифрованное слово"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:122
+msgid "Описание алгоритма"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:126
+msgid "Разгадать шифр"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:129
+msgid "Осталось попыток:"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:156
+msgid "Правильно! Шифр решен!"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:158
+msgid "К сожалению попытки закончились"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:168 .\templates\ciphers\cipher.html:182
+msgid "Проверить"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:189
+msgid "Ваши предыдущие попытки"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:213
+msgid "Топ решивших"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:224
+msgid "Количество попыток"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:227
+msgid "-е место"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:232
+msgid "Шифр пока никто не решил"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:237
+msgid "Редактировать"
+msgstr ""
+
+#: .\templates\ciphers\cipher.html:239
+msgid "Пожаловаться"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:9
+msgid "Правила создания шифров"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:11
+msgid "Опишите алгоритм (не менее 100 символов)"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:12
+msgid "Укажите правильный ответ для проверки решений"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:13
+msgid "Шифр должен быть решаемым (не случайная последовательность)"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:14
+msgid "Все шифры проходят модерацию перед публикацией"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:40
+msgid "Придумайте интересное название для вашего шифра"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:65
+msgid "Введите зашифрованную фразу, которую будут разгадывать пользователи"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:78
+msgid ""
+"Этот ответ будет использоваться для автоматической проверки решений "
+"пользователей"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:82
+msgid "Пример заполнения для шифра Цезаря"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:83
+msgid "Правильный ответ: \"ABC\""
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:84
+msgid "Зашифрованная фраза: \"DEF\""
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:85
+msgid "Это пример для шифра Цезаря со сдвигом 3"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:139
+msgid "Подсказки (необязательно)"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:141
+msgid "Добавить подсказку"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:144
+msgid ""
+"Вы можете добавить подсказки, которые будут постепенно открываться "
+"пользователям при решении шифра"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:152
+#: .\templates\ciphers\create_cipher.html:164
+msgid "Удалить"
+msgstr ""
+
+#: .\templates\ciphers\create_cipher.html:169
+msgid "Введите текст подсказки..."
+msgstr ""
+
+#: .\templates\ciphers\library.html:6 .\templates\courses\courses.html:6
+msgid "Шифры сообщества"
+msgstr ""
+
+#: .\templates\ciphers\library.html:7 .\templates\courses\courses.html:7
+msgid "Обучающие курсы"
+msgstr ""
+
+#: .\templates\ciphers\library.html:12
+msgid "Сложность"
+msgstr ""
+
+#: .\templates\ciphers\library.html:14
+msgid "Все"
+msgstr ""
+
+#: .\templates\ciphers\library.html:15
+#: .\templates\courses\create_course.html:85
+#: .\templates\includes\cipher-card.html:10
+#: .\templates\includes\cipher-card.html:18
+msgid "Легкий"
+msgstr ""
+
+#: .\templates\ciphers\library.html:16
+#: .\templates\courses\create_course.html:86
+#: .\templates\includes\cipher-card.html:10
+#: .\templates\includes\cipher-card.html:18
+msgid "Средний"
+msgstr ""
+
+#: .\templates\ciphers\library.html:17
+#: .\templates\courses\create_course.html:87
+#: .\templates\includes\cipher-card.html:10
+#: .\templates\includes\cipher-card.html:18
+msgid "Сложный"
+msgstr ""
+
+#: .\templates\ciphers\library.html:18
+#: .\templates\courses\create_course.html:88
+#: .\templates\includes\cipher-card.html:10
+msgid "Очень сложный"
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:5 .\templates\includes\footer.html:7
+msgid "Политика конфиденциальности"
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:7
+msgid ""
+"Cryptonite — это инновационная образовательная платформа, которая превращает "
+"изучение криптографии в увлекательную игру. Мы создали уникальную "
+"экосистему, предоставляющую пользователям доступ к обучающим материалам по "
+"криптографии в игровой форме."
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:9
+msgid "1. Сбор и использование данных"
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:10
+msgid ""
+"Мы собираем личные данные, такие как имя пользователя, электронная почта и "
+"информацию о профиле, чтобы предоставлять вам услуги на платформе "
+"Cryptonite. Эти данные необходимы для регистрации, личных настроек и "
+"коммуникации с вами."
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:12
+msgid "2. Хранение данных"
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:13
+msgid ""
+"Все данные, собранные через сайт, хранятся на защищённых серверах. Мы "
+"принимаем меры для обеспечения безопасности ваших данных."
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:15
+msgid "3. Использование файлов cookie"
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:16
+msgid ""
+"Мы используем cookies для улучшения функциональности сайта и предоставления "
+"вам лучшего пользовательского опыта."
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:18
+msgid "4. Поделиться информацией с третьими сторонами"
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:19
+msgid ""
+"Мы не передаем ваши личные данные третьим сторонам, за исключением случаев, "
+"когда это необходимо для выполнения наших обязательств перед вами."
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:21
+msgid "5. Ваши права"
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:22
+msgid ""
+"Вы можете запросить доступ к своим данным, их исправление или удаление, "
+"связавшись с нами через контактные данные, указанные на сайте."
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:24
+msgid "6. Контакты"
+msgstr ""
+
+#: .\templates\core\privacy_policy.html:25
+msgid ""
+"Если у вас есть вопросы о нашей политике конфиденциальности, вы можете "
+"связаться с нами через Telegram"
+msgstr ""
+
+#: .\templates\courses\course_detail.html:9
+msgid "ШИФРЫ"
+msgstr ""
+
+#: .\templates\courses\courses.html:9
+#: .\templates\courses\create_course.html:136
+msgid "Создать курс"
+msgstr ""
+
+#: .\templates\courses\courses.html:11
+msgid "Пока нет курсов"
+msgstr ""
+
+#: .\templates\courses\create_course.html:6
+msgid "Создание курса"
+msgstr ""
+
+#: .\templates\courses\create_course.html:11
+msgid "Название должно быть информативным (не менее 5 символов)"
+msgstr ""
+
+#: .\templates\courses\create_course.html:12
+msgid "Описание должно быть развернутым (не менее 100 символов)"
+msgstr ""
+
+#: .\templates\courses\create_course.html:13
+msgid "Курс должен содержать хотя бы 2 шифра"
+msgstr ""
+
+#: .\templates\courses\create_course.html:14
+msgid "Все шифры должны быть вашими опубликованными шифрами"
+msgstr ""
+
+#: .\templates\courses\create_course.html:33
+msgid "Название курса *"
+msgstr ""
+
+#: .\templates\courses\create_course.html:36
+msgid "Введите название курса"
+msgstr ""
+
+#: .\templates\courses\create_course.html:45
+msgid "Придумайте интересное и понятное название"
+msgstr ""
+
+#: .\templates\courses\create_course.html:49
+msgid "Описание курса *"
+msgstr ""
+
+#: .\templates\courses\create_course.html:52
+msgid "Опишите содержание курса"
+msgstr ""
+
+#: .\templates\courses\create_course.html:60
+msgid "Подробно опишите, что пользователи получат от этого курса"
+msgstr ""
+
+#: .\templates\courses\create_course.html:64
+msgid "Шифры курса *"
+msgstr ""
+
+#: .\templates\courses\create_course.html:68
+msgid "Ваши шифры"
+msgstr ""
+
+#: .\templates\courses\create_course.html:69
+msgid "Перетащите нужные шифры в правую колонку"
+msgstr ""
+
+#: .\templates\courses\create_course.html:95
+msgid "У вас пока нет созданных шифров."
+msgstr ""
+
+#: .\templates\courses\create_course.html:96
+#: .\templates\includes\header.html:31 .\templates\includes\header.html:78
+msgid "Создать шифр"
+msgstr ""
+
+#: .\templates\courses\create_course.html:103
+msgid "Шифры курса"
+msgstr ""
+
+#: .\templates\courses\create_course.html:104
+msgid "Перетащите сюда шифры в нужном порядке"
+msgstr ""
+
+#: .\templates\courses\create_course.html:107
+msgid "Перетащите сюда шифры из левой колонки"
+msgstr ""
+
+#: .\templates\courses\create_course.html:125
+msgid "Выбрано шифров"
+msgstr ""
+
+#: .\templates\courses\create_course.html:128
+msgid "Очистить выбор"
+msgstr ""
+
+#: .\templates\courses\create_course.html:132
+msgid "Выберите минимум 2 шифра для курса"
+msgstr ""
+
+#: .\templates\feedback\feedback.html:5
+msgid "Жалоба на шифр"
+msgstr ""
+
+#: .\templates\includes\allow-hide.html:4
+msgid "Ты уверен, что хочешь изменить статус шифра?"
+msgstr ""
+
+#: .\templates\includes\allow-hide.html:6
+msgid "Нет"
+msgstr ""
+
+#: .\templates\includes\allow-hide.html:7
+msgid "Да"
+msgstr ""
+
+#: .\templates\includes\cipher-card.html:18
+msgid "Очень Сложный"
+msgstr ""
+
+#: .\templates\includes\cipher-card.html:22
+msgid "Решили"
+msgstr ""
+
+#: .\templates\includes\cipher-card.html:37
+msgid "Выложить"
+msgstr ""
+
+#: .\templates\includes\cipher-card.html:42
+msgid "Скрыть"
+msgstr ""
+
+#: .\templates\includes\cipher-card.html:49
+msgid "Опубликовано"
+msgstr ""
+
+#: .\templates\includes\cipher-card.html:58
+msgid "ПРОВЕРИТЬ"
+msgstr ""
+
+#: .\templates\includes\cipher-card.html:67 .\templates\main\main.html:14
+msgid "РЕШИТЬ"
+msgstr ""
+
+#: .\templates\includes\footer.html:3
+msgid "Cryptonite © 2025. Платформа для изучения и создания шифров."
+msgstr ""
+
+#: .\templates\includes\footer.html:5 .\templates\users\profile.html:17
+#: .\templates\users\profile_edit.html:20
+msgid "Уровень"
+msgstr ""
+
+#: .\templates\includes\header.html:15
+msgid "Админка"
+msgstr ""
+
+#: .\templates\includes\header.html:26 .\templates\includes\header.html:73
+msgid "Главная"
+msgstr ""
+
+#: .\templates\includes\header.html:27 .\templates\includes\header.html:74
+msgid "О Проекте"
+msgstr ""
+
+#: .\templates\includes\header.html:35 .\templates\includes\header.html:85
+msgid "Выйти"
+msgstr ""
+
+#: .\templates\includes\header.html:39 .\templates\includes\header.html:80
+msgid "Проверка"
+msgstr ""
+
+#: .\templates\includes\header.html:43 .\templates\includes\header.html:90
+msgid "Регистрация"
+msgstr ""
+
+#: .\templates\includes\header.html:45 .\templates\includes\header.html:92
+#: .\templates\users\signup.html:59
+msgid "Войти"
+msgstr ""
+
+#: .\templates\main\main.html:8
+msgid "ШИФР ДНЯ"
+msgstr ""
+
+#: .\templates\main\main.html:12
+msgid "Уже решили"
+msgstr ""
+
+#: .\templates\main\main.html:18
+msgid "ТОП ДНЯ"
+msgstr ""
+
+#: .\templates\main\main.html:23
+msgid "очков"
+msgstr ""
+
+#: .\templates\main\main.html:27
+msgid "Еще никто не заработал баллов"
+msgstr ""
+
+#: .\templates\main\main.html:31
+msgid "Ваш страйк"
+msgstr ""
+
+#: .\templates\main\main.html:31
+msgid "дней"
+msgstr ""
+
+#: .\templates\main\main.html:32
+msgid "Ваше место"
+msgstr ""
+
+#: .\templates\main\main.html:37
+msgid "Упс... Похоже шифр дня отсутствует"
+msgstr ""
+
+#: .\templates\main\main.html:42
+msgid "ПОПУЛЯРНЫЕ ШИФРЫ"
+msgstr ""
+
+#: .\templates\notifications\stuff_page.html:5
+msgid "Ожидающие проверки шифры"
+msgstr ""
+
+#: .\templates\notifications\stuff_page.html:10
+msgid "Нет шифров, ожидающих проверки."
+msgstr ""
+
+#: .\templates\users\login.html:8
+msgid "Вход"
+msgstr ""
+
+#: .\templates\users\login.html:9
+msgid "Войдите, чтобы продолжить свое путешествие в мир криптографии"
+msgstr ""
+
+#: .\templates\users\login.html:14
+msgid "Забыли пароль?"
+msgstr ""
+
+#: .\templates\users\login.html:15
+msgid "Нет аккаунта?"
+msgstr ""
+
+#: .\templates\users\login.html:15
+msgid "Зарегистрироваться"
+msgstr ""
+
+#: .\templates\users\password_change.html:6
+#: .\templates\users\password_reset_confirm.html:6
+msgid "Новый пароль"
+msgstr ""
+
+#: .\templates\users\password_change.html:7
+#: .\templates\users\password_reset_confirm.html:7
+msgid "Введите новый пароль для вашего аккаунта"
+msgstr ""
+
+#: .\templates\users\password_change_done.html:6
+#: .\templates\users\password_reset_complete.html:6
+msgid "Пароль успешно изменен!"
+msgstr ""
+
+#: .\templates\users\password_change_done.html:10
+#: .\templates\users\password_reset_complete.html:10
+msgid "Теперь вы можете войти в свой аккаунт с новым паролем."
+msgstr ""
+
+#: .\templates\users\password_change_done.html:14
+#: .\templates\users\password_reset_complete.html:14
+msgid "Войти в аккаунт"
+msgstr ""
+
+#: .\templates\users\password_reset.html:6
+msgid "Восстановление пароля"
+msgstr ""
+
+#: .\templates\users\password_reset.html:7
+msgid "Введите ваш email, и мы отправим инструкции для сброса пароля"
+msgstr ""
+
+#: .\templates\users\password_reset.html:12
+#: .\templates\users\password_reset_done.html:15
+msgid "Вернуться к входу"
+msgstr ""
+
+#: .\templates\users\password_reset_done.html:6
+msgid "Письмо отправлено!"
+msgstr ""
+
+#: .\templates\users\password_reset_done.html:10
+msgid "Мы отправили вам email с инструкциями по восстановлению пароля."
+msgstr ""
+
+#: .\templates\users\password_reset_done.html:11
+msgid ""
+"Если вы не получили письмо в течение нескольких минут, проверьте папку "
+"\"Спам\"."
+msgstr ""
+
+#: .\templates\users\password_reset_done.html:16
+msgid "Отправить письмо еще раз"
+msgstr ""
+
+#: .\templates\users\password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: .\templates\users\password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: .\templates\users\password_reset_email.html:8
+msgid "Your username, in case you've forgotten:"
+msgstr ""
+
+#: .\templates\users\password_reset_email.html:10
+msgid "Thanks for using our site!"
+msgstr ""
+
+#: .\templates\users\password_reset_email.html:12
+#, python-format
+msgid "The %(site_name)s team"
+msgstr ""
+
+#: .\templates\users\profile.html:18 .\templates\users\profile_edit.html:21
+msgid "Участник с"
+msgstr ""
+
+#: .\templates\users\profile.html:20
+msgid "Описание профиля"
+msgstr ""
+
+#: .\templates\users\profile.html:28
+msgid "решено шифров"
+msgstr ""
+
+#: .\templates\users\profile.html:32
+msgid "счёт"
+msgstr ""
+
+#: .\templates\users\profile.html:36
+msgid "дней страйк"
+msgstr ""
+
+#: .\templates\users\profile.html:40
+msgid "место в рейтинге"
+msgstr ""
+
+#: .\templates\users\profile.html:47
+msgid "Изменить профиль"
+msgstr ""
+
+#: .\templates\users\profile.html:48
+msgid "Сменить пароль"
+msgstr ""
+
+#: .\templates\users\profile.html:52
+msgid "ИЗБРАННЫЕ ДОСТИЖЕНИЯ"
+msgstr ""
+
+#: .\templates\users\profile.html:65
+msgid "Созданные"
+msgstr ""
+
+#: .\templates\users\profile.html:68
+msgid "Решённые"
+msgstr ""
+
+#: .\templates\users\profile.html:75
+msgid "СОЗДАННЫЕ ШИФРЫ"
+msgstr ""
+
+#: .\templates\users\profile.html:80
+msgid "Шифров нет"
+msgstr ""
+
+#: .\templates\users\profile.html:86
+msgid "РЕШЁННЫЕ ШИФРЫ"
+msgstr ""
+
+#: .\templates\users\profile.html:91
+msgid "Решённых шифров нет"
+msgstr ""
+
+#: .\templates\users\profile_edit.html:52
+msgid "Сохранить"
+msgstr ""
+
+#: .\templates\users\signup.html:13 .\templates\users\signup.html:57
+msgid "Создать аккаунт"
+msgstr ""
+
+#: .\templates\users\signup.html:14
+msgid "Зарегистрируйтесь, чтобы начать свое путешествие в мир криптографии"
+msgstr ""
+
+#: .\templates\users\signup.html:31
+msgid "Аватарка (необязательно)"
+msgstr ""
+
+#: .\templates\users\signup.html:35
+msgid "JPEG или PNG, макс. 2 МБ"
+msgstr ""
+
+#: .\templates\users\signup.html:40
+msgid "Имя пользователя *"
+msgstr ""
+
+#: .\templates\users\signup.html:42
+msgid "Будет отображаться в рейтингах"
+msgstr ""
+
+#: .\templates\users\signup.html:49
+msgid "Пароль *"
+msgstr ""
+
+#: .\templates\users\signup.html:51
+msgid "Минимум 8 символов"
+msgstr ""
+
+#: .\templates\users\signup.html:54
+msgid "Подтвердите пароль *"
+msgstr ""
+
+#: .\templates\users\signup.html:59
+msgid "Уже есть аккаунт?"
+msgstr ""

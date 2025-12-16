@@ -1,8 +1,20 @@
 {% load i18n %}
 {% load static %}
 <div class="language-switch-container">
-    <div class="language-switch"><a>EN</a></div>
+    <div class="language-switch">
+        {% get_current_language as current_lang %}
+        {% if current_lang == 'ru' %}
+            <a href="/en{{ request.get_full_path }}">EN</a>
+        {% else %}
+            <a href="{{ request.get_full_path|slice:'3:' }}">RU</a>
+        {% endif %}
+    </div>
 </div>
+{% if request.user.is_superuser %}
+<div class="language-switch">
+    <a href="{% url 'admin:index' %}">{% trans 'Админка' %}</a>
+</div>
+{% endif %}
 <div class="header-container">
     <a href="{% url 'main:main' %}" class="logo">
         <span class="logo-icon">🔐</span>
@@ -11,26 +23,26 @@
     
     <nav>
         <ul>
-            <li><a {% if request.resolver_match.view_name == 'main:main' %} class="active" {% else %} href="{% url 'main:main' %}"{% endif %}>Главная</a></li>
-            <li><a {% if request.resolver_match.view_name == 'about:about' %} class="active" {% else %}href="{% url 'about:about' %}"{% endif %}>О Проекте</a></li>
-            <li><a {% if request.resolver_match.view_name == 'ciphers:library_community' or  request.resolver_match.view_name == 'courses:library_courses'%} class="active" {% else %}href="{% url 'ciphers:library_community' %}"{% endif %}>Библиотека</a></li>
+            <li><a {% if request.resolver_match.view_name == 'main:main' %} class="active" {% else %} href="{% url 'main:main' %}"{% endif %}>{% trans 'Главная' %}</a></li>
+            <li><a {% if request.resolver_match.view_name == 'about:about' %} class="active" {% else %}href="{% url 'about:about' %}"{% endif %}>{% trans 'О Проекте' %}</a></li>
+            <li><a {% if request.resolver_match.view_name == 'ciphers:library_community' or  request.resolver_match.view_name == 'courses:library_courses'%} class="active" {% else %}href="{% url 'ciphers:library_community' %}"{% endif %}>{% trans 'Библиотека' %}</a></li>
             {% if user.is_authenticated %}
-                <li><a {% if request.resolver_match.view_name == 'users:profile' and request.resolver_match.kwargs.username == user.username %} class="active" {% else %}href="{% url 'users:profile' user.username %}"{% endif %}>Профиль</a></li>
-                <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>Создать шифр</a></li>
+                <li><a {% if request.resolver_match.view_name == 'users:profile' and request.resolver_match.kwargs.username == user.username %} class="active" {% else %}href="{% url 'users:profile' user.username %}"{% endif %}>{% trans 'Профиль' %}</a></li>
+                <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>{% trans 'Создать шифр' %}</a></li>
                 <li>
                     <form method="post" action="{% url 'users:logout' %}">
                         {% csrf_token %}
-                        <button class="nav-link" type="submit"><span>Выйти</span></button>
+                        <button class="nav-link" type="submit"><span>{% trans 'Выйти' %}</span></button>
                     </form>
                 </li>
                 {% if user.is_staff %}
-                    <li><a {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %} class="active" {% else %} href="{% url 'notifications:stuff-notifications' %}"{% endif %}>Проверка</a></li>
+                    <li><a {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %} class="active" {% else %} href="{% url 'notifications:stuff-notifications' %}"{% endif %}>{% trans 'Проверка' %}</a></li>
                 {% endif %}
             {% else %}
                 {% if request.resolver_match.view_name == 'users:login' %}
-                    <li><a href="{% url 'users:signup' %}">Регистрация</a></li>
+                    <li><a href="{% url 'users:signup' %}">{% trans 'Регистрация' %}</a></li>
                 {% else %}
-                    <li><a href="{% url 'users:login' %}">Войти</a></li>
+                    <li><a href="{% url 'users:login' %}">{% trans 'Войти' %}</a></li>
                 {% endif %}
             {% endif %}
         </ul>
@@ -58,26 +70,26 @@
 </div>
 <div id="nav-burger" class="nav-burger" hidden>
     <ul>
-        <li><a {% if request.resolver_match.view_name == 'main:main' %} class="active" {% else %} href="{% url 'main:main' %}"{% endif %}>Главная</a></li>
-        <li><a {% if request.resolver_match.view_name == 'about:about' %} class="active" {% else %}href="{% url 'about:about' %}"{% endif %}>О Проекте</a></li>
-        <li><a {% if request.resolver_match.view_name == 'ciphers:library_community' or  request.resolver_match.view_name == 'courses:library_courses'%} class="active" {% else %}href="{% url 'ciphers:library_community' %}"{% endif %}>Библиотека</a></li>
+        <li><a {% if request.resolver_match.view_name == 'main:main' %} class="active" {% else %} href="{% url 'main:main' %}"{% endif %}>{% trans 'Главная' %}</a></li>
+        <li><a {% if request.resolver_match.view_name == 'about:about' %} class="active" {% else %}href="{% url 'about:about' %}"{% endif %}>{% trans 'О Проекте' %}</a></li>
+        <li><a {% if request.resolver_match.view_name == 'ciphers:library_community' or  request.resolver_match.view_name == 'courses:library_courses'%} class="active" {% else %}href="{% url 'ciphers:library_community' %}"{% endif %}>{% trans 'Библиотека' %}</a></li>
         {% if user.is_authenticated %}
-            <li><a {% if request.resolver_match.view_name == 'users:profile' and request.resolver_match.kwargs.username == user.username %} class="active" {% else %}href="{% url 'users:profile' user.username %}"{% endif %}>Профиль</a></li>
-            <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>Создать шифр</a></li>
+            <li><a {% if request.resolver_match.view_name == 'users:profile' and request.resolver_match.kwargs.username == user.username %} class="active" {% else %}href="{% url 'users:profile' user.username %}"{% endif %}>{% trans 'Профиль' %}</a></li>
+            <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>{% trans 'Создать шифр' %}</a></li>
             {% if user.is_staff %}
-                <li><a {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %} class="active" {% else %} href="{% url 'notifications:stuff-notifications' %}"{% endif %}>Проверка</a></li>
+                <li><a {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %} class="active" {% else %} href="{% url 'notifications:stuff-notifications' %}"{% endif %}>{% trans 'Проверка' %}</a></li>
             {% endif %}
             <li>
                 <form method="post" action="{% url 'users:logout' %}">
                     {% csrf_token %}
-                    <button class="nav-link" type="submit"><span>Выйти</span></button>
+                    <button class="nav-link" type="submit"><span>{% trans 'Выйти' %}</span></button>
                 </form>
             </li>
         {% else %}
             {% if request.resolver_match.view_name == 'users:login' %}
-                <li><a href="{% url 'users:signup' %}">Регистрация</a></li>
+                <li><a href="{% url 'users:signup' %}">{% trans 'Регистрация' %}</a></li>
             {% else %}
-                <li><a href="{% url 'users:login' %}">Войти</a></li>
+                <li><a href="{% url 'users:login' %}">{% trans 'Войти' %}</a></li>
             {% endif %}
         {% endif %}
     </ul>

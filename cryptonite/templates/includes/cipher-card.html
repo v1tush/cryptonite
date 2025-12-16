@@ -7,19 +7,19 @@
     {% if user.is_authenticated and user.id == cipher.author.id %}
         <a href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}">
     {% endif %}
-    <div data-difficulty="{% if cipher.difficulty == 1 %}Легкий{% elif cipher.difficulty == 2 %}Средний{% elif cipher.difficulty == 3 %}Сложный{% else %}Очень сложный{% endif %}"
+    <div data-difficulty="{% if cipher.difficulty == 1 %}{% trans 'Легкий' %}{% elif cipher.difficulty == 2 %}{% trans 'Средний' %}{% elif cipher.difficulty == 3 %}{% trans 'Сложный' %}{% else %}{% trans 'Очень сложный' %}{% endif %}"
          class="cipher-card {% if cipher.solved_by_user %} solved {% endif %}">
         <h4>{{ cipher.title }}</h4>
-        <div class="cipher-author">Автор: {{ cipher.author.username }}</div>
+        <div class="cipher-author">{% trans 'Автор' %}: {{ cipher.author.username }}</div>
         <p class="cipher-desc">{{ cipher.description }}</p>
         <div class="cipher-meta">
             <div>
                 <div class="difficulty {% if cipher.difficulty == 1 %}easy{% elif cipher.difficulty == 2 %}medium{% elif cipher.difficulty == 3 %}hard{% else %}hardcore{% endif %}">
-                    {% if cipher.difficulty == 1 %}Легкий{% elif cipher.difficulty == 2 %}Средний{% elif cipher.difficulty == 3 %}Сложный{% else %}Очень Сложный{% endif %}
+                    {% if cipher.difficulty == 1 %}{% trans 'Легкий' %}{% elif cipher.difficulty == 2 %}{% trans 'Средний' %}{% elif cipher.difficulty == 3 %}{% trans 'Сложный' %}{% else %}{% trans 'Очень Сложный' %}{% endif %}
                 </div>
             </div>
             <div class="stats">
-                <div>Решили: {{ cipher.correct_solutions_count|default:0 }}</div>
+                <div>{% trans 'Решили' %}: {{ cipher.correct_solutions_count|default:0 }}</div>
                 <div style="display: inline-block; cursor: pointer;"
                      data-cipher-id="{{ cipher.id }}"
                      class="likes {% if cipher.liked_by_user %} yellow-text {% endif %}">
@@ -34,19 +34,19 @@
                 {% if cipher.status == 'hidden' %}
                     <button class="btn btn-small"
                             data-hide-url="{% url 'ciphers:open_cipher' cipher.id %}">
-                        Выложить
+                        {% trans 'Выложить' %}
                     </button>
                 {% else %}
                     <button class="btn btn-small"
                             data-hide-url="{% url 'ciphers:hide_cipher' cipher.id %}">
-                        Скрыть
+                        {% trans 'Скрыть' %}
                     </button>
                 {% endif %}
             {% endif %}
 
             <span class="status {% if cipher.is_published %} is-published {% else %} not-is-published {% endif %}">
                 {% if cipher.is_published %}
-                    Опубликовано
+                    {% trans 'Опубликовано' %}
                 {% else %}
                     {{ cipher.get_status_display }}
                 {% endif %}
@@ -55,7 +55,7 @@
             {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %}
                 <a href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}"
                    class="btn btn-small btn-warning">
-                    ПРОВЕРИТЬ
+                    {% trans 'ПРОВЕРИТЬ' %}
                 </a>
             {% else %}
                 <a {% if user.is_authenticated %}
@@ -64,7 +64,7 @@
                         href="{% url 'users:login' %}
                     {% endif %}
                     class="btn btn-small btn-cipher">
-                    РЕШИТЬ
+                    {% trans 'РЕШИТЬ' %}
                 </a>
             {% endif %}
         {% endif %}

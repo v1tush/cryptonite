@@ -3,15 +3,15 @@
 {% load i18n %}
 
 {% block content %}
-<h1 class="page-title">Создание курса</h1>
+<h1 class="page-title">{% trans 'Создание курса' %}</h1>
 
 <div style="max-width: 1000px;" class="validation-rules">
     <div class="rules-title">Правила создания курса:</div>
     <ul class="rules-list">
-        <li>Название должно быть информативным (не менее 5 символов)</li>
-        <li>Описание должно быть развернутым (не менее 100 символов)</li>
-        <li>Курс должен содержать хотя бы 2 шифра</li>
-        <li>Все шифры должны быть вашими опубликованными шифрами</li>
+        <li>{% trans 'Название должно быть информативным (не менее 5 символов)' %}</li>
+        <li>{% trans 'Описание должно быть развернутым (не менее 100 символов)' %}</li>
+        <li>{% trans 'Курс должен содержать хотя бы 2 шифра' %}</li>
+        <li>{% trans 'Все шифры должны быть вашими опубликованными шифрами' %}</li>
     </ul>
 </div>
 
@@ -30,10 +30,10 @@
         {% endif %}
         
         <div class="form-group">
-            <label class="form-label" for="title">Название курса *</label>
+            <label class="form-label" for="title">{% trans 'Название курса *' %}</label>
             <input type="text" id="title" name="title" required 
                    class="form-input {% if errors.title %}error-field{% endif %}" 
-                   placeholder="Введите название курса"
+                   placeholder="{% trans 'Введите название курса' %}"
                    value="{{ form_data.title|default:'' }}">
             {% if errors.title %}
             <div class="field-error">
@@ -42,14 +42,14 @@
                 {% endfor %}
             </div>
             {% endif %}
-            <div class="form-note">Придумайте интересное и понятное название</div>
+            <div class="form-note">{% trans 'Придумайте интересное и понятное название' %}</div>
         </div>
         
         <div class="form-group">
-            <label class="form-label" for="description">Описание курса *</label>
+            <label class="form-label" for="description">{% trans 'Описание курса *' %}</label>
             <textarea id="description" name="description" required 
                       class="form-textarea {% if errors.description %}error-field{% endif %}" rows="5"
-                      placeholder="Опишите содержание курса">{{ form_data.description|default:'' }}</textarea>
+                      placeholder="{% trans 'Опишите содержание курса' %}">{{ form_data.description|default:'' }}</textarea>
             {% if errors.description %}
             <div class="field-error">
                 {% for error in errors.description %}
@@ -57,16 +57,16 @@
                 {% endfor %}
             </div>
             {% endif %}
-            <div class="form-note">Подробно опишите, что пользователи получат от этого курса</div>
+            <div class="form-note">{% trans 'Подробно опишите, что пользователи получат от этого курса' %}</div>
         </div>
         
         <div class="form-group">
-            <label class="form-label">Шифры курса *</label>
+            <label class="form-label">{% trans 'Шифры курса *' %}</label>
             <div class="course-ciphers-container {% if errors.cipher_ids %}error-container{% endif %}">
                 <div class="ciphers-selection-area">
                     <div class="available-ciphers">
-                        <h3 class="selection-title">Ваши шифры</h3>
-                        <p class="selection-subtitle">Перетащите нужные шифры в правую колонку</p>
+                        <h3 class="selection-title">{% trans 'Ваши шифры' %}</h3>
+                        <p class="selection-subtitle">{% trans 'Перетащите нужные шифры в правую колонку' %}</p>
                         <div class="ciphers-list" id="available-ciphers">
                             <div class="cipher-grid">
                             {% for cipher in user_ciphers %}
@@ -82,29 +82,29 @@
                                         {% elif cipher.difficulty == 2 %}medium
                                         {% elif cipher.difficulty == 3 %}hard
                                         {% else %}hardcore{% endif %}">
-                                        {% if cipher.difficulty == 1 %}Легкий
-                                        {% elif cipher.difficulty == 2 %}Средний
-                                        {% elif cipher.difficulty == 3 %}Сложный
-                                        {% else %}Очень сложный{% endif %}
+                                        {% if cipher.difficulty == 1 %}{% trans 'Легкий' %}
+                                        {% elif cipher.difficulty == 2 %}{% trans 'Средний' %}
+                                        {% elif cipher.difficulty == 3 %}{% trans 'Сложный' %}
+                                        {% else %}{% trans 'Очень сложный' %}{% endif %}
                                     </span>
                                 </div>
                                 <span class="drag-handle">☰</span>
                             </div>
                             {% empty %}
                             <div class="empty-message">
-                                У вас пока нет созданных шифров.
-                                <a href="{% url 'ciphers:create_cipher' %}">Создать шифр</a>
+                                {% trans 'У вас пока нет созданных шифров.' %}
+                                <a href="{% url 'ciphers:create_cipher' %}">{% trans 'Создать шифр' %}</a>
                             </div>
                             {% endfor %}
                             </div>
                         </div>
                     </div>
                     <div class="selected-ciphers">
-                        <h3 class="selection-title">Шифры курса</h3>
-                        <p class="selection-subtitle">Перетащите сюда шифры в нужном порядке</p>
+                        <h3 class="selection-title">{% trans 'Шифры курса' %}</h3>
+                        <p class="selection-subtitle">{% trans 'Перетащите сюда шифры в нужном порядке' %}</p>
                         <div class="ciphers-list drop-zone" id="selected-ciphers">
                             <div class="empty-drop-message">
-                                Перетащите сюда шифры из левой колонки
+                                {% trans 'Перетащите сюда шифры из левой колонки' %}
                             </div>
                         </div>
                     </div>
@@ -122,18 +122,18 @@
                 
                 <div class="selection-info">
                     <div class="selected-count">
-                        Выбрано шифров: <span id="selected-count">0</span>
+                        {% trans 'Выбрано шифров' %}: <span id="selected-count">0</span>
                     </div>
                     <button type="button" class="btn btn-small" id="clear-selection">
-                        Очистить выбор
+                        {% trans 'Очистить выбор' %}
                     </button>
                 </div>
             </div>
-            <div class="form-note">Выберите минимум 2 шифра для курса</div>
+            <div class="form-note">{% trans 'Выберите минимум 2 шифра для курса' %}</div>
         </div>
         
         <button type="submit" class="btn btn-large" id="create-course-btn">
-            Создать курс
+            {% trans 'Создать курс' %}
         </button>
     </form>
 </div>

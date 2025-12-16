@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
+{% load i18n %}
 <div {% if user.background %}
      style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(/media/{{ user.background }}); background-size: cover; background-position: center;"
      {% endif %}
@@ -17,8 +17,8 @@
 
     <div class="profile-info">
         <div class="profile-name">{{ user.username }}</div>
-        <div class="profile-title">Уровень {{ user.level }}</div>
-        <p class="sub-text">Участник с {{ user.date_joined|date:"d.m.Y" }}</p>
+        <div class="profile-title">{% trans 'Уровень' %} {{ user.level }}</div>
+        <p class="sub-text">{% trans 'Участник с' %} {{ user.date_joined|date:"d.m.Y" }}</p>
     </div>
 </div>
 
@@ -49,7 +49,7 @@
         </div>
     {% endfor %}
 
-    <button type="submit" class="btn btn-large" style="margin-top: 20px;">Сохранить</button>
+    <button type="submit" class="btn btn-large" style="margin-top: 20px;">{% trans 'Сохранить' %}</button>
 </form>
 
 

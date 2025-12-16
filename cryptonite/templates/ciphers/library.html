@@ -3,19 +3,19 @@
 {% load static %}
 {% block content %}
 <div class="tabs">
-    <a class="tab {% if request.resolver_match.view_name == 'ciphers:library_community' %}active {% endif %}" {% if request.resolver_match.view_name != 'ciphers:library_community' %}href="{% url 'ciphers:library_community' %}"{% endif %}>Шифры сообщества</a>
-    <a class="tab {% if request.resolver_match.view_name == 'courses:library_courses' %}active {% endif %}" {% if request.resolver_match.view_name != 'courses:library_courses' %}href="{% url 'courses:library_courses' %}"{% endif %}>Обучающие курсы</a>
+    <a class="tab {% if request.resolver_match.view_name == 'ciphers:library_community' %}active {% endif %}" {% if request.resolver_match.view_name != 'ciphers:library_community' %}href="{% url 'ciphers:library_community' %}"{% endif %}>{% trans 'Шифры сообщества' %}</a>
+    <a class="tab {% if request.resolver_match.view_name == 'courses:library_courses' %}active {% endif %}" {% if request.resolver_match.view_name != 'courses:library_courses' %}href="{% url 'courses:library_courses' %}"{% endif %}>{% trans 'Обучающие курсы' %}</a>
 </div>
 
 <div class="filters">
     <div class="filter-group">
-        <div class="filter-label">Сложность</div>
+        <div class="filter-label">{% trans 'Сложность' %}</div>
         <div class="filter-buttons">
-            <button class="filter-btn active difficulty-filter-button">Все</button>
-            <button class="filter-btn difficulty-filter-button">Легкий</button>
-            <button class="filter-btn difficulty-filter-button">Средний</button>
-            <button class="filter-btn difficulty-filter-button">Сложный</button>
-            <button class="filter-btn difficulty-filter-button">Очень сложный</button>
+            <button class="filter-btn active difficulty-filter-button">{% trans 'Все' %}</button>
+            <button class="filter-btn difficulty-filter-button">{% trans 'Легкий' %}</button>
+            <button class="filter-btn difficulty-filter-button">{% trans 'Средний' %}</button>
+            <button class="filter-btn difficulty-filter-button">{% trans 'Сложный' %}</button>
+            <button class="filter-btn difficulty-filter-button">{% trans 'Очень сложный' %}</button>
         </div>
     </div>
 </div>

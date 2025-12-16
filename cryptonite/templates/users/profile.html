@@ -14,10 +14,10 @@
     <div class="profile-avatar"><img src="{% if profile_user.avatar %} /media/{{ profile_user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
     <div class="profile-info">
         <div class="profile-name">{{ profile_user.username }}</div>
-        <div class="profile-title">Уровень {{ profile_user.level }}</div>
-        <p class="sub-text">Участник с {{ profile_user.date_joined|date:"d.m.Y"  }}</p>
+        <div class="profile-title">{% trans 'Уровень' %} {{ profile_user.level }}</div>
+        <p class="sub-text">{% trans 'Участник с' %} {{ profile_user.date_joined|date:"d.m.Y"  }}</p>
 
-        <div class="stat-value">Описание профиля</div>
+        <div class="stat-value">{% trans 'Описание профиля' %}</div>
         <p class="sub-text">
             {{ profile_user.about_me }}
         </p>
@@ -25,31 +25,31 @@
         <div class="profile-stats">
             <div class="stat-item">
                 <div class="stat-value">{{ profile_user.solved_ciphers_count }}</div>
-                <div class="stat-label">решено шифров</div>
+                <div class="stat-label">{% trans 'решено шифров' %}</div>
             </div>
             <div class="stat-item">
                 <div class="stat-value">{{ profile_user.xp }}</div>
-                <div class="stat-label">счёт</div>
+                <div class="stat-label">{% trans 'счёт' %}</div>
             </div>
             <div class="stat-item">
                 <div class="stat-value">{{ profile_user.strike }}</div>
-                <div class="stat-label">дней страйк</div>
+                <div class="stat-label">{% trans 'дней страйк' %}</div>
             </div>
             <div class="stat-item">
                 <div class="stat-value">{{ rank }}</div>
-                <div class="stat-label">место в рейтинге</div>
+                <div class="stat-label">{% trans 'место в рейтинге' %}</div>
             </div>
         </div>
     </div>
 </div>
 
 {% if user == profile_user %}
-    <a href="{% url 'users:profile_edit' %}" class="btn edit-profile-button">Изменить профиль</a>
-    <a href="{% url 'users:password_change' %}" class="btn edit-profile-button">Сменить пароль</a>
+    <a href="{% url 'users:profile_edit' %}" class="btn edit-profile-button">{% trans 'Изменить профиль' %}</a>
+    <a href="{% url 'users:password_change' %}" class="btn edit-profile-button">{% trans 'Сменить пароль' %}</a>
 {% endif %}
 
 <div class="achievements">
-    <h3 class="section-title">ИЗБРАННЫЕ ДОСТИЖЕНИЯ</h3>
+    <h3 class="section-title">{% trans 'ИЗБРАННЫЕ ДОСТИЖЕНИЯ' %}</h3>
     <div class="achievement-grid">
         {% for achievement in profile_user.achievements.all %}
             <div class="achievement-item featured">
@@ -62,33 +62,33 @@
 
 <div class="profile-tabs">
     <span class="profile-tab active" data-tab="created">
-        Созданные ({{ created_ciphers|length }})
+        {% trans 'Созданные' %} ({{ created_ciphers|length }})
     </span>
     <span class="profile-tab" data-tab="solved">
-        Решённые ({{ solved_users_ciphers|length }})
+        {% trans 'Решённые' %} ({{ solved_users_ciphers|length }})
     </span>
 </div>
 
 <div class="user-ciphers">
 
     <div class="cipher-tab active" id="tab-created">
-        <h3 class="section-title">СОЗДАННЫЕ ШИФРЫ</h3>
+        <h3 class="section-title">{% trans 'СОЗДАННЫЕ ШИФРЫ' %}</h3>
         <div class="cipher-grid">
             {% for cipher in created_ciphers %}
                 {% include 'includes/cipher-card.html' with cipher=cipher solved_users_cnt=cipher.correct_solutions_count %}
             {% empty %}
-                <p class="sub-text">Шифров нет</p>
+                <p class="sub-text">{% trans 'Шифров нет' %}</p>
             {% endfor %}
         </div>
     </div>
 
     <div class="cipher-tab" id="tab-solved">
-        <h3 class="section-title">РЕШЁННЫЕ ШИФРЫ</h3>
+        <h3 class="section-title">{% trans 'РЕШЁННЫЕ ШИФРЫ' %}</h3>
         <div class="cipher-grid">
             {% for cipher in solved_users_ciphers %}
                 {% include 'includes/cipher-card.html' with cipher=cipher solved_users_cnt=cipher.correct_solutions_count %}
             {% empty %}
-                <p class="sub-text">Решённых шифров нет</p>
+                <p class="sub-text">{% trans 'Решённых шифров нет' %}</p>
             {% endfor %}
         </div>
     </div>

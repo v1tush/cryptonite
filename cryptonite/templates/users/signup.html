@@ -10,8 +10,8 @@
                 <span class="logo-icon">🔐</span>
                 <h1>Cryptonite</h1>
             </div>
-            <h2>Создать аккаунт</h2>
-            <p class="signup-subtitle">Зарегистрируйтесь, чтобы начать свое путешествие в мир криптографии</p>
+            <h2>{% trans 'Создать аккаунт' %}</h2>
+            <p class="signup-subtitle">{% trans 'Зарегистрируйтесь, чтобы начать свое путешествие в мир криптографии' %}</p>
         </div>
         {% if form.errors %}
         <div class="form-errors">
@@ -28,35 +28,35 @@
         <form method="POST" enctype="multipart/form-data" class="signup-form">
             {% csrf_token %}
             <div class="form-group avatar-group">
-                <label>Аватарка (необязательно)</label>
+                <label>{% trans 'Аватарка (необязательно)' %}</label>
                 <div class="avatar-field">
                     {{ form.avatar }}
                     <div class="avatar-hint">
-                        JPEG или PNG, макс. 2 МБ, мин. 300×300px
+                        {% trans 'JPEG или PNG, макс. 2 МБ' %}
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <label for="id_username">Имя пользователя *</label>
+                <label for="id_username">{% trans 'Имя пользователя *' %}</label>
                 {{ form.username }}
-                <small>Будет отображаться в рейтингах</small>
+                <small>{% trans 'Будет отображаться в рейтингах' %}</small>
             </div>
             <div class="form-group">
                 <label for="id_email">Email *</label>
                 {{ form.email }}
             </div>
             <div class="form-group">
-                <label for="id_password1">Пароль *</label>
+                <label for="id_password1">{% trans 'Пароль *' %}</label>
                 {{ form.password1 }}
-                <small>Минимум 8 символов</small>
+                <small>{% trans 'Минимум 8 символов' %}</small>
             </div>
             <div class="form-group">
-                <label for="id_password2">Подтвердите пароль *</label>
+                <label for="id_password2">{% trans 'Подтвердите пароль *' %}</label>
                 {{ form.password2 }}
             </div>
-            <button type="submit" class="btn btn-primary btn-large">Создать аккаунт</button>
+            <button type="submit" class="btn btn-primary btn-large">{% trans 'Создать аккаунт' %}</button>
             <div class="signup-footer">
-                <p>Уже есть аккаунт? <a href="{% url 'users:login' %}">Войти</a></p>
+                <p>{% trans 'Уже есть аккаунт?' %} <a href="{% url 'users:login' %}">{% trans 'Войти' %}</a></p>
             </div>
         </form>
     </div>

@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load static %}  
-<p>Cryptonite © 2025. Платформа для изучения и создания шифров.</p>
+<p>{% trans 'Cryptonite © 2025. Платформа для изучения и создания шифров.' %}</p>
 {% if user.is_authenticated %}
-    <p>Профиль: {{ user.username }} | Уровень: {{ user.level }}</p>
+    <p>{% trans 'Профиль' %}: {{ user.username }} | {% trans 'Уровень' %}: {{ user.level }}</p>
 {% endif %}
-<a href="{% url 'core:privacy_policy' %}">Политика конфиденциальности</a>
+<a href="{% url 'core:privacy_policy' %}">{% trans 'Политика конфиденциальности' %}</a>
