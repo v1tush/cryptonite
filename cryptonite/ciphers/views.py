@@ -117,7 +117,9 @@ class LibraryCommunityView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        approved = Cipher.objects.approved().with_user_likes_and_solutions(self.request.user)
+        approved = Cipher.objects.approved().with_user_likes_and_solutions(
+            self.request.user,
+        )
         if not self.request.user.is_authenticated:
             return approved
 
@@ -135,6 +137,7 @@ class CipherAccessMixin:
     def get_cipher(self, request, cipher_id):
         if request.user.is_staff:
             return get_object_or_404(Cipher, id=cipher_id)
+
         return get_object_or_404(Cipher, id=cipher_id, author=request.user)
 
 

@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import redirect
 from django.views.generic import ListView
 
-import ciphers.models
+from ciphers.models import Cipher
 
 
 class UserPassesTestMixinForStaff(UserPassesTestMixin):
@@ -20,12 +20,14 @@ class StaffNotificationsView(
     UserPassesTestMixinForStaff,
     ListView,
 ):
-    model = ciphers.models.Cipher
+    model = Cipher
     template_name = 'notifications/stuff_page.html'
     context_object_name = 'ciphers'
 
     def get_queryset(self):
-        return ciphers.models.Cipher.objects.pending().with_user_likes_and_solutions(self.request.user)
+        return Cipher.objects.pending().with_user_likes_and_solutions(
+            self.request.user,
+        )
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
