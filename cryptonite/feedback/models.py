@@ -1,9 +1,9 @@
 from django.db import models
 
 from ciphers.models import Cipher
+import feedback.managers
 from users.models import CustomUser
 
-import feedback.managers
 
 class Feedback(models.Model):
     STATUS_CHOICES = [
