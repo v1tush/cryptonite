@@ -68,9 +68,9 @@ class ProfileDetailView(
         context = super().get_context_data(**kwargs)
 
         created_ciphers = (
-            user_whose_profile.ciphers.all().with_user_likes_and_solutions(
+            user_whose_profile.ciphers.with_user_likes_and_solutions(
                 self.request.user,
-            )
+            ).with_stats()
         )
 
         if user_whose_profile == self.request.user:

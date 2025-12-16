@@ -4,7 +4,7 @@
 {% include 'includes/allow-hide.html' %}
 
 <div class="cipher-wrapper">
-    {% if user.is_authenticated and user.id == cipher.author.id %}
+    {% if user.is_authenticated and user.id == cipher.author.id or user.is_staff %}
         <a href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}">
     {% endif %}
     <div data-difficulty="{% if cipher.difficulty == 1 %}{% trans 'Легкий' %}{% elif cipher.difficulty == 2 %}{% trans 'Средний' %}{% elif cipher.difficulty == 3 %}{% trans 'Сложный' %}{% else %}{% trans 'Очень сложный' %}{% endif %}"
@@ -29,7 +29,7 @@
         </div>
 
         {# ===== ВОТ ТУТ ЕДИНСТВЕННОЕ ИЗМЕНЕНИЕ ===== #}
-        {% if user.id == cipher.author.id and not user.is_staff %}
+        {% if user.id == cipher.author.id or user.is_staff %}
             {% if cipher.status != "pending" and cipher.status != "rejected" %}
                 {% if cipher.status == 'hidden' %}
                     <button class="btn btn-small"
@@ -69,7 +69,7 @@
             {% endif %}
         {% endif %}
     </div>
-    {% if user.is_authenticated and user.id == cipher.author.id %}
+    {% if user.is_authenticated and user.id == cipher.author.id or user.is_staff %}
         </a>
     {% endif %}
 </div>

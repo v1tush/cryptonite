@@ -25,7 +25,7 @@ class StaffNotificationsView(
     context_object_name = 'ciphers'
 
     def get_queryset(self):
-        return ciphers.models.Cipher.objects.pending()
+        return ciphers.models.Cipher.objects.pending().with_user_likes_and_solutions(self.request.user)
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)

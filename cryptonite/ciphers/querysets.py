@@ -3,7 +3,7 @@ from django.db.models import Count, Exists, OuterRef, Q
 
 
 class CipherQuerySet(models.QuerySet):
-    def all(self):
+    def with_stats(self):
         return (
             self.select_related('author')
             .prefetch_related('likes')
@@ -18,10 +18,10 @@ class CipherQuerySet(models.QuerySet):
         )
 
     def approved(self):
-        return self.all().filter(status='approved')
+        return self.filter(status='approved').with_stats()
 
     def pending(self):
-        return self.all().filter(status='pending')
+        return self.filter(status='pending').with_stats()
 
     def with_user_likes_and_solutions(self, user):
         from ciphers.models import CipherLike

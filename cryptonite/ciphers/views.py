@@ -117,7 +117,7 @@ class LibraryCommunityView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        approved = Cipher.objects.approved()
+        approved = Cipher.objects.approved().with_user_likes_and_solutions(self.request.user)
         if not self.request.user.is_authenticated:
             return approved
 
@@ -131,9 +131,16 @@ class LibraryCommunityView(ListView):
         return context
 
 
-class HideCipherView(LoginRequiredMixin, View):
+class CipherAccessMixin:
+    def get_cipher(self, request, cipher_id):
+        if request.user.is_staff:
+            return get_object_or_404(Cipher, id=cipher_id)
+        return get_object_or_404(Cipher, id=cipher_id, author=request.user)
+
+
+class HideCipherView(LoginRequiredMixin, CipherAccessMixin, View):
     def post(self, request, cipher_id):
-        cipher = get_object_or_404(Cipher, id=cipher_id, author=request.user)
+        cipher = self.get_cipher(request, cipher_id)
 
         if cipher.status == 'pending' or cipher.status == 'rejected':
             return HttpResponseForbidden(
@@ -145,9 +152,9 @@ class HideCipherView(LoginRequiredMixin, View):
         return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
-class OpenCipherView(LoginRequiredMixin, View):
+class OpenCipherView(LoginRequiredMixin, CipherAccessMixin, View):
     def post(self, request, cipher_id):
-        cipher = get_object_or_404(Cipher, id=cipher_id, author=request.user)
+        cipher = self.get_cipher(request, cipher_id)
 
         if cipher.status != 'hidden':
             return HttpResponseForbidden('Можно открыть только скрытые шифры')

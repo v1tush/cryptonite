@@ -11,9 +11,6 @@ class CipherManager(models.Manager):
     def get_queryset(self):
         return CipherQuerySet(self.model, using=self._db)
 
-    def all(self):
-        return self.get_queryset().all()
-
     def approved(self):
         return self.get_queryset().approved()
 
@@ -22,6 +19,9 @@ class CipherManager(models.Manager):
 
     def with_user_likes_and_solutions(self, user):
         return self.get_queryset().with_user_likes_and_solutions(user)
+
+    def with_stats(self):
+        return self.get_queryset().with_stats()
 
     def get_all_user_solved_ciphers(self, user):
         return self.get_queryset().get_all_user_solved_ciphers(user)
