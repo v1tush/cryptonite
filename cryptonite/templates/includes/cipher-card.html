@@ -20,20 +20,25 @@
             </div>
             <div class="stats">
                 <div>Решили: {{ cipher.correct_solutions_count|default:0 }}</div>
-                <div style="display: inline-block; cursor: pointer;" data-cipher-id="{{ cipher.id }}" class="likes {% if cipher.liked_by_user %} yellow-text {% endif %}">
+                <div style="display: inline-block; cursor: pointer;"
+                     data-cipher-id="{{ cipher.id }}"
+                     class="likes {% if cipher.liked_by_user %} yellow-text {% endif %}">
                     ♥ <span class="likes-cnt">{{ cipher.likes_count|default:0 }}</span>
                 </div>
             </div>
         </div>
 
-        {% if user.id == cipher.author.id %}
+        {# ===== ВОТ ТУТ ЕДИНСТВЕННОЕ ИЗМЕНЕНИЕ ===== #}
+        {% if user.id == cipher.author.id and not user.is_staff %}
             {% if cipher.status != "pending" and cipher.status != "rejected" %}
                 {% if cipher.status == 'hidden' %}
-                    <button class="btn btn-small" data-hide-url="{% url 'ciphers:open_cipher' cipher.id %}">
+                    <button class="btn btn-small"
+                            data-hide-url="{% url 'ciphers:open_cipher' cipher.id %}">
                         Выложить
                     </button>
                 {% else %}
-                    <button class="btn btn-small" data-hide-url="{% url 'ciphers:hide_cipher' cipher.id %}">
+                    <button class="btn btn-small"
+                            data-hide-url="{% url 'ciphers:hide_cipher' cipher.id %}">
                         Скрыть
                     </button>
                 {% endif %}
@@ -47,11 +52,26 @@
                 {% endif %}
             </span>
         {% else %}
-            <a {% if user.is_authenticated %} href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}" {% else %} href="{% url 'users:login' %}" {% endif %} class="btn btn-small btn-cipher">РЕШИТЬ</a>
+            {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %}
+                <a href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}"
+                   class="btn btn-small btn-warning">
+                    ПРОВЕРИТЬ
+                </a>
+            {% else %}
+                <a {% if user.is_authenticated %}
+                        href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}"
+                    {% else %}
+                        href="{% url 'users:login' %}
+                    {% endif %}
+                    class="btn btn-small btn-cipher">
+                    РЕШИТЬ
+                </a>
+            {% endif %}
         {% endif %}
     </div>
     {% if user.is_authenticated and user.id == cipher.author.id %}
         </a>
     {% endif %}
 </div>
+
 <script src="{% static 'js/allow-hide.js' %}"></script>

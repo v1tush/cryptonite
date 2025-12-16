@@ -193,8 +193,14 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
     def get_object(self, queryset=None):
         cipher = get_object_or_404(Cipher, id=self.kwargs['cipher_id'])
 
-        if cipher.status != 'approved' and cipher.author != self.request.user:
-            raise Http404()
+        if (
+            not self.request.user.is_staff
+        ):  # иначе все ломается, когда нажимаю "проверить"
+            if (
+                cipher.status != 'approved'
+                and cipher.author != self.request.user
+            ):
+                raise Http404()
 
         return cipher
 
@@ -270,10 +276,26 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         return context
 
     def post(self, request, **kwargs):
+        # Проверка модерации шифра
+        self.object = self.get_object()
+
+        if request.user.is_staff and 'moderation_action' in request.POST:
+            action = request.POST.get('moderation_action')
+
+            if self.object.status == 'pending':
+                if action == 'approve':
+                    self.object.status = 'approved'
+
+                elif action == 'reject':
+                    self.object.status = 'rejected'
+
+                self.object.save()
+
+            return redirect(request.path)
+
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return self.handle_hint_purchase(request)
 
-        self.object = self.get_object()
         self.form = self.get_form()
         self.user = request.user
 

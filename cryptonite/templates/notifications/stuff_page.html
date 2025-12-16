@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+<h1>Ожидающие проверки шифры</h1>
+<div class="cipher-grid">
+    {% for cipher in object_list %}
+        {% include 'includes/cipher-card.html' with cipher=cipher solved_users_cnt=cipher.correct_solutions_count %}
+    {% empty %}
+        <p>Нет шифров, ожидающих проверки.</p>
+    {% endfor %}
+</div>
+<script src="{% static 'js/allow-hide.js' %}"></script>
+<script src="{% static 'js/common.js' %}"></script>
+{% endblock %}

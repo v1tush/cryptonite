@@ -20,6 +20,27 @@
         <div class="cipher-author">
             Автор: <strong><a href="{% url 'users:profile' username=cipher.author.username %}">{{cipher.author.username}}</a></strong> • Создан: {{cipher.created_at|date:"d.m.Y"}}
         </div>
+
+        {% if user.is_staff and cipher.status == 'pending' %}
+            <div class="staff-actions" style="margin: 15px 0;">
+                <form method="post" style="display: inline-block;">
+                    {% csrf_token %}
+                    <input type="hidden" name="moderation_action" value="approve">
+                    <button type="submit" class="btn btn-small btn-success">
+                        ✅ Одобрить
+                    </button>
+                </form>
+
+                <form method="post" style="display: inline-block; margin-left: 10px;">
+                    {% csrf_token %}
+                    <input type="hidden" name="moderation_action" value="reject">
+                    <button type="submit" class="btn btn-small btn-danger">
+                        ❌ Отклонить
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+
         
         <div class="cipher-stats">
             <div class="cipher-stats-info">

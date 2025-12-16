@@ -17,6 +17,9 @@ class CipherManager(models.Manager):
     def approved(self):
         return self.get_queryset().approved()
 
+    def pending(self):
+        return self.get_queryset().pending()
+
     def with_user_likes_and_solutions(self, user):
         return self.get_queryset().with_user_likes_and_solutions(user)
 

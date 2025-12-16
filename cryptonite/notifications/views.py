@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.views.generic import ListView
 from django.shortcuts import redirect
+from django.views.generic import ListView
 
 import ciphers.models
 
@@ -21,14 +21,11 @@ class StaffNotificationsView(
     ListView,
 ):
     model = ciphers.models.Cipher
-    template_name = 'ciphers/library.html'
+    template_name = 'notifications/stuff_page.html'
     context_object_name = 'ciphers'
-    
+
     def get_queryset(self):
-        if self.request.user.is_staff:
-            unchecked = ciphers.models.Cipher.objects.pending()
-            return unchecked
-    
+        return ciphers.models.Cipher.objects.pending()
+
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+        return super().get_context_data(**kwargs)
