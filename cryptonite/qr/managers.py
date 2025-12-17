@@ -6,7 +6,6 @@ import segno
 
 
 class QrManager(models.Manager):
-
     def _create_qr_photo(self, url: str) -> ContentFile:
         qr = segno.make(
             url,

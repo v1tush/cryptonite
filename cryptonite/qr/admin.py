@@ -18,13 +18,9 @@ class QRAdmin(admin.ModelAdmin):
         'qr_preview',
     )
 
-    search_fields = (
-        'cipher__title',
-    )
+    search_fields = ('cipher__title',)
 
-    list_select_related = (
-        'cipher',
-    )
+    list_select_related = ('cipher',)
 
     def qr_preview(self, obj):
         if obj.image and obj.image.storage.exists(obj.image.name):
