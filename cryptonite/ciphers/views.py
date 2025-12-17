@@ -204,7 +204,10 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         cipher = get_object_or_404(Cipher, id=self.kwargs['cipher_id'])
 
         if not self.request.user.is_staff:
-            if cipher.status != 'approved' and cipher.author != self.request.user:
+            if (
+                cipher.status != 'approved'
+                and cipher.author != self.request.user
+            ):
                 raise Http404()
 
         return cipher
