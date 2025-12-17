@@ -799,6 +799,9 @@ msgstr "ciphers solved"
 msgid "счёт"
 msgstr "score"
 
+msgid "Счёт"
+msgstr "Score"
+
 #: .\templates\users\profile.html:36
 msgid "дней страйк"
 msgstr "days streak"
@@ -886,3 +889,15 @@ msgstr "Confirm password *"
 #: .\templates\users\signup.html:59
 msgid "Уже есть аккаунт?"
 msgstr "Already have an account?"
+
+msgid "Жалобы"
+msgstr "Complaints"
+
+msgid "Исходный текст"
+msgstr "Correct answer"
+
+msgid "Жалобы, полученные в прошлом"
+msgstr "Complaints received in the past"
+
+msgid "Жалоба без дополнительных пояснений"
+msgstr "Complaint without further explanation"

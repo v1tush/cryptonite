@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% block content %}
-<h1>{% trans 'Ожидающие проверки шифры' %}</h1>
+<h1 style="color: #d79921; margin-bottom: 15px;">{% trans 'Ожидающие проверки шифры' %}</h1>
 <div class="cipher-grid">
     {% for cipher in object_list %}
         {% include 'includes/cipher-card.html' with cipher=cipher solved_users_cnt=cipher.correct_solutions_count %}

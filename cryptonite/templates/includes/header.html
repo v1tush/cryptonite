@@ -21,7 +21,7 @@
         <span>Cryptonite</span>
     </a>
     
-    <nav>
+    <nav {% if user.is_staff %} style="display: none;" {% endif %}>
         <ul>
             <li><a {% if request.resolver_match.view_name == 'main:main' %} class="active" {% else %} href="{% url 'main:main' %}"{% endif %}>{% trans 'Главная' %}</a></li>
             <li><a {% if request.resolver_match.view_name == 'about:about' %} class="active" {% else %}href="{% url 'about:about' %}"{% endif %}>{% trans 'О Проекте' %}</a></li>
@@ -35,9 +35,6 @@
                         <button class="nav-link" type="submit"><span>{% trans 'Выйти' %}</span></button>
                     </form>
                 </li>
-                {% if user.is_staff %}
-                    <li><a {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %} class="active" {% else %} href="{% url 'notifications:stuff-notifications' %}"{% endif %}>{% trans 'Проверка' %}</a></li>
-                {% endif %}
             {% else %}
                 {% if request.resolver_match.view_name == 'users:login' %}
                     <li><a href="{% url 'users:signup' %}">{% trans 'Регистрация' %}</a></li>
@@ -48,7 +45,7 @@
         </ul>
     </nav>
     <div class="user-info">
-        <div id="burger-menu" class="burger-menu">&#9776;</div>
+        <div {% if user.is_staff %} style="display: block;" {% endif %} id="burger-menu" class="burger-menu">&#9776;</div>
         {% if user.is_authenticated %}
             <div class="user-balance">
                 <p>
@@ -61,7 +58,7 @@
                     <div class="avatar"><a style="display: inline-block; width: 40px; height: 40px;" href="{% url 'users:profile' user.username %}"><img src="{% if user.avatar %} /media/{{ user.avatar }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></a></div>
                     <div>
                         <div id="username">{{ user.username }}</div>
-                        <div class="user-rating">Счёт: {{ user.xp }}</div>
+                        <div class="user-rating">{% trans 'Счёт' %}: {{ user.xp }}</div>
                     </div>
                 </div>
             </div>

@@ -876,3 +876,19 @@ footer p:nth-child(2){
 .auth-links .btn:hover {
     color: #282828;
 }
+
+.complaint {
+    background-color: rgba(204, 36, 29, 0.3);
+    color: #fb4934;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #fb4934;
+    margin-bottom: 15px;
+}
+
+.complaint-h3{
+    font-weight: bold;
+    color: #fb4934;
+    font-size: 30px;
+    margin-bottom: 15px;
+}

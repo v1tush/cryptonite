@@ -13,6 +13,7 @@ from ciphers.forms import CipherForm
 from ciphers.models import Cipher, CipherHelp, CipherLike, PurchasedHint
 from logs.forms import SolutionLogForm
 from logs.models import SolutionLog
+from feedback.models import Feedback
 from qr.utils import create_qr_for_cipher
 
 HINT_PRICE = 100
@@ -239,6 +240,7 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
                 available_hints.append(
                     {
                         'id': hint.id,
+                        'text': hint.text,
                         'order': hint.order,
                         'purchased': False,
                     },
@@ -250,11 +252,11 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         context['user_balance'] = user.money
         context['hint_price'] = HINT_PRICE
         context['qr_code'] = create_qr_for_cipher(cipher, self.request)
-        context[
-            'user_attempts'
-        ] = SolutionLog.objects.user_solutions_for_cipher(
-            self.request.user,
-            self.get_object(),
+        context['user_attempts'] = (
+            SolutionLog.objects.user_solutions_for_cipher(
+                self.request.user,
+                self.get_object(),
+            )
         )
 
         _lks_crs = CipherLike.objects.filter(
@@ -283,6 +285,14 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
             self.get_object(),
         )
         context['has_limit'] = self.object.attempt_limit is not None
+        if self.request.user.is_staff:
+            context['complaints'] = Feedback.objects.received_for_cipher(
+                self.get_object(),
+            )
+            context['complaints_from_past'] = (
+                Feedback.objects.answered_for_cipher(self.get_object())
+            )
+
         return context
 
     def post(self, request, **kwargs):
@@ -295,6 +305,12 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
             if self.object.status == 'pending':
                 if action == 'approve':
                     self.object.status = 'approved'
+                    complaints = Feedback.objects.received_for_cipher(
+                        self.object,
+                    )
+                    for complaint in complaints:
+                        complaint.status = 'answered'
+                        complaint.save()
 
                 elif action == 'reject':
                     self.object.status = 'rejected'
