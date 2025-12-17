@@ -52,7 +52,7 @@
                 {% endif %}
             </span>
         {% else %}
-            {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %}
+            {% if request.resolver_match.view_name == 'notifications:staff-notifications' %}
                 <a href="{% url 'ciphers:solve_cipher' cipher_id=cipher.id %}"
                    class="btn btn-small btn-warning">
                     {% trans 'ПРОВЕРИТЬ' %}

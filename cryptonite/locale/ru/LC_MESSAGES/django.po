@@ -719,11 +719,11 @@ msgstr ""
 msgid "ПОПУЛЯРНЫЕ ШИФРЫ"
 msgstr ""
 
-#: .\templates\notifications\stuff_page.html:5
+#: .\templates\notifications\staff_page.html:5
 msgid "Ожидающие проверки шифры"
 msgstr ""
 
-#: .\templates\notifications\stuff_page.html:10
+#: .\templates\notifications\staff_page.html:10
 msgid "Нет шифров, ожидающих проверки."
 msgstr ""
 

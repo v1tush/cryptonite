@@ -31,7 +31,7 @@
                 <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>{% trans 'Создать шифр' %}</a></li>
                 {% if user.is_staff %}
                     <li>
-                        <a {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %} class="active" {% else %} href="{% url 'notifications:stuff-notifications' %}"{% endif %}>
+                        <a {% if request.resolver_match.view_name == 'notifications:staff-notifications' %} class="active" {% else %} href="{% url 'notifications:staff-notifications' %}"{% endif %}>
                             {% trans 'Проверка' %} ({% if count_pending_ciphers < 1000 %}{{ count_pending_ciphers }}{% else %}9+{% endif %})
                         </a>
                     </li>
@@ -76,7 +76,7 @@
             <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>{% trans 'Создать шифр' %}</a></li>
             {% if user.is_staff %}
                 <li>
-                    <a {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %} class="active" {% else %} href="{% url 'notifications:stuff-notifications' %}"{% endif %}>
+                    <a {% if request.resolver_match.view_name == 'notifications:staff-notifications' %} class="active" {% else %} href="{% url 'notifications:staff-notifications' %}"{% endif %}>
                         {% trans 'Проверка' %} ({% if count_pending_ciphers < 1000 %}{{ count_pending_ciphers }}{% else %}999+{% endif %})
                     </a>
                 </li>

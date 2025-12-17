@@ -20,7 +20,7 @@ class StaffNotificationsView(
     ListView,
 ):
     model = Cipher
-    template_name = 'notifications/stuff_page.html'
+    template_name = 'notifications/staff_page.html'
     context_object_name = 'ciphers'
 
     def get_queryset(self):
