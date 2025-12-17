@@ -11,9 +11,9 @@ from django.views.generic.edit import FormMixin
 
 from ciphers.forms import CipherForm
 from ciphers.models import Cipher, CipherHelp, CipherLike, PurchasedHint
+from feedback.models import Feedback
 from logs.forms import SolutionLogForm
 from logs.models import SolutionLog
-from feedback.models import Feedback
 from qr.utils import create_qr_for_cipher
 
 HINT_PRICE = 100
@@ -252,11 +252,11 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         context['user_balance'] = user.money
         context['hint_price'] = HINT_PRICE
         context['qr_code'] = create_qr_for_cipher(cipher, self.request)
-        context['user_attempts'] = (
-            SolutionLog.objects.user_solutions_for_cipher(
-                self.request.user,
-                self.get_object(),
-            )
+        context[
+            'user_attempts'
+        ] = SolutionLog.objects.user_solutions_for_cipher(
+            self.request.user,
+            self.get_object(),
         )
 
         _lks_crs = CipherLike.objects.filter(
@@ -289,9 +289,9 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
             context['complaints'] = Feedback.objects.received_for_cipher(
                 self.get_object(),
             )
-            context['complaints_from_past'] = (
-                Feedback.objects.answered_for_cipher(self.get_object())
-            )
+            context[
+                'complaints_from_past'
+            ] = Feedback.objects.answered_for_cipher(self.get_object())
 
         return context
 
