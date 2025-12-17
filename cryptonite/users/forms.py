@@ -67,3 +67,20 @@ class ProfileChangeForm(
             'avatar',
             'background',
         )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].disabled = True
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        qs = User.objects.filter(username=username).exclude(
+            pk=self.instance.pk,
+        )
+
+        if qs.exists():
+            raise django.forms.ValidationError(
+                'Пользователь с таким ником уже существует.',
+            )
+
+        return username

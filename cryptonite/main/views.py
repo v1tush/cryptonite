@@ -25,7 +25,6 @@ class HomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cipher_daily'] = get_today_cipher()
-
         if context['cipher_daily']:
             context[
                 'cipher_daily_solvers_cnt'
@@ -36,11 +35,6 @@ class HomeView(ListView):
                 'daily_top_users'
             ] = SolutionLog.objects.get_daily_top_users()
 
-        # context.setdefault('rank', None)
-        # Убрала потому что даже у
-        # авторизованных пользователей rank был None.
-        # Я тупенькая и не знаю способа лучше чем тот что в профиле,
-        # поэтому не бейте тапками, я просто отлаживаю фронт
-        # и мне нужна инфа о месте человека.
         context['rank'] = get_user_ranking_position(self.request.user)
+
         return context
