@@ -52,4 +52,5 @@ class CustomUser(AbstractUser):
         for lvl, xp_required in reversed(LEVEL_THRESHOLDS):
             if self.xp >= xp_required:
                 return lvl
+
         return 1
