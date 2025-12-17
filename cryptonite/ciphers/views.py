@@ -118,9 +118,8 @@ class LibraryCommunityView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        approved = Cipher.objects.approved().with_user_likes_and_solutions(
-            self.request.user,
-        )
+        approved = Cipher.objects.approved()
+
         if not self.request.user.is_authenticated:
             return approved
 
@@ -204,19 +203,14 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
     def get_object(self, queryset=None):
         cipher = get_object_or_404(Cipher, id=self.kwargs['cipher_id'])
 
-        if (
-            not self.request.user.is_staff
-        ):  # иначе все ломается, когда нажимаю "проверить"
-            if (
-                cipher.status != 'approved'
-                and cipher.author != self.request.user
-            ):
+        if not self.request.user.is_staff:
+            if cipher.status != 'approved' and cipher.author != self.request.user:
                 raise Http404()
 
         return cipher
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)  # базовый контекст
+        context = super().get_context_data(**kwargs)
         cipher = self.get_object()
         user = self.request.user
         hints = cipher.hints.all().order_by('order')
