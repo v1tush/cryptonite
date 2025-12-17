@@ -14,7 +14,6 @@ class UserPassesTestForStaffMixin(UserPassesTestMixin):
         return redirect('main:main')
 
 
-# Занимался только по части стафа
 class StaffNotificationsView(
     LoginRequiredMixin,
     UserPassesTestForStaffMixin,

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from users.constants import LEVEL_THRESHOLDS
 from users.validators import validate_username
 
 
@@ -44,17 +45,11 @@ class CustomUser(AbstractUser):
         verbose_name_plural = 'пользователи'
 
     def __str__(self):
-        return f'{self.username} ({self.email})'
+        return f'CustomUser: {self.username} ({self.email})'
 
     @property
     def level(self):
-        if self.xp < 100:
-            return 1
-
-        if self.xp < 300:
-            return 2
-
-        if self.xp < 600:
-            return 3
-
-        return 4
+        for lvl, xp_required in reversed(LEVEL_THRESHOLDS):
+            if self.xp >= xp_required:
+                return lvl
+        return 1
