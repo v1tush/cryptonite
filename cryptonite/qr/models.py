@@ -20,3 +20,6 @@ class QR(models.Model):
         auto_now_add=True,
         verbose_name='дата создания',
     )
+
+    def __str__(self):
+        return f'QR: {self.cipher.title}'

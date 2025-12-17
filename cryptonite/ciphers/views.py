@@ -9,14 +9,13 @@ from django.views import View
 from django.views.generic import DetailView, FormView, ListView
 from django.views.generic.edit import FormMixin
 
+from ciphers.constants import HINT_PRICE, REWARD_VALUES
 from ciphers.forms import CipherForm
 from ciphers.models import Cipher, CipherHelp, CipherLike, PurchasedHint
 from feedback.models import Feedback
 from logs.forms import SolutionLogForm
 from logs.models import SolutionLog
 from qr.utils import create_qr_for_cipher
-
-HINT_PRICE = 100
 
 
 class CreateEditCipher(LoginRequiredMixin, FormView):
@@ -439,9 +438,9 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         )
         solution.save()
         if solution.correct:
-            self.user.xp += 100
-            self.user.money += 25
-            solution.score = 100
+            self.user.xp += REWARD_VALUES['xp_for_correct_solution']
+            self.user.money += REWARD_VALUES['money_for_correct_solution']
+            solution.score = REWARD_VALUES['score_for_correct_solution']
             solution.save()
             self.user.save()
 

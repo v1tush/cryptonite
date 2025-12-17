@@ -19,4 +19,4 @@ class Course(models.Model):
         verbose_name_plural = 'курсы'
 
     def __str__(self):
-        return f'{self.title[:15]}'
+        return f'Course: {self.title[:15]} - {self.author.username}'

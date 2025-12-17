@@ -13,7 +13,7 @@ class Feedback(models.Model):
     ]
     text = models.TextField(
         verbose_name='жалоба',
-        help_text=('Напишите здесь причину жалобы'),
+        help_text='Напишите здесь причину жалобы',
         blank=True,
     )
     created_on = models.DateTimeField(
@@ -46,4 +46,4 @@ class Feedback(models.Model):
         verbose_name_plural = 'жалобы'
 
     def __str__(self):
-        return 'Жалоба'
+        return f'Feedback: {self.text[:15]} - {self.author.username}'

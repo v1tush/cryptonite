@@ -56,4 +56,7 @@ class NotificationModel(models.Model):
         verbose_name_plural = 'уведомления'
 
     def __str__(self):
-        return f'{self.get_classification_display()} → {self.user.username}'
+        return (
+            f'NotificationModel: {self.get_classification_display()} '
+            f'- {self.user.username} - {self.created_on}'
+        )

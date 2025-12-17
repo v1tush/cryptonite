@@ -30,7 +30,7 @@ class Achievement(models.Model):
         verbose_name_plural = 'достижения'
 
     def __str__(self):
-        return f'{self.title[:15]} {self.xp_reward}'
+        return f'Achievement: {self.title[:15]} - {self.xp_reward}'
 
 
 class UserAchievement(models.Model):
@@ -53,9 +53,9 @@ class UserAchievement(models.Model):
     class Meta:
         verbose_name = 'достижение пользователя'
         verbose_name_plural = 'достижения пользователей'
-        #  чтобы 1 пользователь не мог получить
-        # одно и то же достижение несколько раз
         unique_together = ('user', 'achievement')
 
     def __str__(self):
-        return f'{self.user.username} - {self.achievement.title}'
+        return (
+            f'UserAchievement: {self.user.username} - {self.achievement.title}'
+        )

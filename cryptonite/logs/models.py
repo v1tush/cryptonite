@@ -56,7 +56,7 @@ class SolutionLog(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.user} - {self.cipher}'
+        return f'SolutionLog: {self.user} - {self.cipher}'
 
     def save(self, *args, **kwargs):
         if self.attempts_used is None:

@@ -6,7 +6,7 @@ from django.views.generic import ListView
 from ciphers.models import Cipher
 
 
-class UserPassesTestMixinForStaff(UserPassesTestMixin):
+class UserPassesTestForStaffMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_staff
 
@@ -17,7 +17,7 @@ class UserPassesTestMixinForStaff(UserPassesTestMixin):
 # Занимался только по части стафа
 class StaffNotificationsView(
     LoginRequiredMixin,
-    UserPassesTestMixinForStaff,
+    UserPassesTestForStaffMixin,
     ListView,
 ):
     model = Cipher

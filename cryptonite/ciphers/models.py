@@ -84,7 +84,7 @@ class Cipher(models.Model):
         verbose_name_plural = 'шифры'
 
     def __str__(self):
-        return f'{self.author.username} {self.title[:10]}'
+        return f'Cipher: {self.author.username} - {self.title[:10]}'
 
     def clean(self):
         if self.cipher_type == 'course' and not self.course:
@@ -94,7 +94,7 @@ class Cipher(models.Model):
             raise ValidationError('Шифр сообщества не должен иметь курс')
 
     def save(self, *args, **kwargs):
-        self.full_clean()
+        self.clean()
         super().save(*args, **kwargs)
 
     @property
@@ -129,7 +129,7 @@ class CipherHelp(models.Model):
         verbose_name_plural = 'подсказки к шифрам'
 
     def __str__(self):
-        return f'{self.cipher.title} {self.order}'
+        return f'CipherHelp: {self.cipher.title} - {self.order}'
 
     def save(self, *args, **kwargs):
         if self.order is None:
@@ -168,6 +168,7 @@ class PurchasedHint(models.Model):
 
     def __str__(self):
         return (
+            'PurchasedHint: '
             f'{self.user.username}'
             f' → {self.hint.cipher.title} (подсказка {self.hint.order})'
         )
@@ -196,7 +197,9 @@ class CipherComment(models.Model):
         verbose_name_plural = 'комментарии к шифрам'
 
     def __str__(self):
-        return f'{self.user.username} {self.cipher.title[:10]}'
+        return (
+            f'CipherComment: {self.user.username} - {self.cipher.title[:10]}'
+        )
 
 
 class CipherDayHistory(models.Model):
@@ -220,7 +223,7 @@ class CipherDayHistory(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.cipher.title} {self.date}'
+        return f'CipherDayHistory: {self.cipher.title} - {self.date}'
 
 
 class CipherLike(models.Model):
@@ -249,4 +252,4 @@ class CipherLike(models.Model):
         verbose_name_plural = 'лайки шифров'
 
     def __str__(self):
-        return f'{self.user.username}'
+        return f'CipherLike: {self.user.username} - {self.created_at}'
