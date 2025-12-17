@@ -15,7 +15,7 @@ from ciphers.models import Cipher, CipherHelp, CipherLike, PurchasedHint
 from feedback.models import Feedback
 from logs.forms import SolutionLogForm
 from logs.models import SolutionLog
-from qr.utils import create_qr_for_cipher
+from qr.models import QR
 
 
 class CreateEditCipher(LoginRequiredMixin, FormView):
@@ -247,7 +247,10 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         context['hints_count'] = hints.count()
         context['user_balance'] = user.money
         context['hint_price'] = HINT_PRICE
-        context['qr_code'] = create_qr_for_cipher(cipher, self.request)
+        context['qr_code'] = QR.objects.create_qr_for_cipher(
+            cipher=cipher,
+            request=self.request,
+        )
         context[
             'user_attempts'
         ] = SolutionLog.objects.user_solutions_for_cipher(

@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 
 from ciphers.managers import CipherLikeManager, CipherManager
 from courses.models import Course
@@ -96,6 +97,12 @@ class Cipher(models.Model):
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse(
+            'ciphers:solve_cipher',
+            kwargs={'cipher_id': self.id},
+        )
 
     @property
     def is_published(self):

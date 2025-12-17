@@ -1,6 +1,7 @@
 from django.db import models
 
 from ciphers.models import Cipher
+from qr.managers import QrManager
 
 
 class QR(models.Model):
@@ -20,6 +21,12 @@ class QR(models.Model):
         auto_now_add=True,
         verbose_name='дата создания',
     )
+
+    objects = QrManager()
+
+    class Meta:
+        verbose_name = 'QR-код'
+        verbose_name_plural = 'QR-коды'
 
     def __str__(self):
         return f'QR: {self.cipher.title}'
