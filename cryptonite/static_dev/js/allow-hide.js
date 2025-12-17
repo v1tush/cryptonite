@@ -26,12 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     confirmBtn.addEventListener("click", () => {
         if (currentUrl) {
-            // Деактивируем кнопку, чтобы не было двойного клика
             confirmBtn.disabled = true;
+
+            // Получаем токен из meta
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
             fetch(currentUrl, {
                 method: "POST",
                 headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    'X-CSRFToken': csrfToken
                 }
             }).then(() => {
                 modal.classList.add("hidden");

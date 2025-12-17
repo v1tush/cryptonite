@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     async function saveHints(cipherId, hints) {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
         const response = await fetch('/ciphers/save-hints/', {
             method: 'POST',
