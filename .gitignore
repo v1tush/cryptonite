@@ -39,6 +39,7 @@ ENV/
 db.sqlite3
 
 # Local config
+django.mo
 local_settings.py
 settings_local.py
 
