@@ -43,9 +43,27 @@
     </div>
 </div>
 
-{% if user == profile_user %}
-    <a href="{% url 'users:profile_edit' %}" class="btn edit-profile-button">{% trans 'Изменить профиль' %}</a>
-    <a href="{% url 'users:password_change' %}" class="btn edit-profile-button">{% trans 'Сменить пароль' %}</a>
+{% if request.user.is_authenticated and request.user.pk == profile_user.pk %}
+    <div class="profile-actions">
+        <a href="{% url 'users:profile_edit' %}" class="btn edit-profile-button">
+            {% trans 'Изменить профиль' %}
+        </a>
+
+        <a href="{% url 'users:password_change' %}" class="btn edit-profile-button">
+            {% trans 'Сменить пароль' %}
+        </a>
+
+        <form method="post"
+              action="{% url 'users:logout' %}"
+              class="profile-actions__form">
+            {% csrf_token %}
+            <a href="#"
+               class="btn edit-profile-button"
+               onclick="this.closest('form').submit(); return false;">
+                {% trans 'Выйти' %}
+            </a>
+        </form>
+    </div>
 {% endif %}
 
 <div class="achievements">

@@ -29,12 +29,6 @@
             {% if user.is_authenticated %}
                 <li><a {% if request.resolver_match.view_name == 'users:profile' and request.resolver_match.kwargs.username == user.username %} class="active" {% else %}href="{% url 'users:profile' user.username %}"{% endif %}>{% trans 'Профиль' %}</a></li>
                 <li><a {% if request.resolver_match.view_name == 'ciphers:create_cipher'%} class="active" {% else %}href="{% url 'ciphers:create_cipher' %}"{% endif %}>{% trans 'Создать шифр' %}</a></li>
-                <li>
-                    <form method="post" action="{% url 'users:logout' %}">
-                        {% csrf_token %}
-                        <button class="nav-link" type="submit"><span>{% trans 'Выйти' %}</span></button>
-                    </form>
-                </li>
             {% else %}
                 {% if request.resolver_match.view_name == 'users:login' %}
                     <li><a href="{% url 'users:signup' %}">{% trans 'Регистрация' %}</a></li>
@@ -76,12 +70,6 @@
             {% if user.is_staff %}
                 <li><a {% if request.resolver_match.view_name == 'notifications:stuff-notifications' %} class="active" {% else %} href="{% url 'notifications:stuff-notifications' %}"{% endif %}>{% trans 'Проверка' %}</a></li>
             {% endif %}
-            <li>
-                <form method="post" action="{% url 'users:logout' %}">
-                    {% csrf_token %}
-                    <button class="nav-link" type="submit"><span>{% trans 'Выйти' %}</span></button>
-                </form>
-            </li>
         {% else %}
             {% if request.resolver_match.view_name == 'users:login' %}
                 <li><a href="{% url 'users:signup' %}">{% trans 'Регистрация' %}</a></li>
