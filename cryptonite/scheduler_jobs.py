@@ -9,12 +9,13 @@ from ciphers.models import Cipher, CipherDayHistory
 def get_approved_ciphers(exclude_used: bool = True):
     qs = Cipher.objects.approved()
 
-    if exclude_used:
-        used_ids = CipherDayHistory.objects.values_list(
-            'cipher_id',
-            flat=True,
-        )
+    if not exclude_used:
+        return qs
 
+    used_ids = CipherDayHistory.objects.values_list(
+        'cipher_id',
+        flat=True,
+    )
     return qs.exclude(id__in=used_ids)
 
 
