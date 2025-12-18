@@ -15,8 +15,6 @@ DEBUG = env.bool('DJANGO_DEBUG', default='False')
 
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['*'])
 
-SITE_URL = '127.0.0.1:8000'
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
