@@ -71,6 +71,12 @@ header{
     margin-top: 10px;
 }
 
+.nav-burger a {
+    padding: 15px 20px;
+    display: block;
+    text-align: center;
+}
+
 .nav-burger ul{
     display: flex;
     flex-direction: column;

@@ -2,7 +2,6 @@
 {% block content %}
 {% load i18n %}
 {% load static %}
-<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 <div id="wrapper" class="wrapper">
     <img id="img-qr" src="{{ qr_code.image.url }}">
@@ -11,9 +10,9 @@
 <div class="cipher-header">
     <div class="cipher-info">
         <h1 class="cipher-title">
-            {{cipher.title}}
+            {{ cipher.title }}
             <span class="difficulty-badge-cipher {% if cipher.difficulty == 1 %}easy{% elif cipher.difficulty == 2 %}medium{% elif cipher.difficulty == 3 %}hard{% else %}hardcore{% endif %}">
-                {% if cipher.difficulty == 1 %}{% trans 'ЛЕГКАЯ СЛОЖНОСТЬ' %}{% elif cipher.difficulty == 2 %}{% trans 'СРЕДНЯЯ СЛОЖНОСТЬ' %}{% elif cipher.difficulty == 3 %}{% trans 'СЛОЖНАЯ СЛОЖНОСТЬ' %}{% else %}{% trans 'ОЧЕНЬ СЛОЖНАЯ СЛОЖНОСТЬ' %}{% endif %}
+                {% include 'includes/cipher-difficulty.html' with difficulty=cipher.difficulty %}
             </span>
         </h1>
         

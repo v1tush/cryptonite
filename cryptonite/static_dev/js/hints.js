@@ -1,6 +1,6 @@
 class HintSystem {
     constructor() {
-        this.csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        this.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         this.HINT_PRICE = 100;
         this.currentUrl = window.location.href;
         this.messageContainer = document.getElementById('message-container');

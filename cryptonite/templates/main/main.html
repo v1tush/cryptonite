@@ -6,7 +6,7 @@
     {% if cipher_daily %}
     <div class="cipher-of-day">
         <h2 class="cipher-title">{% trans 'ШИФР ДНЯ' %}</h2>
-        <div class="difficulty-badge">{% if cipher_daily.difficulty == 1 %}{% trans 'ЛЕГКАЯ СЛОЖНОСТЬ' %}{% elif cipher_daily.difficulty == 2 %}{% trans 'СРЕДНЯЯ СЛОЖНОСТЬ' %}{% elif cipher_daily.difficulty == 3 %}{% trans 'СЛОЖНАЯ СЛОЖНОСТЬ' %}{% else %}{% trans 'ОЧЕНЬ СЛОЖНАЯ СЛОЖНОСТЬ' %}{% endif %}</div>
+        <div class="difficulty-badge">{% include 'includes/cipher-difficulty.html' with difficulty=cipher_daily.difficulty %}</div>
         <p class="cipher-desc-daily">{{cipher_daily.description}}</p>
         <div style="margin-bottom: 20px;">
             <div  class="sub-text">{% trans 'Уже решили' %}: {{ cipher_daily_solvers_cnt|default:0 }}</div>

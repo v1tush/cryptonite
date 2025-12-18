@@ -7,8 +7,8 @@ class FeedbackManager(models.Manager):
     def get_queryset(self):
         return FeedbackQuerySet(self.model, using=self._db)
 
-    def all(self):
-        return self.get_queryset().all()
+    def with_related(self):
+        return self.get_queryset().with_related()
 
     def received(self):
         return self.get_queryset().received()

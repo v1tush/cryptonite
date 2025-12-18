@@ -112,12 +112,11 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-# TODO: исправить
 class LibraryCommunityView(ListView):
     model = Cipher
     template_name = 'ciphers/library.html'
     context_object_name = 'ciphers'
-    paginate_by = 20
+    paginate_by = 9
 
     def get_queryset(self):
         approved = Cipher.objects.approved()
@@ -210,7 +209,7 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
                 cipher.status != 'approved'
                 and cipher.author != self.request.user
             ):
-                raise Http404()
+                raise Http404('Шифр скрыт')
 
         return cipher
 

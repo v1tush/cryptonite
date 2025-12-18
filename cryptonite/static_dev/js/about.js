@@ -1,10 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     const screenshotBtns = document.querySelectorAll('.screenshot-btn');
     const screenshotFrames = document.querySelectorAll('.screenshot-frame');
+
     screenshotBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             screenshotBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
+
             const screenshotType = this.dataset.screenshot;
             screenshotFrames.forEach(frame => {
                 frame.classList.remove('active');
@@ -12,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById(`screenshot-${screenshotType}`).classList.add('active');
         });
     });
+
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             if (this.getAttribute('href') !== '#') {
@@ -27,10 +32,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -39,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }, observerOptions);
+
     document.querySelectorAll('.section, .feature-card, .team-card, .timeline-item').forEach(el => {
         el.style.opacity = '0';
         observer.observe(el);

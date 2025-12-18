@@ -2,7 +2,7 @@ from django.db import models
 
 
 class FeedbackQuerySet(models.QuerySet):
-    def all(self):
+    def with_related(self):
         return self.select_related('author', 'cipher')
 
     def received(self):

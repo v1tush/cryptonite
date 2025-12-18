@@ -82,10 +82,7 @@
                                         {% elif cipher.difficulty == 2 %}medium
                                         {% elif cipher.difficulty == 3 %}hard
                                         {% else %}hardcore{% endif %}">
-                                        {% if cipher.difficulty == 1 %}{% trans 'Легкий' %}
-                                        {% elif cipher.difficulty == 2 %}{% trans 'Средний' %}
-                                        {% elif cipher.difficulty == 3 %}{% trans 'Сложный' %}
-                                        {% else %}{% trans 'Очень сложный' %}{% endif %}
+                                        {% include 'includes/cipher-difficulty.html' with difficulty=cipher.difficulty %}
                                     </span>
                                 </div>
                                 <span class="drag-handle">☰</span>
