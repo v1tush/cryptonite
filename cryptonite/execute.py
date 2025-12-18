@@ -2,15 +2,14 @@ from datetime import datetime
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 from pytz import utc
-
-import cryptonite.scheduler_jobs
+import scheduler_jobs
 
 
 def start_scheduler():
     scheduler = BlockingScheduler(timezone=utc)
 
     scheduler.add_job(
-        cryptonite.scheduler_jobs.setting_daily_cipher,
+        scheduler_jobs.setting_daily_cipher,
         trigger='interval',
         seconds=86400,
         next_run_time=datetime.now(utc),
