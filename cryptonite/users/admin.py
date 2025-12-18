@@ -32,9 +32,7 @@ class CustomUserAdmin(UserAdmin):
         'email',
     )
 
-    ordering = (
-        '-xp',
-    )
+    ordering = ('-xp',)
 
     readonly_fields = (
         'last_login',
@@ -45,60 +43,78 @@ class CustomUserAdmin(UserAdmin):
     )
 
     fieldsets = (
-        ('Основная информация', {
-            'fields': (
-                'username',
-                'email',
-                'password',
-            ),
-        }),
-        ('Профиль', {
-            'fields': (
-                'about_me',
-                'avatar',
-                'avatar_preview',
-                'background',
-                'background_preview',
-            ),
-        }),
-        ('Прогресс', {
-            'fields': (
-                'xp',
-                'level_display',
-                'money',
-                'solved_ciphers_count',
-                'strike',
-            ),
-        }),
-        ('Права доступа', {
-            'fields': (
-                'is_active',
-                'is_staff',
-                'is_superuser',
-                'groups',
-                'user_permissions',
-            ),
-        }),
-        ('Системная информация', {
-            'fields': (
-                'last_login',
-                'date_joined',
-            ),
-        }),
+        (
+            'Основная информация',
+            {
+                'fields': (
+                    'username',
+                    'email',
+                    'password',
+                ),
+            },
+        ),
+        (
+            'Профиль',
+            {
+                'fields': (
+                    'about_me',
+                    'avatar',
+                    'avatar_preview',
+                    'background',
+                    'background_preview',
+                ),
+            },
+        ),
+        (
+            'Прогресс',
+            {
+                'fields': (
+                    'xp',
+                    'level_display',
+                    'money',
+                    'solved_ciphers_count',
+                    'strike',
+                ),
+            },
+        ),
+        (
+            'Права доступа',
+            {
+                'fields': (
+                    'is_active',
+                    'is_staff',
+                    'is_superuser',
+                    'groups',
+                    'user_permissions',
+                ),
+            },
+        ),
+        (
+            'Системная информация',
+            {
+                'fields': (
+                    'last_login',
+                    'date_joined',
+                ),
+            },
+        ),
     )
 
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': (
-                'username',
-                'email',
-                'password1',
-                'password2',
-                'is_staff',
-                'is_active',
-            ),
-        }),
+        (
+            None,
+            {
+                'classes': ('wide',),
+                'fields': (
+                    'username',
+                    'email',
+                    'password1',
+                    'password2',
+                    'is_staff',
+                    'is_active',
+                ),
+            },
+        ),
     )
 
     def level_display(self, obj):
