@@ -21,9 +21,13 @@ class CreateCourseView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user_ciphers'] = Cipher.objects.filter(
-            author=self.request.user,
-        ).approved().order_by('-created_at')
+        context['user_ciphers'] = (
+            Cipher.objects.filter(
+                author=self.request.user,
+            )
+            .approved()
+            .order_by('-created_at')
+        )
         context['form_data'] = {}
         context['errors'] = {}
         context['error_messages'] = []
