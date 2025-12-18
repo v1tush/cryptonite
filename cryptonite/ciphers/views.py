@@ -364,11 +364,11 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
 
             return JsonResponse(result)
 
-        except Exception as e:
+        except Exception:
             return JsonResponse(
                 {
                     'success': False,
-                    'error': str(e),
+                    'error': 'Server Error',
                 },
             )
 
@@ -462,10 +462,10 @@ class SaveCipherHintsView(LoginRequiredMixin, View):
                 },
             )
 
-        except Exception as e:
+        except Exception:
             return JsonResponse(
                 {
                     'success': False,
-                    'error': str(e),
+                    'error': 'Server Error',
                 },
             )
