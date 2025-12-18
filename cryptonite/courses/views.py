@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, TemplateView
@@ -22,7 +23,7 @@ class CreateCourseView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['user_ciphers'] = Cipher.objects.filter(
             author=self.request.user,
-        ).order_by('-created_at')
+        ).approved().order_by('-created_at')
         context['form_data'] = {}
         context['errors'] = {}
         context['error_messages'] = []
@@ -59,7 +60,7 @@ class CreateCourseView(LoginRequiredMixin, TemplateView):
         user_ciphers = Cipher.objects.filter(
             id__in=cipher_ids,
             author=request.user,
-        )
+        ).approved()
 
         if user_ciphers.count() != len(cipher_ids):
             error_messages.append(
@@ -72,17 +73,18 @@ class CreateCourseView(LoginRequiredMixin, TemplateView):
                 error_messages,
             )
 
-        course = Course.objects.create(
-            title=title,
-            description=description,
-            author=request.user,
-        )
+        with transaction.atomic():
+            course = Course.objects.create(
+                title=title,
+                description=description,
+                author=request.user,
+            )
 
-        for cipher_id in cipher_ids:
-            cipher = Cipher.objects.get(id=cipher_id)
-            cipher.cipher_type = 'course'
-            cipher.course = course
-            cipher.save()
+            for cipher_id in cipher_ids:
+                cipher = Cipher.objects.get(id=cipher_id)
+                cipher.cipher_type = 'course'
+                cipher.course = course
+                cipher.save()
 
         return redirect(reverse('courses:library_courses'))
 
