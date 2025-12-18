@@ -3,14 +3,14 @@ from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from pytz import utc
 
-import scheduler_jobs
+import cryptonite.scheduler_jobs
 
 
 def start_scheduler():
     scheduler = BlockingScheduler(timezone=utc)
 
     scheduler.add_job(
-        scheduler_jobs.setting_daily_cipher,
+        cryptonite.scheduler_jobs.setting_daily_cipher,
         trigger='interval',
         seconds=86400,
         next_run_time=datetime.now(utc),
