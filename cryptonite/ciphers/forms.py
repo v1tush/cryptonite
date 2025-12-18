@@ -15,8 +15,8 @@ class CipherForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             self.initial['difficulty'] = str(self.instance.difficulty)
 
-        for filed in self.visible_fields():
-            filed.field.widget.attrs['class'] = 'form-input'
+        for field in self.visible_fields():
+            field.field.widget.attrs['class'] = 'form-input'
 
     title = forms.CharField(
         label='Название шифра',
