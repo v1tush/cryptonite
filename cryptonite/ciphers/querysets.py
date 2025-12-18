@@ -1,12 +1,12 @@
 from django.db import models
-from django.db.models import Count, Exists, OuterRef, Q
+from django.db.models import Count, Exists, OuterRef, Prefetch, Q
 
 
 class CipherQuerySet(models.QuerySet):
     def with_stats(self):
         return (
             self.select_related('author')
-            .prefetch_related('likes')
+            .prefetch_related('likes', 'hints')
             .annotate(
                 likes_count=Count('likes', distinct=True),
                 correct_solutions_count=Count(
@@ -41,9 +41,17 @@ class CipherQuerySet(models.QuerySet):
         )
 
     def get_all_user_solved_ciphers(self, user):
+        from logs.models import SolutionLog
+
         return self.filter(
             solution_logs__user=user,
             solution_logs__correct=True,
+        ).prefetch_related(
+            Prefetch(
+                'solution_logs',
+                queryset=SolutionLog.objects.filter(user=user, correct=True),
+                to_attr='user_solved_logs',
+            ),
         )
 
     def get_some_most_popular_ciphers(self, num):

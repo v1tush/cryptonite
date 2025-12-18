@@ -12,6 +12,7 @@ from django.views.generic.edit import FormMixin
 from ciphers.constants import HINT_PRICE, REWARD_VALUES
 from ciphers.forms import CipherForm
 from ciphers.models import Cipher, CipherHelp, CipherLike, PurchasedHint
+from ciphers.services import normalize_answer, purchase_hint
 from feedback.models import Feedback
 from logs.forms import SolutionLogForm
 from logs.models import SolutionLog
@@ -76,7 +77,9 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
         if self.cipher_id is None:
             cipher.cipher_type = 'community'
 
-        cipher.status = 'pending'
+        if form.changed_data:
+            cipher.status = 'pending'
+
         cipher.save()
         if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse(
@@ -350,41 +353,16 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         try:
             data = json.loads(request.body)
             hint_id = data.get('hint_id')
+
             if not hint_id:
-                return JsonResponse(
-                    {
-                        'success': False,
-                    },
-                )
+                return JsonResponse({'success': False})
 
-            hint = get_object_or_404(CipherHelp, id=hint_id)
-            user = request.user
-            cipher = hint.cipher
-            validation_error = self.validate_hint_purchase(user, cipher, hint)
-            if validation_error:
-                return validation_error
+            result = purchase_hint(
+                user=request.user,
+                hint_id=hint_id,
+            )
 
-            user.money -= HINT_PRICE
-            user.save()
-            cipher.author.money += HINT_PRICE
-            cipher.author.save()
-            PurchasedHint.objects.create(
-                user=user,
-                hint=hint,
-            )
-            return JsonResponse(
-                {
-                    'success': True,
-                    'message': 'Подсказка успешно куплена!',
-                    'hint': {
-                        'id': hint.id,
-                        'text': hint.text,
-                        'order': hint.order,
-                    },
-                    'new_balance': user.money,
-                    'price_paid': HINT_PRICE,
-                },
-            )
+            return JsonResponse(result)
 
         except Exception as e:
             return JsonResponse(
@@ -435,11 +413,12 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         solution.cipher = self.object
         solution.user = self.request.user
 
-        solution.correct = (
-            solution.attempted_answer.strip()
-            == self.object.answer_phrase.strip()
-        )
+        normalized_user_answer = normalize_answer(solution.attempted_answer)
+        normalized_correct_answer = normalize_answer(self.object.answer_phrase)
+
+        solution.correct = normalized_user_answer == normalized_correct_answer
         solution.save()
+
         if solution.correct:
             self.user.xp += REWARD_VALUES['xp_for_correct_solution']
             self.user.money += REWARD_VALUES['money_for_correct_solution']

@@ -126,7 +126,7 @@
 
         <div class="solution-section">
             <div class="cipher-word-container">
-                <h3>{% trans 'Зашифрованное слово' %}</h3>
+                <h3>{% trans 'Зашифрованный текст' %}</h3>
                 <p>{{cipher.encrypted_phrase}}</p>
             </div>
             {% if user.is_staff and cipher.status == 'pending' %}

@@ -1,4 +1,4 @@
-from datetime import date
+from django.utils import timezone
 
 from ciphers.models import CipherDayHistory
 
@@ -6,7 +6,7 @@ from ciphers.models import CipherDayHistory
 def get_today_cipher():
     obj = (
         CipherDayHistory.objects.select_related('cipher')
-        .filter(date=date.today())
+        .filter(date=timezone.localdate())
         .first()
     )
     return obj.cipher if obj else None

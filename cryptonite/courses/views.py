@@ -5,9 +5,8 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import DetailView, ListView, TemplateView
 
-from ciphers.models import Cipher, CipherLike
+from ciphers.models import Cipher
 from courses.models import Course
-from logs.models import SolutionLog
 
 
 class LibraryCoursesView(ListView):
@@ -117,25 +116,10 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['ciphers'] = Cipher.objects.filter(course=self.object)
-        context['likes_ciphers'] = list(
-            map(
-                lambda x: x.cipher,
-                CipherLike.objects.filter(user=self.request.user),
-            ),
+        context['ciphers'] = (
+            Cipher.objects.filter(course=self.object)
+            .approved()
+            .with_user_likes_and_solutions(self.request.user)
         )
-        context['solved_users_ciphers'] = list(
-            map(
-                lambda x: x.cipher,
-                SolutionLog.objects.filter(
-                    user=self.request.user,
-                    correct=True,
-                ).all(),
-            ),
-        )
-        ciphers = [
-            SolutionLog.objects.get_solved_users_cnt(i)
-            for i in Cipher.objects.all()
-        ]
-        context['solved_users_cnt'] = ciphers
+
         return context
