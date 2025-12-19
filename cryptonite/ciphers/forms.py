@@ -5,6 +5,28 @@ from django.forms import modelformset_factory
 from ciphers.models import Cipher, CipherHelp
 
 
+class CipherWorkExampleField(forms.CharField):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            min_length=1,
+            max_length=100,
+            widget=forms.Textarea(
+                attrs={
+                    'placeholder': kwargs.get('placeholder'),
+                    'class': 'form-textarea',
+                    'rows': 5,
+                },
+            ),
+            error_messages={
+                'required': 'Обязательное поле',
+                'min_length': 'Описание должно быть не менее 1 символа',
+                'max_length': 'Описание не может превышать 100 символов',
+            },
+            required=True,
+            label=kwargs.get('label'),
+        )
+
+
 class CipherForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author', None)
@@ -61,7 +83,7 @@ class CipherForm(forms.ModelForm):
     )
 
     description = forms.CharField(
-        label='Описание алгоритма',
+        label='Описание шифра (видно всем)',
         widget=forms.Textarea(
             attrs={
                 'placeholder': 'Введите описание шифра',
@@ -95,12 +117,57 @@ class CipherForm(forms.ModelForm):
             attrs={
                 'min': 1,
                 'max': 15,
-                'placeholder': 'Введите количество попыток '
+                'placeholder': 'Введите количество попыток'
                 '(оставьте это поле пустым, '
                 'если количество попыток бесконечно)',
             },
         ),
         required=False,
+    )
+
+    description_for_admin = forms.CharField(
+        label='Описание алгоритма решения шифра (видно только модератору)',
+        min_length=70,
+        max_length=500,
+        widget=forms.Textarea(
+            attrs={
+                'placeholder': 'Введите описание алгоритма решения шифра',
+                'class': 'form-textarea',
+                'id': 'cipher-description',
+                'rows': 5,
+            },
+        ),
+        error_messages={
+            'required': 'Обязательное поле',
+            'min_length': 'Описание должно быть не менее 10 символов',
+            'max_length': 'Описание не может превышать 500 символов',
+        },
+        required=True,
+    )
+
+    first_example_encrypted_phrase = CipherWorkExampleField(
+        label='Пример зашифрованной фразы 1 (Видно только модератору)',
+        placeholder='Введите пример зашифрованной фразы',
+    )
+    first_example_answer_phrase = CipherWorkExampleField(
+        label='Ответ примера 1',
+        placeholder='Введите ответ для примера',
+    )
+    second_example_encrypted_phrase = CipherWorkExampleField(
+        label='Пример зашифрованной фразы 2 (Видно только модератору)',
+        placeholder='Введите пример зашифрованной фразы',
+    )
+    second_example_answer_phrase = CipherWorkExampleField(
+        label='Ответ примера 2',
+        placeholder = 'Введите ответ для примера',
+    )
+    third_example_encrypted_phrase = CipherWorkExampleField(
+        label='Пример зашифрованной фразы 3 (Видно только модератору)',
+        placeholder='Введите пример зашифрованной фразы',
+    )
+    third_example_answer_phrase = CipherWorkExampleField(
+        label='Ответ примера 3',
+        placeholder = 'Введите ответ для примера',
     )
 
     class Meta:
