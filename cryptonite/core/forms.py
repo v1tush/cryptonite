@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 import django.forms
 
+from core.constants import IMAGE_FORMATS
+
 
 # ! Вынесение виджетов формы в отдельный класс
 class FormInitMixin:
@@ -19,7 +21,7 @@ class FormInitMixin:
                         'Файл слишком большой. Максимум 2 МБ.',
                     )
 
-                if avatar.content_type not in {'image/jpeg', 'image/png'}:
+                if avatar.content_type not in IMAGE_FORMATS:
                     raise ValidationError(
                         'Разрешены только форматы JPEG и PNG.',
                     )
@@ -36,7 +38,7 @@ class FormInitMixin:
                         'Файл слишком большой. Максимум 5 МБ.',
                     )
 
-                if background.content_type not in {'image/jpeg', 'image/png'}:
+                if background.content_type not in IMAGE_FORMATS:
                     raise ValidationError(
                         'Разрешены только форматы JPEG и PNG.',
                     )
