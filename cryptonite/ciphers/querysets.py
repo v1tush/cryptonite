@@ -17,6 +17,9 @@ class CipherQuerySet(models.QuerySet):
             )
         )
 
+    def with_full_data(self):
+        return self.select_related('author', 'course').prefetch_related('hints', 'examples')
+
     def approved(self):
         return self.filter(status='approved').with_stats()
 

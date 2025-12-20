@@ -1,26 +1,27 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, inlineformset_factory
 
-from ciphers.models import Cipher, CipherHelp
+from ciphers.models import Cipher, CipherHelp, CipherExample
 
 
 class CipherWorkExampleField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            min_length=1,
-            max_length=100,
+            min_length=100,
+            max_length=510,
             widget=forms.Textarea(
                 attrs={
                     'placeholder': kwargs.get('placeholder'),
                     'class': 'form-textarea',
+                    'id': kwargs.get('id'),
                     'rows': 5,
                 },
             ),
             error_messages={
                 'required': 'Обязательное поле',
-                'min_length': 'Описание должно быть не менее 1 символа',
-                'max_length': 'Описание не может превышать 100 символов',
+                'min_length': 'Описание должно быть не менее 100 символа',
+                'max_length': 'Описание не может превышать 510 символов',
             },
             required=True,
             label=kwargs.get('label'),
@@ -82,20 +83,15 @@ class CipherForm(forms.ModelForm):
         required=True,
     )
 
-    description = forms.CharField(
+    description = CipherWorkExampleField(
         label='Описание шифра (видно всем)',
-        widget=forms.Textarea(
-            attrs={
-                'placeholder': 'Введите описание шифра',
-                'class': 'form-textarea',
-                'id': 'cipher-description',
-                'rows': 5,
-            },
-        ),
-        error_messages={
-            'required': 'Обязательное поле',
-        },
-        required=True,
+        placeholder='Введите описание шифра',
+        id='cipher-description',
+    )
+    description_for_moderator = CipherWorkExampleField(
+        label='Описание работы алгоритма',
+        placeholder='Введите описание работы алгоритма',
+        id='cipher-description-for-moderator',
     )
 
     difficulty = forms.ChoiceField(
@@ -125,51 +121,6 @@ class CipherForm(forms.ModelForm):
         required=False,
     )
 
-    description_for_admin = forms.CharField(
-        label='Описание алгоритма решения шифра (видно только модератору)',
-        min_length=70,
-        max_length=500,
-        widget=forms.Textarea(
-            attrs={
-                'placeholder': 'Введите описание алгоритма решения шифра',
-                'class': 'form-textarea',
-                'id': 'cipher-description',
-                'rows': 5,
-            },
-        ),
-        error_messages={
-            'required': 'Обязательное поле',
-            'min_length': 'Описание должно быть не менее 10 символов',
-            'max_length': 'Описание не может превышать 500 символов',
-        },
-        required=True,
-    )
-
-    first_example_encrypted_phrase = CipherWorkExampleField(
-        label='Пример зашифрованной фразы 1 (Видно только модератору)',
-        placeholder='Введите пример зашифрованной фразы',
-    )
-    first_example_answer_phrase = CipherWorkExampleField(
-        label='Ответ примера 1',
-        placeholder='Введите ответ для примера',
-    )
-    second_example_encrypted_phrase = CipherWorkExampleField(
-        label='Пример зашифрованной фразы 2 (Видно только модератору)',
-        placeholder='Введите пример зашифрованной фразы',
-    )
-    second_example_answer_phrase = CipherWorkExampleField(
-        label='Ответ примера 2',
-        placeholder = 'Введите ответ для примера',
-    )
-    third_example_encrypted_phrase = CipherWorkExampleField(
-        label='Пример зашифрованной фразы 3 (Видно только модератору)',
-        placeholder='Введите пример зашифрованной фразы',
-    )
-    third_example_answer_phrase = CipherWorkExampleField(
-        label='Ответ примера 3',
-        placeholder = 'Введите ответ для примера',
-    )
-
     class Meta:
         model = Cipher
         fields = (
@@ -177,21 +128,10 @@ class CipherForm(forms.ModelForm):
             'encrypted_phrase',
             'answer_phrase',
             'description',
+            'description_for_moderator',
             'difficulty',
             'attempt_limit',
         )
-
-    def clean_description(self):
-        description = self.cleaned_data.get('description', '')
-        if len(description) < 100:
-            raise ValidationError(
-                'Описание должно содержать не менее 100 символов',
-            )
-
-        if len(description) > 510:
-            raise ValidationError('Описание не должно превышать 510 символов')
-
-        return description
 
     def clean_encrypted_phrase(self):
         encrypted_phrase = self.cleaned_data.get('encrypted_phrase', '')
@@ -239,5 +179,20 @@ CipherHelpFormSet = modelformset_factory(
     CipherHelp,
     fields=('text', 'order'),
     extra=0,
+    max_num=5,
+    validate_max=True,
     can_delete=True,
+)
+
+
+CipherExampleFormSet = inlineformset_factory(
+    Cipher,
+    CipherExample,
+    fields=('encrypted_phrase', 'answer_phrase'),
+    extra=3,
+    min_num=3,
+    max_num=3,
+    validate_min=True,
+    validate_max=True,
+    can_delete=False,
 )

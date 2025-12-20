@@ -40,6 +40,7 @@ class Cipher(models.Model):
     )
     answer_phrase = models.CharField(max_length=100, verbose_name='ответ')
     description = models.TextField(max_length=510, verbose_name='описание')
+    description_for_moderator = models.TextField(max_length=510, verbose_name='описание для модератора')
     difficulty = models.PositiveSmallIntegerField(
         choices=DIFFICULTY_CHOICES,
         verbose_name='сложность',
@@ -260,3 +261,19 @@ class CipherLike(models.Model):
 
     def __str__(self):
         return f'CipherLike: {self.user.username} - {self.created_at}'
+
+
+class CipherExample(models.Model):
+    cipher = models.ForeignKey(Cipher, models.CASCADE, related_name='examples')
+
+    encrypted_phrase = models.CharField(
+        max_length=100,
+        verbose_name='пример зашифрованной фразы',
+    )
+    answer_phrase = models.CharField(max_length=100, verbose_name='ответ на пример')
+
+    order = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        verbose_name='порядок',
+    )

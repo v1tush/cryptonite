@@ -23,6 +23,9 @@ class CipherManager(models.Manager):
     def with_stats(self):
         return self.get_queryset().with_stats()
 
+    def with_full_data(self):
+        return self.get_queryset().with_full_data()
+
     def get_all_user_solved_ciphers(self, user):
         return self.get_queryset().get_all_user_solved_ciphers(user)
 

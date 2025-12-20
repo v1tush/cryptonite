@@ -30,7 +30,7 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
     def get_cipher(self):
         if self.cipher_id:
             return get_object_or_404(
-                Cipher,
+                Cipher.objects.with_full_data(),
                 pk=self.cipher_id,
                 author=self.request.user,
             )
@@ -49,10 +49,11 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         is_edit = self.cipher_id is not None
-        existing_hints = []
+        existing_hints = existing_examples = []
         if is_edit and self.cipher_id:
             cipher = self.get_cipher()
             existing_hints = cipher.hints.all().order_by('order')
+            existing_examples = cipher.examples.all()
 
         context.update(
             {
