@@ -5,3 +5,9 @@ REWARD_VALUES = {
 }
 
 HINT_PRICE = 100
+
+IS_COURSE = 'course'
+
+IS_COMMUNITY = 'community'
+
+IS_CIPHER_APPROVED = 'approved'

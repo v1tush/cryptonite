@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 
+from ciphers.constants import IS_CIPHER_APPROVED, IS_COMMUNITY, IS_COURSE
 from ciphers.managers import CipherLikeManager, CipherManager
 from courses.models import Course
 
@@ -88,10 +89,10 @@ class Cipher(models.Model):
         return f'Cipher: {self.author.username} - {self.title[:10]}'
 
     def clean(self):
-        if self.cipher_type == 'course' and not self.course:
+        if self.cipher_type == IS_COURSE and not self.course:
             raise ValidationError('Шифр курса должен быть привязан к курсу')
 
-        if self.cipher_type == 'community' and self.course:
+        if self.cipher_type == IS_COMMUNITY and self.course:
             raise ValidationError('Шифр сообщества не должен иметь курс')
 
     def save(self, *args, **kwargs):
@@ -106,7 +107,7 @@ class Cipher(models.Model):
 
     @property
     def is_published(self):
-        return self.status == 'approved'
+        return self.status == IS_CIPHER_APPROVED
 
 
 class CipherHelp(models.Model):
