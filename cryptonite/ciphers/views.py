@@ -10,7 +10,7 @@ from django.views.generic import DetailView, FormView, ListView
 from django.views.generic.edit import FormMixin
 
 from ciphers.constants import HINT_PRICE, REWARD_VALUES
-from ciphers.forms import CipherForm
+from ciphers.forms import CipherForm, CipherExampleFormSet
 from ciphers.models import Cipher, CipherHelp, CipherLike, PurchasedHint
 from ciphers.services import normalize_answer, purchase_hint
 from feedback.models import Feedback
@@ -67,6 +67,7 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
                 ),
                 'is_edit': is_edit,
                 'existing_hints': existing_hints,
+                'existing_examples': existing_examples,
             },
         )
 
@@ -80,6 +81,12 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
 
         if form.changed_data:
             cipher.status = 'pending'
+
+        example_formset = CipherExampleFormSet(self.request.POST, instance=cipher)
+        if example_formset.is_valid():
+            example_formset.save()
+        else:
+            return self.form_invalid(form)
 
         cipher.save()
         if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
