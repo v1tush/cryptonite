@@ -71,8 +71,8 @@
     <div class="achievement-grid">
         {% for achievement in profile_user.achievements.all %}
             <div class="achievement-item featured">
-                <div class="achievement-icon"><img src="{% if achievement.image %} /media/{{ achievement.image }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
-                <div class="achievement-name">{{achievement.title}}</div>
+                <div class="achievement-icon"><img src="{% if achievement.achievement.image %} /media/{{ achievement.achievement.image }} {% else %} {% static 'images/avatar.jpg' %} {% endif %}"></div>
+                <div class="achievement-name">{{achievement.achievement.title}}</div>
             </div>
         {% endfor %}
     </div>
