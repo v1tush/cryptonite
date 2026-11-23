@@ -1,204 +1,127 @@
-# Cryptonite — платформа для изучения шифров
+# Cryptonite
 
-[![Lint & Django Tests](https://gitlab.crja72.ru/django/2025/autumn/course/projects/team-1/badges/main/pipeline.svg?key_text=lint%26tests)](https://gitlab.crja72.ru/django/2025/autumn/course/projects/team-1/-/pipelines)
-## ⚙️ Требования
+Cryptonite is a Django web application for creating, solving, and sharing ciphers. It was built as a team project for the Yandex Lyceum project defense.
 
-Перед запуском проекта убедитесь, что у вас установлена необходимая версия Python: **3.10, 3.11, 3.12 или 3.13**, **git и gettext** 
+## Features
 
+- User registration, login, profiles, and profile editing
+- Community cipher creation, editing, moderation, and solving
+- Difficulty levels, attempt limits, hints, and in-app rewards
+- Likes, leaderboards, and achievement rules
+- Daily cipher selection with history
+- QR codes for ciphers
+- Russian and English localization
+- Course-related models and views (partially implemented)
 
-## 👾 Описание проекта
+## Tech stack
 
-Cryptonite — это платформа, посвящённая шифрам, их решению и взаимодействию пользователей внутри сообщества. Ниже приведено описание функциональности проекта и разграничения ролей.
+- Python 3.10–3.13
+- Django 5.2
+- PostgreSQL
+- Pillow, Segno, APScheduler
 
----
+## Requirements
 
-## Роли пользователей
+- Python 3.10, 3.11, 3.12, or 3.13
+- PostgreSQL
+- Git
+- `gettext` is needed only if you want to compile translation files
 
-В системе реализованы четыре основные роли:
+## Local development setup
 
-### 1. Анонимный пользователь (`is_authenticated=False`)
-- Не может ставить лайки  
-- Не имеет доступа к страницам решений шифров  
-- Не может просматривать профили других пользователей  
-- Не может создавать шифры  
+Commands below start from the repository root.
 
-### 2. Обычный пользователь (`is_authenticated=True`)
-- Имеет доступ ко всем базовым функциям платформы  
-- Может ставить лайки, решать шифры, просматривать профили  
-- Может редактировать данные своего профиля  
-- Может создавать и редактировать собственные шифры  
-- Может создавать курсы (функциональность реализована частично и не являлась приоритетной на текущем этапе)
-
-### 3. Менеджер-модератор (`is_staff=True`)
-- Может модерировать шифры пользователей
-- Может скрывать шифры других участников
-- Имеет расширенные права для оперативного реагирования в критических ситуациях
-
-### 4. Главный администратор (`is_superuser=True`)
-- Имеет полный доступ ко всем возможностям системы  
-
-> **Примечание:** при создании новый шифр по умолчанию отправляется на модерацию, поэтому для полного тестирования рекомендуется создать несколько аккаунтов с разными ролями.
-
----
-
-## Дополнительные возможности
-
-- **QR-код для каждого шифра** — позволяет быстро перейти к шифру, например, с мобильного устройства  
-- **Шифр дня**  
-- **Лидерборд пользователей**
-
----
-
-## 🚀 Запуск проекта в режиме разработки
-
-Следуйте шагам ниже, чтобы развернуть проект локально.
-
----
-
-### 1. Клонирование репозитория
-
-Скачайте проект на локальную машину и перейдите в его директорию:
+### 1. Clone and create a virtual environment
 
 ```bash
-git clone https://gitlab.crja72.ru/django/2025/autumn/course/projects/team-1.git
-cd team-1
+git clone https://github.com/v1tush/cryptonite.git
+cd cryptonite
+python -m venv .venv
 ```
 
----
+Activate the environment:
 
-### 2. Создание и активация виртуального окружения
-
-Создаём виртуальное окружение для Python и активируем его:
-
-| ОС                          | Команды                                                 |
-| :---------------------------- | :------------------------------------------------------------- |
-| **Windows ❖**          | ``python -m venv venv`` ` && ` ``venv/Scripts/activate``     |
-| **macOS  / Linux 🐧** | ``python3 -m venv venv`` ` && ` ``source venv/bin/activate`` |
-
----
-
-### 3. Установка зависимостей
-
-Зависимости проекта разделены на несколько файлов.
-Выберите нужный вариант в зависимости от окружения.
-
-#### 🔧 Для разработки (`dev.txt`)
-``pip install -r requirements/dev.txt``
-
-#### 🧪 Для тестирования (`test.txt`)
-``pip install -r requirements/test.txt``
-
-#### 🚀 Для продакшена (`prod.txt`)
-``pip install -r requirements/prod.txt``
-
----
-
-### 4. Настройка переменных окружения
-
-Создайте файл `.env` на основе шаблона:
-
-| Среда                     | Команда                   |
-| :----------------------------- | :------------------------------- |
-| Linux / macOS / Git Bash / WSL | `cp .env.template .env`        |
-| Windows (PowerShell)           | `Copy-Item .env.template .env` |
-| Windows (CMD)                  | `copy .env.template .env`      |
-
-Пример содержимого `.env`:
-
-```env
-# Django Settings
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
-DJANGO_DEBUG=True
-DJANGO_SECRET_KEY=fake_insecure_key_for_template_!@
-DJANGO_LANGUAGE_CODE=ru
-
-# Database Settings
-DJANGO_DB_NAME=demo_project_db
-DJANGO_DB_USER=demo_user
-DJANGO_DB_PASSWORD=demo_password_123ABC
-DJANGO_DB_HOST=localhost
-DJANGO_DB_PORT=5432
+```powershell
+# Windows PowerShell
+.\.venv\Scripts\Activate.ps1
 ```
 
----
+```bash
+# macOS / Linux
+source .venv/bin/activate
+```
 
-Перейдите в папку проекта:
+### 2. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements/dev.txt
+```
+
+### 3. Configure the environment
+
+Copy `.env.template` to `.env` in the repository root:
+
+```powershell
+# Windows PowerShell
+Copy-Item .env.template .env
+```
+
+```bash
+# macOS / Linux / Git Bash
+cp .env.template .env
+```
+
+Set the database name, user, password, and host in `.env` to match a PostgreSQL database you have created. The template's values are examples for local development only. Generate a unique Django secret key for your local environment and keep `.env` private.
+
+### 4. Apply migrations and create an admin account
+
+The Django `manage.py` file is inside the `cryptonite/` directory:
 
 ```bash
 cd cryptonite
+python manage.py migrate
+python manage.py createsuperuser
 ```
 
-### 5. Применение миграций и работа с базой данных
+### 5. Start the web app
 
-#### Выполните миграции
-
-| ОС                | Команда                |
-| :------------------ | :---------------------------- |
-| Windows ❖          | `python manage.py migrate`  |
-| macOS  / Linux 🐧 | `python3 manage.py migrate` |
-
-#### Загрузка тестовых данных (фикстур)
-
-Если проект содержит подготовленные фикстуры, загрузите их следующей командой:
-
-| ОС        | Команда                                   |
-| :---------- | :----------------------------------------------- |
-| Все ОС | `python manage.py loaddata fixtures/data.json` |
-
----
-
-### 6. Создание суперпользователя
-
-Создайте администратора для доступа к админ-панели:
-
-| ОС                | Команда                        |
-| :------------------ | :------------------------------------ |
-| Windows ❖          | `python manage.py createsuperuser`  |
-| macOS  / Linux 🐧 | `python3 manage.py createsuperuser` |
-
-После запуска сервера админка будет доступна по адресу:
-👉 [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin)
-
----
-
-### 7. Локализация проекта
-
-Выберите язык по умолчанию в файле `settings.py`:
-
-```python
-LANGUAGE_CODE = 'en'
+```bash
+python manage.py runserver
 ```
 
-Для генерации и компиляции переводов используйте:
+Open <http://127.0.0.1:8000/>. The Django admin is at <http://127.0.0.1:8000/admin/>.
 
-| Действие                              | Команда                                                                 |
-| :-------------------------------------------- | :----------------------------------------------------------------------------- |
-| Создать файлы перевода    | `django-admin makemessages -l en` или `django-admin makemessages -l ru` |
-| Скомпилировать переводы | `django-admin compilemessages`                                               |
+## Daily cipher scheduler
 
----
+The daily cipher scheduler is a separate, long-running process; starting the Django web server does **not** start it. In a second terminal, activate the same virtual environment, go to the inner `cryptonite/` directory, and run:
 
-### 8. Запуск сервера разработки
+```bash
+python manage.py run_scheduler
+```
 
-Теперь можно запустить проект:
+Keep this process running while using the app. It selects an approved cipher immediately on startup, then schedules subsequent selections every 24 hours. If there are no approved ciphers, no daily cipher can be selected.
 
-| ОС                | Команда                  |
-| :------------------ | :------------------------------ |
-| Windows ❖          | `python manage.py runserver`  |
-| macOS  / Linux 🐧 | `python3 manage.py runserver` |
+## Tests and code checks
 
-После запуска проект будет доступен по адресу:
-👉 [http://127.0.0.1:8000](http://127.0.0.1:8000)
+The GitLab CI configuration runs Black, Flake8, and Django's test command. The repository currently has little to no automated application test coverage, so passing the test job should not be taken as proof that all user flows are covered.
 
----
+## Translations
 
-## 🗄️ ER-диаграмма базы данных
+Translation sources are in `cryptonite/locale/`. To update translations, install `gettext` and run these commands from the inner `cryptonite/` directory:
 
-![ER-диаграмма базы данных](ER.png)
+```bash
+python manage.py makemessages -l en
+python manage.py makemessages -l ru
+python manage.py compilemessages
+```
 
-> На диаграмме показана структура моделей проекта.
-> Со временем база данных может расширяться, добавляться новые связи и таблицы.
+## Project structure
 
----
+```text
+cryptonite/       Django project and apps
+requirements/     Development, test, and production dependencies
+ER.png            Entity-relationship diagram
+```
 
-© 2025 — Проект Criptonite, Яндекс Лицей.
+This is an educational project and is not configured as a production deployment. Before deploying it publicly, review the Django secret key, allowed hosts, database credentials, HTTPS/security settings, media storage, and background scheduler deployment.
