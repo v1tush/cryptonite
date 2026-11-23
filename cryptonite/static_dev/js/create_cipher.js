@@ -147,7 +147,19 @@ document.addEventListener('DOMContentLoaded', function() {
     cipherForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         const formData = new FormData(this);
-        const cipherId = document.getElementById('cipher_id').value;
+        const hints = [];
+        document.querySelectorAll('.hint-textarea').forEach(textarea => {
+            const text = textarea.value.trim();
+            if (text) {
+                hints.push({
+                    id: textarea.dataset.hintId || null,
+                    text,
+                    order: hints.length + 1
+                });
+            }
+        });
+        formData.delete('hints[]');
+        formData.set('hints_payload', JSON.stringify(hints));
         
         try {
             const response = await fetch(this.action, {
@@ -161,20 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
 
             if (data.success) {
-                const cipherId = data.cipher_id;
-                const hints = [];
-                document.querySelectorAll('.hint-textarea').forEach((textarea, index) => {
-                    const text = textarea.value.trim();
-                    if (text) {
-                        hints.push({
-                            text: text,
-                            order: index + 1
-                        });
-                    }
-                });
-                if (hints.length > 0) {
-                    await saveHints(cipherId, hints);
-                }
                 window.location.href = data.redirect_url;
             } else {
                 if (data.errors) {
@@ -186,31 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Ошибка:', error);
             alert('Произошла ошибка при отправке формы');
+            this.querySelector('button[type="submit"]').disabled = false;
         }
     });
-    
-    async function saveHints(cipherId, hints) {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        
-        const response = await fetch('/ciphers/save-hints/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({
-                cipher_id: cipherId,
-                hints: hints
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (!data.success) {
-            throw new Error(data.error || 'Ошибка при сохранении подсказок');
-        }
-        
-        return data;
-    }
 });

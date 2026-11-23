@@ -1,7 +1,4 @@
-from django.core.exceptions import ValidationError
 import django.forms
-
-from core.constants import IMAGE_FORMATS
 
 
 # ! Вынесение виджетов формы в отдельный класс
@@ -10,40 +7,6 @@ class FormInitMixin:
         super().__init__(*args, **kwargs)
         for field in self.visible_fields():
             field.field.widget.attrs['class'] = 'form-control'
-
-    def clean_avatar(self):
-        avatar = self.cleaned_data.get('avatar')
-
-        if avatar:
-            if hasattr(avatar, 'content_type'):
-                if avatar.size > 2 * 1024 * 1024:
-                    raise ValidationError(
-                        'Файл слишком большой. Максимум 2 МБ.',
-                    )
-
-                if avatar.content_type not in IMAGE_FORMATS:
-                    raise ValidationError(
-                        'Разрешены только форматы JPEG и PNG.',
-                    )
-
-        return avatar
-
-    def clean_background(self):
-        background = self.cleaned_data.get('background')
-
-        if background:
-            if hasattr(background, 'content_type'):
-                if background.size > 5 * 1024 * 1024:
-                    raise ValidationError(
-                        'Файл слишком большой. Максимум 5 МБ.',
-                    )
-
-                if background.content_type not in IMAGE_FORMATS:
-                    raise ValidationError(
-                        'Разрешены только форматы JPEG и PNG.',
-                    )
-
-        return background
 
     def clean_email(self):  # * небольшая нормальзация email
         email = self.cleaned_data.get('email')
@@ -101,13 +64,4 @@ class CommonUserRowsMixin:
             'required': 'Обязательное поле',
         },
         required=True,
-    )
-
-    avatar = django.forms.ImageField(
-        widget=django.forms.FileInput(
-            attrs={
-                'placeholder': 'Загрузите вашу аватарку',
-            },
-        ),
-        required=False,
     )

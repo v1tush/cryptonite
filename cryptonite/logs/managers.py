@@ -9,7 +9,7 @@ class SolutionLogManager(models.Manager):
         return self.filter(cipher=cipher)
 
     def user_solutions_for_cipher(self, user, cipher):
-        return self.filter(user=user, cipher=cipher).order_by('-created_at')
+        return self.filter(user=user, cipher=cipher).order_by('-attempts_used')
 
     def has_attempts(self, user, cipher):
         return self.user_solutions_for_cipher(user, cipher).exists()

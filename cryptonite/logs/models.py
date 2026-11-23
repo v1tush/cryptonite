@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.db import IntegrityError, models, transaction
+from django.db import models
 
 from ciphers.models import Cipher
 from logs.managers import SolutionLogManager
-
 
 User = get_user_model()
 
@@ -56,32 +55,6 @@ class SolutionLog(models.Model):
 
     def __str__(self):
         return f'SolutionLog: {self.user} - {self.cipher}'
-
-    def save(self, *args, **kwargs):
-        if self.pk:
-            return super().save(*args, **kwargs)
-
-        for _ in range(5):
-            try:
-                with transaction.atomic():
-                    qs = SolutionLog.objects.select_for_update()
-                    last = (
-                        qs.filter(user=self.user, cipher=self.cipher)
-                        .order_by('-attempts_used')
-                        .first()
-                    )
-
-                    self.attempts_used = (
-                        (last.attempts_used + 1) if last else 1
-                    )
-                    super().save(*args, **kwargs)
-
-                break
-
-            except IntegrityError:
-                continue
-        else:
-            raise RuntimeError('Failed to allocate attempts_used')
 
     @property
     def is_solved(self):

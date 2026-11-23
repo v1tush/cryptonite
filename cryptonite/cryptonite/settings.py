@@ -1,7 +1,9 @@
 from pathlib import Path
 
-from django.utils.translation import gettext_lazy as _
 import environ
+from django.utils.translation import gettext_lazy as _
+
+from cryptonite.config import validate_production_settings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,11 +11,31 @@ env = environ.Env()
 
 env.read_env(BASE_DIR.parent / '.env')
 
-SECRET_KEY = env('DJANGO_SECRET_KEY', default='fake-key')
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
+SECRET_KEY = env(
+    'DJANGO_SECRET_KEY',
+    default='local-development-only' if DEBUG else '',
+)
+ALLOWED_HOSTS = env.list(
+    'DJANGO_ALLOWED_HOSTS',
+    default=['localhost', '127.0.0.1', '[::1]'] if DEBUG else [],
+)
+ALLOWED_HOSTS = [host.strip().lower() for host in ALLOWED_HOSTS]
+if not DEBUG:
+    validate_production_settings(SECRET_KEY, ALLOWED_HOSTS)
 
-DEBUG = env.bool('DJANGO_DEBUG', default='False')
-
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['*'])
+CSRF_TRUSTED_ORIGINS = env.list('DJANGO_CSRF_TRUSTED_ORIGINS', default=[])
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG
+SECURE_HSTS_SECONDS = env.int('DJANGO_HSTS_SECONDS', default=0)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
+    'DJANGO_HSTS_INCLUDE_SUBDOMAINS',
+    default=False,
+)
+SECURE_HSTS_PRELOAD = env.bool('DJANGO_HSTS_PRELOAD', default=False)
+if env.bool('DJANGO_TRUST_PROXY_SSL_HEADER', default=False):
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,9 +96,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': env('DJANGO_DB_NAME', default='cryptonite_db'),
         'USER': env('DJANGO_DB_USER', default='cryptonite_user'),
-        'PASSWORD': env('DJANGO_DB_PASSWORD', default='password'),
-        'HOST': env('DJANGO_DB_HOST', default='db'),
+        'PASSWORD': env('DJANGO_DB_PASSWORD', default=''),
+        'HOST': env('DJANGO_DB_HOST', default='localhost'),
         'PORT': env('DJANGO_DB_PORT', default='5432'),
+        'OPTIONS': {'connect_timeout': 5},
     },
 }
 
@@ -123,7 +146,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static_dev']
 
 STATIC_ROOT = BASE_DIR / 'static'
 
-MEDIA_URL = '/media/'
+MEDIA_URL = env('DJANGO_MEDIA_URL', default='/media/')
 
 MEDIA_ROOT = BASE_DIR / 'media'
 

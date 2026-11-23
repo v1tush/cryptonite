@@ -2,7 +2,6 @@ from django.urls import path
 
 import courses.views
 
-
 app_name = 'courses'
 
 urlpatterns = [

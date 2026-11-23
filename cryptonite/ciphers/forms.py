@@ -1,15 +1,12 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import modelformset_factory
 
-from ciphers.models import Cipher, CipherHelp
+from ciphers.models import Cipher
+from ciphers.services import normalize_answer
 
 
 class CipherForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        self.author = kwargs.pop('author', None)
-        self.create_flag = kwargs.pop('create_flag', True)
-
         super().__init__(*args, **kwargs)
 
         if self.instance and self.instance.pk:
@@ -91,6 +88,8 @@ class CipherForm(forms.ModelForm):
 
     attempt_limit = forms.IntegerField(
         label='Количество попыток',
+        min_value=1,
+        max_value=15,
         widget=forms.NumberInput(
             attrs={
                 'min': 1,
@@ -140,37 +139,6 @@ class CipherForm(forms.ModelForm):
         if len(answer_phrase) > 100:
             raise ValidationError('Ответ не должен превышать 100 символов')
 
+        if not normalize_answer(answer_phrase):
+            raise ValidationError('Введите ответ, содержащий буквы или цифры')
         return answer_phrase
-
-    def clean_attempt_limit(self):
-        attempt_limit = self.cleaned_data.get('attempt_limit')
-        if attempt_limit is not None and attempt_limit < 1:
-            raise ValidationError('Количество попыток должно быть больше 0')
-
-        return attempt_limit
-
-    def save(self, commit=True):
-        cipher = super().save(commit=False)
-        try:
-            cipher.author = self.author
-        except ValidationError:
-            return None
-
-        if commit:
-            cipher.save()
-
-        return cipher
-
-
-class CipherHelpForm(forms.ModelForm):
-    class Meta:
-        model = CipherHelp
-        fields = ('text',)
-
-
-CipherHelpFormSet = modelformset_factory(
-    CipherHelp,
-    fields=('text', 'order'),
-    extra=0,
-    can_delete=True,
-)

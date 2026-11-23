@@ -1,8 +1,8 @@
 from io import BytesIO
 
+import segno
 from django.core.files.base import ContentFile
 from django.db import models
-import segno
 
 
 class QrManager(models.Manager):

@@ -5,5 +5,4 @@ class AchievementAbstract(abc.ABC):
     achievement_code: str
 
     @abc.abstractmethod
-    def is_achieved(self, user) -> bool:
-        ...
+    def is_achieved(self, user) -> bool: ...

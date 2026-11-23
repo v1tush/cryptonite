@@ -78,6 +78,7 @@ docker/
 # Cache & temp
 # =========================
 *.cache
+.ruff_cache/
 .cache/
 cache/
 tmp/

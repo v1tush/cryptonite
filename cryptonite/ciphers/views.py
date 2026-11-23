@@ -2,21 +2,89 @@ import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError, transaction
-from django.http import HttpResponseForbidden, JsonResponse
-from django.shortcuts import get_object_or_404, Http404, redirect
+from django.http import (
+    Http404,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    JsonResponse,
+)
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 from django.views.generic import DetailView, FormView, ListView
 from django.views.generic.edit import FormMixin
 
-from ciphers.constants import HINT_PRICE, REWARD_VALUES
+from ciphers.constants import HINT_PRICE
 from ciphers.forms import CipherForm
 from ciphers.models import Cipher, CipherHelp, CipherLike, PurchasedHint
-from ciphers.services import normalize_answer, purchase_hint
+from ciphers.services import (
+    GameRuleError,
+    moderate_cipher,
+    purchase_hint,
+    save_cipher_hints,
+    submit_solution,
+    visible_ciphers,
+)
 from feedback.models import Feedback
 from logs.forms import SolutionLogForm
 from logs.models import SolutionLog
 from qr.models import QR
+
+
+def _read_json(request):
+    try:
+        data = json.loads(request.body)
+    except (ValueError, RecursionError):
+        raise ValueError('Ожидается JSON-объект') from None
+    if not isinstance(data, dict):
+        raise ValueError('Ожидается JSON-объект')
+    return data
+
+
+def _positive_id(value):
+    if (
+        type(value) not in (int, str)
+        or not str(value).isascii()
+        or not str(value).isdecimal()
+        or len(str(value)) > 19
+        or not 0 < int(value) <= 2**63 - 1
+    ):
+        raise ValueError('Ожидается положительный идентификатор')
+    return int(value)
+
+
+def _json_error(error, status):
+    return JsonResponse({'success': False, 'error': str(error)}, status=status)
+
+
+def _parse_hints(items):
+    if not isinstance(items, list) or len(items) > 20:
+        raise ValueError('Ожидается список из не более 20 подсказок')
+    result = []
+    orders = set()
+    hint_ids = set()
+    for item in items:
+        if not isinstance(item, dict):
+            raise ValueError('Некорректная подсказка')
+        order = _positive_id(item.get('order'))
+        text = item.get('text')
+        if order > 20 or order in orders:
+            raise ValueError('Укажите уникальные номера подсказок от 1 до 20')
+        if not isinstance(text, str) or not 0 < len(text.strip()) <= 1000:
+            raise ValueError('Введите от 1 до 1000 символов в подсказке')
+        if '\x00' in text:
+            raise ValueError('Некорректный текст подсказки')
+        text.encode('utf-8')
+        hint_id = item.get('id')
+        if hint_id is not None:
+            hint_id = _positive_id(hint_id)
+            if hint_id in hint_ids:
+                raise ValueError('Подсказка указана дважды')
+            hint_ids.add(hint_id)
+        orders.add(order)
+        result.append((order, text.strip(), hint_id))
+    return result
 
 
 class CreateEditCipher(LoginRequiredMixin, FormView):
@@ -40,10 +108,6 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['instance'] = self.get_cipher()
-        kwargs['create_flag'] = self.cipher_id is None
-        if self.request.method == 'GET':
-            kwargs['data'] = None
-
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -72,33 +136,53 @@ class CreateEditCipher(LoginRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        cipher = form.save(commit=False)
-        cipher.author = self.request.user
-        if self.cipher_id is None:
-            cipher.cipher_type = 'community'
+        try:
+            hints = None
+            if 'hints_payload' in self.request.POST:
+                hints = _parse_hints(
+                    json.loads(self.request.POST['hints_payload'])
+                )
+        except (ValueError, RecursionError) as exc:
+            form.add_error(None, str(exc))
+            return self.form_invalid(form)
+        try:
+            cipher = self.save_cipher(form, hints)
+        except GameRuleError as exc:
+            form.add_error(None, str(exc))
+            return self.form_invalid(form)
 
-        if form.changed_data:
-            cipher.status = 'pending'
-
-        cipher.save()
+        profile_url = reverse_lazy(
+            'users:profile',
+            kwargs={'username': self.request.user.username},
+        )
         if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse(
                 {
                     'success': True,
                     'cipher_id': cipher.id,
-                    'redirect_url': reverse_lazy(
-                        'users:profile',
-                        kwargs={'username': self.request.user.username},
-                    ),
+                    'redirect_url': profile_url,
                 },
             )
+        return redirect(profile_url)
 
-        return redirect(
-            reverse_lazy(
-                'users:profile',
-                kwargs={'username': self.request.user.username},
-            ),
-        )
+    @transaction.atomic
+    def save_cipher(self, form, hints):
+        cipher = form.save(commit=False)
+        cipher.author = self.request.user
+        if self.cipher_id is None:
+            cipher.cipher_type = 'community'
+            cipher.save()
+        elif form.changed_data:
+            cipher.status = 'pending'
+            cipher.save(
+                update_fields=[*form.changed_data, 'status', 'updated_at'],
+            )
+
+        if hints is not None:
+            save_cipher_hints(
+                user=self.request.user, cipher_id=cipher.pk, hints=hints
+            )
+        return cipher
 
     def form_invalid(self, form):
         if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -135,16 +219,29 @@ class LibraryCommunityView(ListView):
 
 
 class CipherAccessMixin:
-    def get_cipher(self, request, cipher_id):
-        if request.user.is_staff:
-            return get_object_or_404(Cipher, id=cipher_id)
+    def get_cipher(self, request, cipher_id, *, lock=False):
+        queryset = Cipher.objects.all()
+        if not request.user.is_staff:
+            queryset = queryset.filter(author=request.user)
+        if lock:
+            queryset = queryset.select_for_update(no_key=True)
+        return get_object_or_404(queryset, pk=cipher_id)
 
-        return get_object_or_404(Cipher, id=cipher_id, author=request.user)
+    def redirect_back(self, request):
+        referer = request.META.get('HTTP_REFERER')
+        if url_has_allowed_host_and_scheme(
+            referer,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            return redirect(referer)
+        return redirect('ciphers:library_community')
 
 
 class HideCipherView(LoginRequiredMixin, CipherAccessMixin, View):
+    @transaction.atomic
     def post(self, request, cipher_id):
-        cipher = self.get_cipher(request, cipher_id)
+        cipher = self.get_cipher(request, cipher_id, lock=True)
 
         if cipher.status == 'pending' or cipher.status == 'rejected':
             return HttpResponseForbidden(
@@ -152,20 +249,21 @@ class HideCipherView(LoginRequiredMixin, CipherAccessMixin, View):
             )
 
         cipher.status = 'hidden'
-        cipher.save()
-        return redirect(request.META.get('HTTP_REFERER', '/'))
+        cipher.save(update_fields=['status', 'updated_at'])
+        return self.redirect_back(request)
 
 
 class OpenCipherView(LoginRequiredMixin, CipherAccessMixin, View):
+    @transaction.atomic
     def post(self, request, cipher_id):
-        cipher = self.get_cipher(request, cipher_id)
+        cipher = self.get_cipher(request, cipher_id, lock=True)
 
         if cipher.status != 'hidden':
             return HttpResponseForbidden('Можно открыть только скрытые шифры')
 
         cipher.status = 'approved'
-        cipher.save()
-        return redirect(request.META.get('HTTP_REFERER', '/'))
+        cipher.save(update_fields=['status', 'updated_at'])
+        return self.redirect_back(request)
 
 
 class LikeCipherView(LoginRequiredMixin, View):
@@ -202,30 +300,27 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
         return self.request.path
 
     def get_object(self, queryset=None):
-        cipher = get_object_or_404(Cipher, id=self.kwargs['cipher_id'])
-
-        if not self.request.user.is_staff:
-            if (
-                cipher.status != 'approved'
-                and cipher.author != self.request.user
-            ):
-                raise Http404('Шифр скрыт')
-
-        return cipher
+        return get_object_or_404(
+            visible_ciphers(self.request.user),
+            pk=self.kwargs['cipher_id'],
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cipher = self.get_object()
+        cipher = self.object
         user = self.request.user
         hints = cipher.hints.all().order_by('order')
-        purchased_hint_ids = PurchasedHint.objects.filter(
-            user=user,
-            hint__in=hints,
-        ).values_list('hint_id', flat=True)
+        purchased_hint_ids = set(
+            PurchasedHint.objects.filter(
+                user=user, hint__in=hints
+            ).values_list('hint_id', flat=True)
+        )
         purchased_hints = []
         available_hints = []
         for hint in hints:
-            if hint.id in purchased_hint_ids:
+            if hint.id in purchased_hint_ids or (
+                user.is_staff and cipher.status == 'pending'
+            ):
                 purchased_hints.append(
                     {
                         'id': hint.id,
@@ -238,7 +333,6 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
                 available_hints.append(
                     {
                         'id': hint.id,
-                        'text': hint.text,
                         'order': hint.order,
                         'purchased': False,
                     },
@@ -253,11 +347,11 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
             cipher=cipher,
             request=self.request,
         )
-        context[
-            'user_attempts'
-        ] = SolutionLog.objects.user_solutions_for_cipher(
-            self.request.user,
-            self.get_object(),
+        context['user_attempts'] = (
+            SolutionLog.objects.user_solutions_for_cipher(
+                self.request.user,
+                cipher,
+            )
         )
 
         _lks_crs = CipherLike.objects.filter(
@@ -273,198 +367,99 @@ class SolveCipherView(LoginRequiredMixin, FormMixin, DetailView):
             self.request.user,
             self.object,
         )
-        if context['last_attempt'] and self.object.attempt_limit is not None:
-            context['left_attempt_cnt'] = (
-                self.object.attempt_limit
-                - context['last_attempt'].attempts_used
+        if cipher.attempt_limit is not None:
+            last = context['last_attempt']
+            context['left_attempt_cnt'] = max(
+                0,
+                cipher.attempt_limit - (last.attempts_used if last else 0),
             )
 
         context['solved_users_cnt'] = SolutionLog.objects.get_solved_users_cnt(
             self.object,
         )
         context['top_users'] = SolutionLog.objects.get_top_solvers(
-            self.get_object(),
+            cipher,
         )
         context['has_limit'] = self.object.attempt_limit is not None
         if self.request.user.is_staff:
             context['complaints'] = Feedback.objects.received_for_cipher(
-                self.get_object(),
+                cipher,
             )
-            context[
-                'complaints_from_past'
-            ] = Feedback.objects.answered_for_cipher(self.get_object())
+            context['complaints_from_past'] = (
+                Feedback.objects.answered_for_cipher(cipher)
+            )
 
         return context
 
     def post(self, request, **kwargs):
-        # Проверка модерации шифра
-        self.object = self.get_object()
-
-        if request.user.is_staff and 'moderation_action' in request.POST:
-            action = request.POST.get('moderation_action')
-
-            if self.object.status == 'pending':
-                if action == 'approve':
-                    self.object.status = 'approved'
-                    complaints = Feedback.objects.received_for_cipher(
-                        self.object,
-                    )
-                    for complaint in complaints:
-                        complaint.status = 'answered'
-                        complaint.save()
-
-                elif action == 'reject':
-                    self.object.status = 'rejected'
-
-                self.object.save()
-
+        if 'moderation_action' in request.POST:
+            try:
+                moderate_cipher(
+                    user=request.user,
+                    cipher_id=kwargs['cipher_id'],
+                    action=request.POST['moderation_action'],
+                )
+            except Cipher.DoesNotExist as exc:
+                raise Http404 from exc
+            except GameRuleError as exc:
+                return HttpResponseBadRequest(str(exc))
             return redirect(request.path)
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return self.handle_hint_purchase(request)
 
-        self.form = self.get_form()
-        self.user = request.user
-
-        if self.form.is_valid():
-            last_attempt = SolutionLog.objects.get_last_attempt(
-                self.user,
-                self.object,
-            )
-            is_correct = last_attempt.correct if last_attempt else False
-            if self.object.attempt_limit is not None:
-                left_attempt_cnt = (
-                    self.object.attempt_limit - last_attempt.attempts_used
-                    if last_attempt
-                    else self.object.attempt_limit
-                )
-            else:
-                left_attempt_cnt = float('inf')
-
-            if left_attempt_cnt <= 0 or is_correct:
-                return self.form_invalid(self.form)
-
-            return self.form_valid(self.form)
-
-        return self.form_invalid(self.form)
+        self.object = self.get_object()
+        form = self.get_form()
+        if not form.is_valid():
+            return self.form_invalid(form)
+        return self.form_valid(form)
 
     def handle_hint_purchase(self, request):
         try:
-            data = json.loads(request.body)
-            hint_id = data.get('hint_id')
+            hint_id = _positive_id(_read_json(request).get('hint_id'))
+        except ValueError as exc:
+            return _json_error(exc, 400)
 
-            if not hint_id:
-                return JsonResponse({'success': False})
-
-            result = purchase_hint(
-                user=request.user,
-                hint_id=hint_id,
-            )
-
-            return JsonResponse(result)
-
-        except Exception:
+        try:
             return JsonResponse(
-                {
-                    'success': False,
-                    'error': 'Server Error',
-                },
+                purchase_hint(
+                    user=request.user,
+                    cipher_id=self.kwargs['cipher_id'],
+                    hint_id=hint_id,
+                )
             )
-
-    def validate_hint_purchase(self, user, cipher, hint):
-        if user == cipher.author:
-            return JsonResponse(
-                {
-                    'success': False,
-                },
-            )
-
-        if PurchasedHint.objects.filter(user=user, hint=hint).exists():
-            return JsonResponse(
-                {
-                    'success': False,
-                },
-            )
-
-        if user.money < HINT_PRICE:
-            return JsonResponse(
-                {
-                    'success': False,
-                    'error': f'Недостаточно монет. Нужно {HINT_PRICE} монет',
-                    'balance': user.money,
-                    'required': HINT_PRICE,
-                },
-            )
-
-        last_attempt = SolutionLog.objects.get_last_attempt(user, cipher)
-        if last_attempt and last_attempt.correct:
-            return JsonResponse(
-                {
-                    'success': False,
-                    'error': 'Вы уже решили этот шифр',
-                },
-            )
-
-        return None
+        except (Cipher.DoesNotExist, CipherHelp.DoesNotExist):
+            return _json_error('Подсказка не найдена', 404)
 
     def form_valid(self, form):
-        solution = form.save(commit=False)
-        solution.cipher = self.object
-        solution.user = self.request.user
-
-        normalized_user_answer = normalize_answer(solution.attempted_answer)
-        normalized_correct_answer = normalize_answer(self.object.answer_phrase)
-
-        solution.correct = normalized_user_answer == normalized_correct_answer
-        solution.save()
-
-        if solution.correct:
-            self.user.xp += REWARD_VALUES['xp_for_correct_solution']
-            self.user.money += REWARD_VALUES['money_for_correct_solution']
-            solution.score = REWARD_VALUES['score_for_correct_solution']
-            solution.save()
-            self.user.save()
-
+        try:
+            submit_solution(
+                user=self.request.user,
+                cipher_id=self.object.pk,
+                answer=form.cleaned_data['attempted_answer'],
+            )
+        except Cipher.DoesNotExist as exc:
+            raise Http404 from exc
+        except GameRuleError as exc:
+            form.add_error(None, str(exc))
+            return self.form_invalid(form)
         return redirect(self.get_success_url())
 
 
 class SaveCipherHintsView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         try:
-            data = json.loads(request.body)
-            cipher_id = data.get('cipher_id')
-            hints_data = data.get('hints', [])
-            if not cipher_id:
-                return JsonResponse(
-                    {
-                        'success': False,
-                    },
-                )
-
-            cipher = get_object_or_404(
-                Cipher,
-                pk=cipher_id,
-                author=self.request.user,
+            data = _read_json(request)
+            cipher_id = _positive_id(data.get('cipher_id'))
+            hints = _parse_hints(data.get('hints'))
+        except ValueError as exc:
+            return _json_error(exc, 400)
+        try:
+            save_cipher_hints(
+                user=request.user, cipher_id=cipher_id, hints=hints
             )
-            cipher.hints.all().delete()
-            for hint_data in hints_data:
-                CipherHelp.objects.create(
-                    cipher=cipher,
-                    text=hint_data.get('text', '').strip(),
-                    order=hint_data.get('order'),
-                )
-
-            return JsonResponse(
-                {
-                    'success': True,
-                    'hints_count': len(hints_data),
-                },
-            )
-
-        except Exception:
-            return JsonResponse(
-                {
-                    'success': False,
-                    'error': 'Server Error',
-                },
-            )
+        except Cipher.DoesNotExist:
+            return _json_error('Шифр не найден', 404)
+        except GameRuleError as exc:
+            return _json_error(exc, 400)
+        return JsonResponse({'success': True, 'hints_count': len(hints)})

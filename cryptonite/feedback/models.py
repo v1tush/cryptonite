@@ -1,7 +1,7 @@
 from django.db import models
 
-from ciphers.models import Cipher
 import feedback.managers
+from ciphers.models import Cipher
 from users.models import CustomUser
 
 

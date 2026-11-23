@@ -4,7 +4,7 @@ import django.forms
 
 import core.forms
 import users.models
-
+from users.fields import ProfileImageField
 
 User = django.contrib.auth.get_user_model()
 
@@ -15,6 +15,8 @@ class UserCreationForm(
     core.forms.CommonUserRowsMixin,
     django.contrib.auth.forms.UserCreationForm,
 ):
+    avatar = ProfileImageField(max_mb=2, max_side=2048)
+
     password1 = django.forms.CharField(
         widget=django.forms.PasswordInput(
             attrs={
@@ -57,13 +59,15 @@ class ProfileChangeForm(
     core.forms.CommonUserRowsMixin,
     django.forms.ModelForm,
 ):
+    avatar = ProfileImageField(max_mb=2, max_side=2048)
+    background = ProfileImageField(max_mb=5, max_side=4096)
+
     class Meta:
         model = User
         fields = (
             'about_me',
             'username',
             'email',
-            'about_me',
             'avatar',
             'background',
         )
@@ -84,3 +88,27 @@ class ProfileChangeForm(
             )
 
         return username
+
+
+class SavePasswordOnlyMixin:
+    def set_password_and_save(
+        self, user, password_field_name='password1', commit=True
+    ):
+        user.set_password(self.cleaned_data[password_field_name])
+        if commit:
+            user.save(update_fields=['password'])
+        return user
+
+
+class PasswordChangeForm(
+    SavePasswordOnlyMixin,
+    django.contrib.auth.forms.PasswordChangeForm,
+):
+    pass
+
+
+class SetPasswordForm(
+    SavePasswordOnlyMixin,
+    django.contrib.auth.forms.SetPasswordForm,
+):
+    pass

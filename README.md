@@ -1,127 +1,97 @@
 # Cryptonite
 
-Cryptonite is a Django web application for creating, solving, and sharing ciphers. It was built as a team project for the Yandex Lyceum project defense.
+Django-приложение, в котором пользователи публикуют и решают шифры. Проект начинался как командная работа для Яндекс Лицея. В этом обновлении фокус на надёжности существующей игры: попытки, награды, покупка подсказок и модерация. Курсы остаются частично реализованными.
 
-## Features
+**Стек:** Python 3.13, Django 5.2 LTS, PostgreSQL 16, APScheduler, Pillow и Segno. Зависимости — uv; линтинг и форматирование — Ruff.
 
-- User registration, login, profiles, and profile editing
-- Community cipher creation, editing, moderation, and solving
-- Difficulty levels, attempt limits, hints, and in-app rewards
-- Likes, leaderboards, and achievement rules
-- Daily cipher selection with history
-- QR codes for ciphers
-- Russian and English localization
-- Course-related models and views (partially implemented)
+## Быстрый запуск и демо
 
-## Tech stack
-
-- Python 3.10–3.13
-- Django 5.2
-- PostgreSQL
-- Pillow, Segno, APScheduler
-
-## Requirements
-
-- Python 3.10, 3.11, 3.12, or 3.13
-- PostgreSQL
-- Git
-- `gettext` is needed only if you want to compile translation files
-
-## Local development setup
-
-Commands below start from the repository root.
-
-### 1. Clone and create a virtual environment
+Из корня репозитория с запущенным Docker:
 
 ```bash
-git clone https://github.com/v1tush/cryptonite.git
-cd cryptonite
-python -m venv .venv
+docker compose up --build --wait
+docker compose exec web python manage.py seed_demo
+docker compose exec web python manage.py run_scheduler --once
 ```
 
-Activate the environment:
+Откройте <http://127.0.0.1:8000/>. Приложение и scheduler запускаются после успешных миграций. `/healthz/` проверяет соединение с PostgreSQL; `docker compose ps` показывает состояние сервисов. База и медиа хранятся в именованных томах. Этот Compose предназначен **только для локальной разработки**: порт приложения доступен лишь с localhost, порт БД наружу не публикуется.
 
-```powershell
-# Windows PowerShell
-.\.venv\Scripts\Activate.ps1
-```
+### Сценарий на две минуты
+
+1. Войдите как `demo_player` с паролем `Cryptonite-demo-only!42`. Откройте «Демо: шифр Цезаря» с главной страницы, из библиотеки или по пути, который напечатала команда `seed_demo`.
+2. Купите подсказку за 100 монет. Баланс игрока станет **0**, текст откроется и останется доступным после обновления страницы.
+3. Введите `wrong`: останется одна попытка. Затем введите `HELLO WORLD`: начислятся **100 XP и 25 монет**, а счёт за решение составит **100**. После обновления страницы награда не повторится.
+
+`seed_demo` создаёт данные только в режиме `DEBUG` и не сбрасывает баланс, покупки или попытки при повторном запуске. Не переносите демо-аккаунты в публичную среду.
+
+## Запуск без Docker
+
+Нужны [uv](https://docs.astral.sh/uv/getting-started/installation/) (в CI и Docker используется `0.12.24`) и локальный PostgreSQL. Из корня репозитория:
 
 ```bash
-# macOS / Linux
-source .venv/bin/activate
+uv sync --locked
 ```
 
-### 2. Install dependencies
+uv использует Python 3.13 из `.python-version` и создаёт `.venv`. Активировать окружение вручную не нужно. Версии зависимостей зафиксированы в `uv.lock`; Docker устанавливает из него только зависимости приложения, без Ruff.
 
-```bash
-python -m pip install --upgrade pip
-pip install -r requirements/dev.txt
-```
-
-### 3. Configure the environment
-
-Copy `.env.template` to `.env` in the repository root:
-
-```powershell
-# Windows PowerShell
-Copy-Item .env.template .env
-```
-
-```bash
-# macOS / Linux / Git Bash
-cp .env.template .env
-```
-
-Set the database name, user, password, and host in `.env` to match a PostgreSQL database you have created. The template's values are examples for local development only. Generate a unique Django secret key for your local environment and keep `.env` private.
-
-### 4. Apply migrations and create an admin account
-
-The Django `manage.py` file is inside the `cryptonite/` directory:
+Скопируйте `.env.template` в `.env` (`Copy-Item .env.template .env` в PowerShell, `cp .env.template .env` в Bash). Укажите параметры созданной БД и оставьте `DJANGO_DEBUG=True` для локального HTTP. Django читает `.env` через `django-environ`; уже заданные переменные окружения имеют приоритет. Перейдите во внутренний каталог `cryptonite/`:
 
 ```bash
 cd cryptonite
-python manage.py migrate
-python manage.py createsuperuser
+uv run python manage.py migrate
+uv run python manage.py seed_demo          # необязательно
+uv run python manage.py createsuperuser    # если нужен доступ к /admin/
+uv run python manage.py runserver
 ```
 
-### 5. Start the web app
+## Что проверяют тесты
+
+Ruff из корня репозитория:
 
 ```bash
-python manage.py runserver
+uv run ruff check
+uv run ruff format --check
 ```
 
-Open <http://127.0.0.1:8000/>. The Django admin is at <http://127.0.0.1:8000/admin/>.
-
-## Daily cipher scheduler
-
-The daily cipher scheduler is a separate, long-running process; starting the Django web server does **not** start it. In a second terminal, activate the same virtual environment, go to the inner `cryptonite/` directory, and run:
+Проверки Django из **внутреннего** каталога `cryptonite/`, где лежит `manage.py`:
 
 ```bash
-python manage.py run_scheduler
+uv run python manage.py check
+uv run python manage.py makemigrations --check --dry-run
+uv run python manage.py test --noinput
 ```
 
-Keep this process running while using the app. It selects an approved cipher immediately on startup, then schedules subsequent selections every 24 hours. If there are no approved ciphers, no daily cipher can be selected.
+Роли PostgreSQL для тестов нужно право `CREATEDB` или заранее подготовленная тестовая база. Тесты покрывают попытки, повторные ответы и покупки, откат начислений, права редактирования и модерации, загрузку изображений и работу scheduler. Тесты гонок используют `TransactionTestCase` и отдельные соединения PostgreSQL: проверяют однократную награду, лимит попыток, расход одного и того же баланса и встречные покупки. GitHub Actions запускает их на каждый push и pull request вместе с проверками форматирования, миграций, production-настроек и Compose.
 
-## Tests and code checks
+### Как устроено обновление
 
-The GitLab CI configuration runs Black, Flake8, and Django's test command. The repository currently has little to no automated application test coverage, so passing the test job should not be taken as proof that all user flows are covered.
+- [`ciphers/services.py`](cryptonite/ciphers/services.py): проверка лимита, запись решения и изменение XP, монет и счётчика решённых шифров проходят в одной транзакции. Блокировка строки шифра работает даже на первой попытке, когда журнал ещё пуст. Цена этого решения — одновременные операции над одним шифром выполняются последовательно.
+- Покупка привязана к конкретному опубликованному шифру. Кошельки покупателя и автора блокируются в порядке их ID, чтобы встречные покупки не образовали взаимную блокировку. Перевод и запись покупки либо сохраняются вместе, либо вместе откатываются. Редактирование подсказки сохраняет её ID и существующие покупки.
+- [`users/fields.py`](cryptonite/users/fields.py): аватар и фон проверяются по реальному формату, размеру и разрешению. Допускаются JPEG и PNG; они декодируются и сохраняются заново без исходных метаданных.
 
-## Translations
+## Scheduler
 
-Translation sources are in `cryptonite/locale/`. To update translations, install `gettext` and run these commands from the inner `cryptonite/` directory:
+Web-процесс не запускает scheduler. Compose автоматически поднимает отдельный сервис после успешных миграций (`docker compose logs scheduler`). Без Docker держите один отдельный процесс под менеджером сервисов:
 
 ```bash
-python manage.py makemessages -l en
-python manage.py makemessages -l ru
-python manage.py compilemessages
+uv run python manage.py run_scheduler
 ```
 
-## Project structure
+На старте и каждые 15 минут, включая полночь по `TIME_ZONE` (сейчас UTC), он проверяет, выбран ли шифр дня. Уникальность даты защищена базой; при повторном запуске история не сбрасывается. После того как все опубликованные шифры использованы, выбирается тот, который дольше всего не был шифром дня. `run_scheduler --once` делает одну проверку и выходит.
 
-```text
-cryptonite/       Django project and apps
-requirements/     Development, test, and production dependencies
-ER.png            Entity-relationship diagram
+## Публичное развёртывание
+
+Локальный Compose и `runserver` не подходят для публичного сервера. Задайте `DJANGO_DEBUG=False`, собственные параметры PostgreSQL, явный список `DJANGO_ALLOWED_HOSTS` без `*` и уникальный `DJANGO_SECRET_KEY`:
+
+```bash
+uv run python -c "import secrets; print(secrets.token_urlsafe(64))"
+uv run python manage.py check --deploy
 ```
 
-This is an educational project and is not configured as a production deployment. Before deploying it publicly, review the Django secret key, allowed hosts, database credentials, HTTPS/security settings, media storage, and background scheduler deployment.
+В production включены HTTPS-редирект и secure cookies. Для прокси включайте `DJANGO_TRUST_PROXY_SSL_HEADER=True` только если прокси сам выставляет `X-Forwarded-Proto` и не пропускает клиентское значение. `DJANGO_CSRF_TRUSTED_ORIGINS` задаётся при необходимости и содержит полные origin с `https://`. После проверки HTTPS задайте `DJANGO_HSTS_SECONDS`; включайте `DJANGO_HSTS_INCLUDE_SUBDOMAINS` и `DJANGO_HSTS_PRELOAD` только осознанно, когда все поддомены готовы к этому.
+
+Выполните миграции и `collectstatic`, используйте WSGI/ASGI-сервер. Отдавайте загрузки с отдельного домена без cookies приложения и установите ограничение на размер тела запроса на прокси (например, 8 МиБ). URL медиа настраивается через `DJANGO_MEDIA_URL`.
+
+## Вклад
+
+Исходная версия — командный проект. Изменения этой итерации: транзакционная игровая логика, проверки доступа и загрузок, тесты на PostgreSQL, локальный запуск с Docker, CI и повторяемый демо-сценарий. Исторические начисления не пересчитывались. Схема данных: [`ER.png`](ER.png).

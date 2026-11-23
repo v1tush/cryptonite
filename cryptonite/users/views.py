@@ -1,15 +1,15 @@
 import django.contrib.auth
 import django.contrib.auth.mixins
-from django.contrib.auth.views import LoginView
 import django.contrib.messages
 import django.shortcuts
 import django.urls
 import django.views.generic
 import django.views.generic.edit
+from django.contrib.auth.views import LoginView
 
+import users.forms
 from ciphers.models import Cipher
 from core.functions import get_user_ranking_position
-import users.forms
 from users.models import CustomUser
 
 
@@ -104,13 +104,15 @@ class ProfileEditView(
         return self.request.user
 
     def form_valid(self, form):
+        self.object = form.save(commit=False)
         if form.has_changed():
+            self.object.save(update_fields=form.changed_data)
             django.contrib.messages.success(
                 self.request,
                 'Ваш профиль успешно обновлен.',
             )
 
-        return super().form_valid(form)
+        return django.shortcuts.redirect(self.get_success_url())
 
     def get_success_url(self):
         return django.urls.reverse_lazy(

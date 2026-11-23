@@ -1,13 +1,33 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import AdminPasswordChangeForm, UserChangeForm
 from django.utils.html import format_html
 
+from users.fields import ProfileImageField
 from users.models import CustomUser
+
+
+class ProfileAdminForm(UserChangeForm):
+    avatar = ProfileImageField(max_mb=2, max_side=2048)
+    background = ProfileImageField(max_mb=5, max_side=4096)
+
+    class Meta(UserChangeForm.Meta):
+        model = CustomUser
+
+
+class AdminPasswordOnlyForm(AdminPasswordChangeForm):
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save(update_fields=['password'])
+        return user
 
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
+    form = ProfileAdminForm
+    change_password_form = AdminPasswordOnlyForm
 
     list_display = (
         'id',
@@ -40,6 +60,9 @@ class CustomUserAdmin(UserAdmin):
         'level_display',
         'avatar_preview',
         'background_preview',
+        'xp',
+        'money',
+        'solved_ciphers_count',
     )
 
     fieldsets = (
@@ -116,6 +139,18 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            return super().save_model(request, obj, form, change)
+        changes = set(form.changed_data)
+        fields = [
+            field.name
+            for field in obj._meta.concrete_fields
+            if field.name in changes
+        ]
+        if fields:
+            obj.save(update_fields=fields)
 
     def level_display(self, obj):
         return obj.level

@@ -10,7 +10,7 @@ from django.contrib.auth.views import (
 from django.urls import path, reverse_lazy
 
 import users.views
-
+from users.forms import PasswordChangeForm, SetPasswordForm
 
 app_name = 'users'
 urlpatterns = [
@@ -42,6 +42,7 @@ urlpatterns = [
     path(
         'password_change/',
         PasswordChangeView.as_view(
+            form_class=PasswordChangeForm,
             template_name='users/password_change.html',
             success_url=reverse_lazy('users:password_change_done'),
         ),
@@ -73,6 +74,7 @@ urlpatterns = [
     path(
         'reset/<uidb64>/<token>/',
         PasswordResetConfirmView.as_view(
+            form_class=SetPasswordForm,
             template_name='users/password_reset_confirm.html',
             success_url=reverse_lazy('users:password_reset_complete'),
         ),

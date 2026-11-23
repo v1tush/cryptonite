@@ -153,6 +153,7 @@
                         </div>
                         <textarea 
                             class="hint-textarea" 
+                            data-hint-id="{{ hint.pk }}"
                             name="hints[]" 
                             placeholder="Введите текст подсказки...">{{ hint.text }}</textarea>
                     </div>
@@ -170,17 +171,11 @@
                     </div>
                 {% endif %}
             </div>
-            <input type="hidden" id="cipher_id" value="{{ cipher_id|default:'' }}">
         </div>
         
         <button type="submit" class="btn btn-large">{{ button_text }}</button>
     </form>
 </div>
 
-<form id="hints-form" style="display: none;">
-    {% csrf_token %}
-</form>
-
 <script src="{% static 'js/create_cipher.js' %}"></script>
-<script src="{% static 'js/hints.js' %}"></script>
 {% endblock %}

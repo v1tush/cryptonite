@@ -8,8 +8,8 @@ class LogsConfig(AppConfig):
     def ready(self):
         from django.db.models.signals import post_save
 
-        import logs.signals
         import logs.models
+        import logs.signals
 
         post_save.connect(
             logs.signals.update_achievements_on_log,

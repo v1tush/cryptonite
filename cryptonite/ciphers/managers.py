@@ -3,7 +3,6 @@ from django.db import models
 
 from ciphers.querysets import CipherQuerySet
 
-
 User = get_user_model()
 
 

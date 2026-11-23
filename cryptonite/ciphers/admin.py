@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-
 from ciphers.models import (
     Cipher,
     CipherComment,

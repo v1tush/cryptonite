@@ -6,6 +6,7 @@ from logs.models import SolutionLog
 class SolutionLogForm(forms.ModelForm):
     attempted_answer = forms.CharField(
         label='',
+        max_length=100,
         widget=forms.TextInput(
             attrs={
                 'placeholder': 'Введите расшифрованный текст...',

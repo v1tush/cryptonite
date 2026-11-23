@@ -1,0 +1,67 @@
+name: Django CI
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: cryptonite
+          POSTGRES_USER: cryptonite
+          POSTGRES_PASSWORD: ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -h 127.0.0.1 -U cryptonite -d cryptonite"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      DJANGO_DEBUG: "True"
+      DJANGO_DB_HOST: 127.0.0.1
+      DJANGO_DB_NAME: cryptonite
+      DJANGO_DB_USER: cryptonite
+      DJANGO_DB_PASSWORD: ci-only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.24"
+          python-version: "3.13"
+          enable-cache: true
+      - run: uv sync --locked
+      - run: uv run --no-sync ruff check
+      - run: uv run --no-sync ruff format --check
+      - working-directory: cryptonite
+        run: |
+          uv run --no-sync python manage.py check
+          uv run --no-sync python manage.py makemigrations --check --dry-run
+          uv run --no-sync python manage.py test --noinput
+      - working-directory: cryptonite
+        env:
+          DJANGO_DEBUG: "False"
+          DJANGO_ALLOWED_HOSTS: test.example.com
+          DJANGO_HSTS_SECONDS: "31536000"
+          DJANGO_HSTS_INCLUDE_SUBDOMAINS: "True"
+          DJANGO_HSTS_PRELOAD: "True"
+        run: |
+          export DJANGO_SECRET_KEY="$(uv run --no-sync python -c 'import secrets; print(secrets.token_urlsafe(64))')"
+          uv run --no-sync python manage.py check --deploy --fail-level WARNING
+      - run: docker compose config --quiet
+      - name: Smoke test Docker Compose
+        run: |
+          docker compose up --build --wait --wait-timeout 120
+          curl --fail --silent --show-error http://127.0.0.1:8000/healthz/
+      - name: Compose logs on failure
+        if: failure()
+        run: docker compose logs --no-color
+      - name: Stop CI containers
+        if: always()
+        run: docker compose down --volumes

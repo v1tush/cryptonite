@@ -1,7 +1,8 @@
 class HintSystem {
     constructor() {
         this.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        this.HINT_PRICE = 100;
+        this.HINT_PRICE = Number(document.querySelector('.hints-container').dataset.price);
+        this.purchasing = false;
         this.currentUrl = window.location.href;
         this.messageContainer = document.getElementById('message-container');
         
@@ -10,8 +11,6 @@ class HintSystem {
     
     init() {
         this.bindEvents();
-        this.checkSolvedCipher();
-        this.updateBuyButtons();
     }
     
     bindEvents() {
@@ -30,6 +29,7 @@ class HintSystem {
     async handleHintPurchase(event) {
         event.preventDefault();
         event.stopPropagation();
+        if (this.purchasing) return;
         
         const buyBtn = event.currentTarget;
         const hintCard = buyBtn.closest('.hint-card');
@@ -46,6 +46,7 @@ class HintSystem {
             return;
         }
 
+        this.purchasing = true;
         this.setLoadingState(buyBtn, hintCard, true);
         
         try {
@@ -75,6 +76,8 @@ class HintSystem {
             console.error('Ошибка при покупке подсказки:', error);
             this.showMessage('Произошла ошибка при покупке', 'error');
             this.setLoadingState(buyBtn, hintCard, false);
+        } finally {
+            this.purchasing = false;
         }
     }
     
@@ -128,8 +131,7 @@ class HintSystem {
     updateUserBalance(newBalance) {
         const balanceElement = document.getElementById('user-balance');
         if (balanceElement) {
-            const oldBalance = parseInt(balanceElement.textContent);
-            this.animateBalanceChange(balanceElement, oldBalance, newBalance);
+            balanceElement.textContent = newBalance;
         }
     }
     
@@ -167,16 +169,6 @@ class HintSystem {
         });
     }
     
-    checkSolvedCipher() {
-        const solvedMessage = document.querySelector('.solution-result.success');
-        if (solvedMessage) {
-            document.querySelectorAll('.buy-hint-btn').forEach(btn => {
-                btn.disabled = true;
-                btn.textContent = 'Шифр уже решен';
-            });
-        }
-    }
-    
     showMessage(text, type = 'success') {
         const existingMessages = this.messageContainer.querySelectorAll('.message');
         existingMessages.forEach(msg => msg.remove());
@@ -184,8 +176,9 @@ class HintSystem {
         messageDiv.className = `message message-${type}`;
         messageDiv.innerHTML = `
             <span class="message-icon">${type === 'success' ? '✓' : '✗'}</span>
-            <span class="message-text">${text}</span>
+            <span class="message-text"></span>
         `;
+        messageDiv.querySelector('.message-text').textContent = text;
         
         this.messageContainer.appendChild(messageDiv);
         setTimeout(() => {
@@ -202,27 +195,6 @@ class HintSystem {
             card.style.transform = 'scale(1)';
             card.style.boxShadow = '';
         }, 500);
-    }
-    
-    animateBalanceChange(element, oldValue, newValue) {
-        const duration = 500;
-        const steps = 20;
-        const stepDuration = duration / steps;
-        const increment = (newValue - oldValue) / steps;
-        let current = oldValue;
-        let step = 0;
-        this.balanceAnimationTimer = setInterval(() => {
-            current += increment;
-            step++;
-            
-            if (step >= steps) {
-                element.textContent = newValue;
-                clearInterval(this.balanceAnimationTimer);
-                this.balanceAnimationTimer = null;
-            } else {
-                element.textContent = Math.round(current);
-            }
-        }, stepDuration);
     }
     
     escapeHtml(text) {

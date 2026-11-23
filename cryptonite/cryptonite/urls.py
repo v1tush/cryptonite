@@ -1,10 +1,13 @@
+import django.urls
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
-import django.urls
+
+from core.health import health
 
 urlpatterns = [
+    django.urls.path('healthz/', health, name='health'),
     django.urls.path('i18n/', django.urls.include('django.conf.urls.i18n')),
 ]
 

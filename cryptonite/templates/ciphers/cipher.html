@@ -63,7 +63,7 @@
                 <span class="hints-count">({{ hints_count }})</span>
             </h3>
         
-            <div class="hints-container">
+            <div class="hints-container" data-price="{{ hint_price }}">
                 {% for hint in purchased_hints %}
                     <div class="hint-card purchased" data-hint-id="{{ hint.id }}">
                         <div class="hint-header">
@@ -80,16 +80,6 @@
                 {% endfor %}
             
                 {% for hint in available_hints %}
-                    {% if user.is_staff and cipher.status == 'pending' %}
-                        <div class="hint-card purchased" data-hint-id="{{ hint.id }}">
-                            <div class="hint-header">
-                                <div class="hint-number">{% trans 'Подсказка' %} {{ hint.order }}</div>
-                            </div>
-                            <div class="hint-content">
-                                {{ hint.text|linebreaks }}
-                            </div>
-                        </div>
-                    {% else %}
                         <div class="hint-card available" data-hint-id="{{ hint.id }}">
                             <div class="hint-header">
                                 <div class="hint-number">{% trans 'Подсказка' %} {{ hint.order }}</div>
@@ -104,7 +94,7 @@
                                     <p class="locked-text">{% trans 'Подсказка заблокирована' %}</p>
                                     <button class="btn btn-small buy-hint-btn" 
                                             data-hint-id="{{ hint.id }}"
-                                            {% if user_balance < hint_price %}disabled{% endif %}>
+                                            {% if not cipher.is_published or user_balance < hint_price or last_attempt.correct %}disabled{% endif %}>
                                         {% trans 'Купить за' %} {{ hint_price }} {% trans 'монет' %}
                                     </button>
                                     {% if user_balance < hint_price %}
@@ -113,7 +103,6 @@
                                 </div>
                             </div>
                         </div>
-                    {% endif %}
                 {% endfor %}
             </div>
             
@@ -160,11 +149,13 @@
                 {% endfor %}
             {% endif %}
             {% else %}
-                {% if user.id != cipher.author.id %}
+                {% if cipher.is_published and user.id != cipher.author.id %}
                     <h3 class="hint-title">{% trans 'Разгадать шифр' %}</h3>
+                    {{ form.non_field_errors }}
                     {% if has_limit %}
                     <div class="attempts-counter">
-                        <span>{% trans 'Осталось попыток:' %}</span>
+                        <span>{% trans 'Осталось попыток:' %} {{ left_attempt_cnt }}</span>
+                        {% if cipher.attempt_limit <= 15 %}
                         <div class="attempts-dots">
                             {% if last_attempt %}
                                 {% if last_attempt.attempts_used < cipher.attempt_limit %}
@@ -187,12 +178,12 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
+                        {% endif %}
                     </div>
                     {% endif %}
-                    {% if last_attempt %}
                         {% if last_attempt.correct %}
                         <p class="solution-resalt success">{% trans 'Правильно! Шифр решен!' %}</p>
-                        {% elif not last_attempt.correct and left_attempt_cnt <= 0 and not has_limit %}
+                        {% elif has_limit and left_attempt_cnt <= 0 %}
                         <p class="solution-resalt fail">{% trans 'К сожалению попытки закончились' %}</p>
                         {% else %}
                             <div class="solution-input">
@@ -208,20 +199,6 @@
                                 </form>
                             </div>
                         {% endif %}
-                    {% else %}
-                        <div class="solution-input">
-                            <form method="post">
-                                {% csrf_token %}
-                                {% for field in form %}
-                                    {{ field }}
-                                    {% if field.errors %}
-                                        <div class="error">{{ field.errors }}</div>
-                                    {% endif %}
-                                    <button class="btn" id="submit-solution">{% trans 'Проверить' %}</button>
-                                {% endfor %}
-                            </form>
-                        </div>
-                    {% endif %}
                     {% if user_attempts %}
                         <div class="solution-history">
                             <h3>{% trans 'Ваши предыдущие попытки' %}:</h3>
