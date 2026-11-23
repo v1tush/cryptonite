@@ -1,5 +1,7 @@
 # Cryptonite
 
+[English version](ENGLISH_README.md)
+
 Django-приложение, в котором пользователи публикуют и решают шифры. Проект начинался как командная работа для Яндекс Лицея. В этом обновлении фокус на надёжности существующей игры: попытки, награды, покупка подсказок и модерация. Курсы остаются частично реализованными.
 
 **Стек:** Python 3.13, Django 5.2 LTS, PostgreSQL 16, APScheduler, Pillow и Segno. Зависимости — uv; линтинг и форматирование — Ruff.
@@ -29,10 +31,11 @@ docker compose exec web python manage.py run_scheduler --once
 Нужны [uv](https://docs.astral.sh/uv/getting-started/installation/) (в CI и Docker используется `0.12.24`) и локальный PostgreSQL. Из корня репозитория:
 
 ```bash
-uv sync --locked
+uv sync --locked           # приложение + Ruff
+uv sync --locked --no-dev  # только зависимости приложения (альтернатива)
 ```
 
-uv использует Python 3.13 из `.python-version` и создаёт `.venv`. Активировать окружение вручную не нужно. Версии зависимостей зафиксированы в `uv.lock`; Docker устанавливает из него только зависимости приложения, без Ruff.
+uv использует Python 3.13 из `.python-version` и создаёт `.venv`. Активировать окружение вручную не нужно. Версии зависимостей зафиксированы в `uv.lock`; Docker устанавливает из него только зависимости приложения, без Ruff. Если выбрали установку без dev-зависимостей, используйте `uv run --locked --no-dev` вместо `uv run`, чтобы не установить Ruff при запуске.
 
 Скопируйте `.env.template` в `.env` (`Copy-Item .env.template .env` в PowerShell, `cp .env.template .env` в Bash). Укажите параметры созданной БД и оставьте `DJANGO_DEBUG=True` для локального HTTP. Django читает `.env` через `django-environ`; уже заданные переменные окружения имеют приоритет. Перейдите во внутренний каталог `cryptonite/`:
 
